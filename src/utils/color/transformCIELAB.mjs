@@ -1,6 +1,14 @@
-// Types
+/**
+ * Types
+ *
+ * Code borrowed from Vuetify to prevent things from braking
+ * when the Vuetify repo gets updated.
+ */
 
-const delta = 0.20689655172413793; // 6÷29
+/**
+ * delta 6÷29
+ */
+const delta = 0.20689655172413793;
 
 /**
  * CIELAB forward transform function.

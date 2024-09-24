@@ -1,4 +1,11 @@
-// Utilities
+/**
+ * Utilities
+ *
+ * Code borrowed from Vuetify to prevent things from braking
+ * when the Vuetify repo gets updated.
+ */
+
+// imports
 import { clamp } from "../helpers.mjs";
 
 // For converting XYZ to sRGB

@@ -1,5 +1,9 @@
 /**
  * HELPER FUNCTIONS
+ *
+ * Code borrowed from Vuetify to prevent things from braking
+ * when the Vuetify repo gets updated.
+ *
  */
 
 /**
