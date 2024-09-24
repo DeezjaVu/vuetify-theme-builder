@@ -87,8 +87,4 @@ function menuItemClickHandler(item) {
 }
 </script>
 
-<style>
-.app-drawer {
-  /* min-width: 300px; */
-}
-</style>
+<style></style>

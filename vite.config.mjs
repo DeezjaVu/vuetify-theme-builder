@@ -11,6 +11,10 @@ import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // For github pages to work, the base path must be set
+  // to the root of the repo
+  // https://vitejs.dev/guide/static-deploy.html#github-pages
+  base: "/vuetify-theme-builder/",
   plugins: [
     VueRouter(),
     Vue({
