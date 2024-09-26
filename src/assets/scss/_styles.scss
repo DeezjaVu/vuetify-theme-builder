@@ -1,0 +1,33 @@
+@use "variables" as *;
+
+/**
+ * To apply a color to a vuetify component, 
+ * custom variables need a bg- prefix style.
+ * e.g; for a custom variable named $color-primary,
+ * create a css style named .bg-color-primary and apply the
+ * variable to the background-color css style property.
+ */
+
+.bg-color-primary {
+  background-color: $color-primary !important;
+}
+
+.bg-color-secondary {
+  background-color: $color-secondary !important;
+}
+
+.bg-color-tertiary {
+  background-color: $color-tertiary !important;
+}
+
+// .text-color-primary {
+//   color: $color-primary !important;
+// }
+
+// .text-color-secondary {
+//   color: $color-secondary !important;
+// }
+
+// .text-color-tertiary {
+//   color: $color-tertiary !important;
+// }

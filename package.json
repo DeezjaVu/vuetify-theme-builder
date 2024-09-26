@@ -1,5 +1,5 @@
 {
-  "name": "vuetify-theme-manager",
+  "name": "vuetify-theme-builder",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --open",
@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "7.4.47",
     "core-js": "^3.37.1",
+    "pinia": "^2.2.2",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11"

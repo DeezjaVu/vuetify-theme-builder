@@ -1,17 +1,18 @@
 <template>
   <v-container class="fill-height">
     <v-responsive class="align-centerfill-height mx-auto" max-width="900">
-      <v-img class="mb-4" height="150" src="@/assets/logo.png" />
+      <v-img class="mb-4" height="128" src="@/assets/logo-128.png" />
 
       <div class="text-center">
         <!-- <div class="text-body-2 font-weight-light mb-n1">Welcome to</div> -->
-
-        <h1 class="text-h2 font-weight-bold">Vuetify Theme Builder</h1>
+        <!-- <h1 class="text-h2 font-weight-bold color-tertiary">Vuetify Theme Builder</h1> -->
+        <!-- <h1 class="text-h2 font-weight-bold">Vuetify Theme Builder</h1> -->
       </div>
 
       <div class="py-4" />
 
       <v-row>
+        <!-- 
         <v-col cols="12">
           <v-card
             class="py-4"
@@ -32,90 +33,66 @@
             <template #subtitle>
               <div class="text-subtitle-1">
                 Replace this page by removing
-                <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in
-                <v-kbd>pages/index.vue</v-kbd>.
+                <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in <v-kbd>pages/index.vue</v-kbd>.
               </div>
             </template>
 
-            <v-overlay
-              opacity=".12"
-              scrim="primary"
-              contained
-              model-value
-              persistent
-            />
+            <v-overlay opacity=".12" scrim="primary" contained model-value persistent />
           </v-card>
         </v-col>
+         -->
 
         <v-col cols="6">
           <v-card
             append-icon="mdi-open-in-new"
-            class="py-4"
-            color="surface-variant"
-            href="https://vuetifyjs.com/"
             prepend-icon="mdi-text-box-outline"
-            rel="noopener noreferrer"
-            rounded="lg"
-            subtitle="Learn about all things Vuetify in our documentation."
-            target="_blank"
             title="Documentation"
+            subtitle="Learn about all things Vuetify in our documentation."
+            class="py-4"
+            color="surface-variant"
             variant="text"
+            rounded="lg"
+            href="https://vuetifyjs.com/"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <v-overlay
-              opacity=".06"
-              scrim="primary"
-              contained
-              model-value
-              persistent
-            />
+            <v-overlay opacity=".06" scrim="primary" contained model-value persistent />
           </v-card>
         </v-col>
 
         <v-col cols="6">
           <v-card
             append-icon="mdi-open-in-new"
-            class="py-4"
-            color="surface-variant"
-            href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
             prepend-icon="mdi-star-circle-outline"
-            rel="noopener noreferrer"
-            rounded="lg"
-            subtitle="Explore available framework Features."
-            target="_blank"
             title="Features"
+            subtitle="Explore available framework Features."
+            class="py-4"
+            color="surface-variant"
             variant="text"
+            rounded="lg"
+            href="https://vuetifyjs.com/introduction/why-vuetify/#feature-guides"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <v-overlay
-              opacity=".06"
-              scrim="primary"
-              contained
-              model-value
-              persistent
-            />
+            <v-overlay opacity=".06" scrim="primary" contained model-value persistent />
           </v-card>
         </v-col>
 
         <v-col cols="6">
           <v-card
             append-icon="mdi-open-in-new"
+            prepend-icon="mdi-widgets-outline"
+            title="Components"
+            subtitle="Discover components in the API Explorer."
             class="py-4"
             color="surface-variant"
-            href="https://vuetifyjs.com/components/all"
-            prepend-icon="mdi-widgets-outline"
-            rel="noopener noreferrer"
-            rounded="lg"
-            subtitle="Discover components in the API Explorer."
-            target="_blank"
-            title="Components"
             variant="text"
+            rounded="lg"
+            href="https://vuetifyjs.com/components/all"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <v-overlay
-              opacity=".06"
-              scrim="primary"
-              contained
-              model-value
-              persistent
-            />
+            <v-overlay opacity=".06" scrim="primary" contained model-value persistent />
           </v-card>
         </v-col>
 
@@ -133,13 +110,7 @@
             title="Community"
             variant="text"
           >
-            <v-overlay
-              opacity=".06"
-              scrim="primary"
-              contained
-              model-value
-              persistent
-            />
+            <v-overlay opacity=".06" scrim="primary" contained model-value persistent />
           </v-card>
         </v-col>
       </v-row>
@@ -148,5 +119,16 @@
 </template>
 
 <script setup>
-//
+  import { onMounted } from "vue";
+
+  /**
+   *
+   */
+  onMounted(() => {
+    console.log("AppView ::: onMounted");
+  });
 </script>
+
+<style scoped lang="scss">
+  //
+</style>
