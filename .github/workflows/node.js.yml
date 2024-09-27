@@ -26,7 +26,6 @@ jobs:
       - name: Push
         uses: s0/git-publish-subdir-action@develop
         with:
-          target_branch: build
           jekyll: false
         env:
           REPO: self
