@@ -58,7 +58,7 @@
             <v-btn :color="selectedColor" class="mt-2"> Selected Color </v-btn>
           </v-col>
         </v-row>
-        <!-- <v-row>
+        <v-row>
           <v-col class="d-flex flex-column">
             <v-color-picker
               width="100%"
@@ -75,7 +75,7 @@
               @update:model-value="colorPickerUpdateHandler"
             ></v-color-picker>
           </v-col>
-        </v-row> -->
+        </v-row>
       </v-list>
     </v-navigation-drawer>
 
@@ -92,12 +92,12 @@
   // import * as colorUtils from "./utils/colorUtils.mjs";
 
   import { MutationType } from "pinia";
-  // import { useAppStore } from "@/stores/app";
+  import { useAppStore } from "@/stores/app";
 
-  // const appStore = useAppStore();
+  const appStore = useAppStore();
 
   // const darklyColors = ref(appStore.darklyColors);
-  // const darklyColors = ref(appStore.bsDarklyHex);
+  const darklyColors = ref(appStore.bsDarklyHex);
 
   // const darklyColors = reactive(appStore.bsDarklyHex);
 
@@ -167,7 +167,7 @@
     // console.log(" - vBlue: ", vBlue);
     // console.log(" - bsBlue: ", bsBlue);
 
-    // console.log(" - darklyColors: ", darklyColors);
+    console.log(" - darklyColors: ", darklyColors);
     // console.log(" - materialColors: ", appStore.materialColors);
 
     // console.log(" - selectedColor: ", selectedColor.value);
@@ -218,16 +218,16 @@
    * Handles color changes from the color picker.
    * @param color - The color value chosen by the user.
    */
-  // function colorPickerUpdateHandler(color) {
-  //   console.log("APP :::colorPickerUpdateHandler");
-  //   console.log(" - color: ", color);
-  //   if (selectedColor.value !== color) {
-  //     selectedColor.value = color;
-  //     console.log(" - selectedColor: ", selectedColor.value);
-  //   } else {
-  //     console.log(" - selectedColor was NOT updated");
-  //   }
-  // }
+  function colorPickerUpdateHandler(color) {
+    console.log("APP :::colorPickerUpdateHandler");
+    console.log(" - color: ", color);
+    if (selectedColor.value !== color) {
+      selectedColor.value = color;
+      console.log(" - selectedColor: ", selectedColor.value);
+    } else {
+      console.log(" - selectedColor was NOT updated");
+    }
+  }
 </script>
 
 <style lang="scss">
