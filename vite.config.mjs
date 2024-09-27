@@ -14,7 +14,9 @@ export default defineConfig({
   // For github pages to work, the base path must be set
   // to the root (name) of the repo.
   // https://vitejs.dev/guide/static-deploy.html#github-pages
-  base: "/vuetify-theme-builder/",
+  // base: "/vuetify-theme-builder/",
+  // For netlify this needs to be the root of the repo.
+  base: "/",
   plugins: [
     VueRouter(),
     Vue({
