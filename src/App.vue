@@ -58,7 +58,7 @@
             <v-btn :color="selectedColor" class="mt-2"> Selected Color </v-btn>
           </v-col>
         </v-row>
-        <v-row>
+        <!-- <v-row>
           <v-col class="d-flex flex-column">
             <v-color-picker
               width="100%"
@@ -75,7 +75,7 @@
               @update:model-value="colorPickerUpdateHandler"
             ></v-color-picker>
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -89,16 +89,17 @@
   import { ref, onMounted, reactive } from "vue";
 
   import colors from "vuetify/lib/util/colors";
-  import * as colorUtils from "./utils/colorUtils.mjs";
+  // import * as colorUtils from "./utils/colorUtils.mjs";
 
   import { MutationType } from "pinia";
-  import { useAppStore } from "@/stores/app";
+  // import { useAppStore } from "@/stores/app";
 
-  const appStore = useAppStore();
+  // const appStore = useAppStore();
 
   // const darklyColors = ref(appStore.darklyColors);
   // const darklyColors = ref(appStore.bsDarklyHex);
-  const darklyColors = reactive(appStore.bsDarklyHex);
+
+  // const darklyColors = reactive(appStore.bsDarklyHex);
 
   /**
    * Defines the open/close state of the menu drawer.
@@ -106,7 +107,7 @@
   const menuOpen = ref(true);
 
   const deepOrange = colors.deepOrange;
-  const baseOrange = colorUtils.parseColor(deepOrange.base);
+  // const baseOrange = colorUtils.parseColor(deepOrange.base);
   // const baseOrangeHex = colorUtils.parseHex(deepOrange.base);
 
   // HEX: #2196f3 RGB: (233,30,99)
@@ -118,13 +119,14 @@
   // HEX: #007cd6 RGB: (0,124,214)
   const variantDarken = { r: 0, g: 124, b: 214, a: 1.0 };
 
-  const vBlue = appStore.colors.blue.base;
-  const bsBlue = appStore.bsDarkly["bs-blue"];
-  const bsPrimary = appStore.bsDarkly["bs-primary"];
-  const bsSecondary = appStore.bsDarkly["bs-secondary"];
+  // const vBlue = appStore.colors.blue.base;
+  // const bsBlue = appStore.bsDarkly["bs-blue"];
+  // const bsPrimary = appStore.bsDarkly["bs-primary"];
+  // const bsSecondary = appStore.bsDarkly["bs-secondary"];
 
   const cpModes = ["hex"];
-  const selectedColor = ref(appStore.colors.deepOrange.base);
+  // const selectedColor = ref(appStore.colors.deepOrange.base);
+  const selectedColor = ref(deepOrange.base);
 
   /**
    * Called when the app is mounted.
@@ -133,26 +135,26 @@
     console.log("APP ::: onMounted");
     console.log(" - deepOrange: ", deepOrange);
     console.log(" - deepOrange base:", deepOrange.base);
-    console.log(" - parseColor - deepOrange.base: ", baseOrange);
+    // console.log(" - parseColor - deepOrange.base: ", baseOrange);
     // console.log(" - parseHex - deepOrange.base: ", baseOrangeHex);
 
-    console.log(" - deepOrange darken 1:", colorUtils.darken(baseOrange, 1));
-    console.log(" - deepOrange darken 2:", colorUtils.darken(baseOrange, 2));
-    console.log(" - deepOrange darken 3:", colorUtils.darken(baseOrange, 3));
-    console.log(" - deepOrange darken 4:", colorUtils.darken(baseOrange, 4));
+    // console.log(" - deepOrange darken 1:", colorUtils.darken(baseOrange, 1));
+    // console.log(" - deepOrange darken 2:", colorUtils.darken(baseOrange, 2));
+    // console.log(" - deepOrange darken 3:", colorUtils.darken(baseOrange, 3));
+    // console.log(" - deepOrange darken 4:", colorUtils.darken(baseOrange, 4));
 
-    let rgb0 = colorUtils.darken(baseOrange, 0);
-    let hex0 = colorUtils.RGBtoHex(rgb0);
-    console.log(" - deepOrange base 0 - HEX", hex0);
+    // let rgb0 = colorUtils.darken(baseOrange, 0);
+    // let hex0 = colorUtils.RGBtoHex(rgb0);
+    // console.log(" - deepOrange base 0 - HEX", hex0);
 
-    let rgb1 = colorUtils.darken(baseOrange, 1);
-    let hex1 = colorUtils.RGBtoHex(rgb1);
-    console.log(" - deepOrange darken 1 - HEX", hex1);
+    // let rgb1 = colorUtils.darken(baseOrange, 1);
+    // let hex1 = colorUtils.RGBtoHex(rgb1);
+    // console.log(" - deepOrange darken 1 - HEX", hex1);
 
-    let pDarken1 = colorUtils.darken(primaryBase, 1);
-    let hexDarken1 = colorUtils.RGBtoHex(pDarken1);
-    console.log(" - primary darken 1 - RGB", pDarken1);
-    console.log(" - primary darken 1 - HEX", hexDarken1);
+    // let pDarken1 = colorUtils.darken(primaryBase, 1);
+    // let hexDarken1 = colorUtils.RGBtoHex(pDarken1);
+    // console.log(" - primary darken 1 - RGB", pDarken1);
+    // console.log(" - primary darken 1 - HEX", hexDarken1);
 
     // https://hostman.com/tutorials/looping-through-objects-s-keys-and-values-in-javascript/
     let colorMap = new Map(Object.entries(colors));
@@ -162,13 +164,13 @@
     // console.log(" - colorMap", orangeMap);
     // appStore.exampleAction();
 
-    console.log(" - vBlue: ", vBlue);
-    console.log(" - bsBlue: ", bsBlue);
+    // console.log(" - vBlue: ", vBlue);
+    // console.log(" - bsBlue: ", bsBlue);
 
-    console.log(" - darklyColors: ", darklyColors);
-    console.log(" - materialColors: ", appStore.materialColors);
+    // console.log(" - darklyColors: ", darklyColors);
+    // console.log(" - materialColors: ", appStore.materialColors);
 
-    console.log(" - selectedColor: ", selectedColor.value);
+    // console.log(" - selectedColor: ", selectedColor.value);
   });
 
   /**
@@ -182,15 +184,15 @@
    * only available with mutation.type === 'patch object'
    * mutation.payload: patch object passed to cartStore.$patch()
    */
-  appStore.$subscribe((mutation, state) => {
-    console.log("APP ::: $subscribe");
-    console.log(" - mutation.type: ", mutation.type);
-    console.log(" - mutation.storeId: ", mutation.storeId);
-    console.log(" - mutation.payload: ", mutation.payload);
-    // TODO: move localStorage to a better place...
-    // persist the whole state to the local storage whenever it changes
-    // localStorage.setItem("appState", JSON.stringify(state));
-  });
+  // appStore.$subscribe((mutation, state) => {
+  //   console.log("APP ::: $subscribe");
+  //   console.log(" - mutation.type: ", mutation.type);
+  //   console.log(" - mutation.storeId: ", mutation.storeId);
+  //   console.log(" - mutation.payload: ", mutation.payload);
+  //   // TODO: move localStorage to a better place...
+  //   // persist the whole state to the local storage whenever it changes
+  //   // localStorage.setItem("appState", JSON.stringify(state));
+  // });
 
   /**
    * Handles menu item clicks.
@@ -206,26 +208,26 @@
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#hex_notation
    */
-  function blueClickHandler() {
-    console.log("APP :::blueClickHandler");
-    appStore.colors.blue.base = "#375a7f";
-    console.log(" - appStore.colors.blue.base", appStore.colors.blue.base);
-  }
+  // function blueClickHandler() {
+  //   console.log("APP :::blueClickHandler");
+  //   appStore.colors.blue.base = "#375a7f";
+  //   console.log(" - appStore.colors.blue.base", appStore.colors.blue.base);
+  // }
 
   /**
    * Handles color changes from the color picker.
    * @param color - The color value chosen by the user.
    */
-  function colorPickerUpdateHandler(color) {
-    console.log("APP :::colorPickerUpdateHandler");
-    console.log(" - color: ", color);
-    if (selectedColor.value !== color) {
-      selectedColor.value = color;
-      console.log(" - selectedColor: ", selectedColor.value);
-    } else {
-      console.log(" - selectedColor was NOT updated");
-    }
-  }
+  // function colorPickerUpdateHandler(color) {
+  //   console.log("APP :::colorPickerUpdateHandler");
+  //   console.log(" - color: ", color);
+  //   if (selectedColor.value !== color) {
+  //     selectedColor.value = color;
+  //     console.log(" - selectedColor: ", selectedColor.value);
+  //   } else {
+  //     console.log(" - selectedColor was NOT updated");
+  //   }
+  // }
 </script>
 
 <style lang="scss">

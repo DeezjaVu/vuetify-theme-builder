@@ -2,7 +2,7 @@
   <v-container class="fill-height" grid-list-xs>
     <v-responsive class="align-centerfill-height mx-auto" max-width="900">
       <div class="text-center">
-        <v-icon icon="mdi-account-box"></v-icon>
+        <!-- <v-icon icon="mdi-account-box"></v-icon> -->
         <v-icon icon="$vuetify"></v-icon>
         <h1 class="text-h2 font-weight-bold">About Theme Builder</h1>
       </div>
