@@ -46,15 +46,6 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"]
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // allows for importing variables in the global scope
-        // example: additionalData: `@import "./src/styles/variables.scss";`
-        // additionalData: `@import "@/assets/scss/global.scss";`
-      }
-    }
-  },
   server: {
     port: 3000
   }
