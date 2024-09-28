@@ -6,9 +6,9 @@
  */
 
 // imports
-import * as CIELAB from "./color/transformCIELAB.mjs";
-import * as sRGB from "./color/transformSRGB.mjs";
-import { chunk, padEnd } from "./helpers.mjs";
+import * as CIELAB from "./color/transformCIELAB.js";
+import * as sRGB from "./color/transformSRGB.js";
+import { chunk, padEnd } from "./helpers.js";
 
 const cssColorRe = /^(?<fn>(?:rgb|hsl)a?)\((?<values>.+)\)/;
 
@@ -17,42 +17,42 @@ const mappers = {
     r,
     g,
     b,
-    a,
+    a
   }),
   rgba: (r, g, b, a) => ({
     r,
     g,
     b,
-    a,
+    a
   }),
   hsl: (h, s, l, a) =>
     HSLtoRGB({
       h,
       s,
       l,
-      a,
+      a
     }),
   hsla: (h, s, l, a) =>
     HSLtoRGB({
       h,
       s,
       l,
-      a,
+      a
     }),
   hsv: (h, s, v, a) =>
     HSVtoRGB({
       h,
       s,
       v,
-      a,
+      a
     }),
   hsva: (h, s, v, a) =>
     HSVtoRGB({
       h,
       s,
       v,
-      a,
-    }),
+      a
+    })
 };
 /**
  * Converts a color in various formats to an RGB color object
@@ -79,7 +79,7 @@ export function parseColor(color) {
     return {
       r: (color & 0xff0000) >> 16,
       g: (color & 0xff00) >> 8,
-      b: color & 0xff,
+      b: color & 0xff
     };
   } else if (typeof color === "string" && cssColorRe.test(color)) {
     const { groups } = color.match(cssColorRe);
@@ -212,7 +212,7 @@ export function HSLtoHSV(hsl) {
     h,
     s: sprime,
     v,
-    a,
+    a
   };
 }
 
@@ -229,12 +229,7 @@ export function HSLtoHSV(hsl) {
  */
 export function RGBtoHex(_ref2) {
   let { r, g, b, a } = _ref2;
-  return `#${[
-    toHex(r),
-    toHex(g),
-    toHex(b),
-    a !== undefined ? toHex(Math.round(a * 255)) : "",
-  ].join("")}`;
+  return `#${[toHex(r), toHex(g), toHex(b), a !== undefined ? toHex(Math.round(a * 255)) : ""].join("")}`;
 }
 
 /**
@@ -256,7 +251,7 @@ export function HexToRGB(hex) {
     r,
     g,
     b,
-    a,
+    a
   };
 }
 
@@ -288,7 +283,7 @@ export function HSVtoRGB(hsva) {
     r: rgb[0],
     g: rgb[1],
     b: rgb[2],
-    a,
+    a
   };
 }
 

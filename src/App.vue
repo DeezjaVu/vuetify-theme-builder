@@ -31,14 +31,14 @@
 
         <v-divider></v-divider>
 
-        <v-list-item title="Home" value="primary-1" to="/"></v-list-item>
-        <v-list-item title="About" value="primary-2" to="/about"></v-list-item>
+        <v-list-item title="Home" value="home" to="/"></v-list-item>
+        <v-list-item title="About" value="about" to="/about"></v-list-item>
 
         <v-list-subheader class="text-uppercase font-weight-black"> Theme Builder </v-list-subheader>
         <v-divider></v-divider>
 
-        <v-list-item title="primary-3" value="primary-3"></v-list-item>
-        <v-list-item title="primary-4" value="primary-4"></v-list-item>
+        <v-list-item title="Colors" value="colors-view" to="/builder/colors"></v-list-item>
+        <v-list-item title="Variables" value="variables-view" to="/builder/variables"></v-list-item>
 
         <v-divider></v-divider>
 
@@ -65,7 +65,7 @@
               dot-size="16"
               mode="hex"
               :modes="cpModes"
-              :swatches="darklyColors"
+              :swatches="materialBaseHex"
               :model-value="selectedColor"
               hide-sliders
               show-swatches
@@ -74,6 +74,15 @@
               class="my-0"
               @update:model-value="colorPickerUpdateHandler"
             ></v-color-picker>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
+          <v-col class="d-flex flex-column">
+            <v-btn class="mt-2 my-1" color="error" title="Error">Error</v-btn>
+            <v-btn class="my-1" color="info" title="Info">Info</v-btn>
+            <v-btn class="my-1" color="success" title="Success">Success</v-btn>
+            <v-btn class="my-1" color="warning" title="Warning">Warning</v-btn>
           </v-col>
         </v-row>
       </v-list>
@@ -90,16 +99,37 @@
 
   import colors from "vuetify/lib/util/colors";
   // import * as colorUtils from "./utils/colorUtils.mjs";
-
-  import { MutationType } from "pinia";
+  import { useTheme } from "vuetify";
   import { useAppStore } from "@/stores/app";
+
+  // const appContext = getCurrentInstance();
+  // const $vuetify = appContext.config.globalProperties.$vuetify;
+
+  /**
+   * interface ThemeInstance {
+   *   readonly isDisabled: boolean;
+   *   readonly themes: Ref<Record<string, InternalThemeDefinition>>;
+   *   readonly name: Readonly<Ref<string>>;
+   *   readonly current: DeepReadonly<Ref<InternalThemeDefinition>>;
+   *   readonly computedThemes: DeepReadonly<Ref<Record<string, InternalThemeDefinition>>>;
+   *   readonly themeClasses: Readonly<Ref<string | undefined>>;
+   *   readonly styles: Readonly<Ref<string>>;
+   *   readonly global: {
+   *       readonly name: Ref<string>;
+   *       readonly current: DeepReadonly<Ref<InternalThemeDefinition>>;
+   *   };
+   * }
+   */
+  const theme = useTheme();
 
   const appStore = useAppStore();
 
-  // const darklyColors = ref(appStore.darklyColors);
-  const darklyColors = ref(appStore.bsDarklyHex);
+  // const bdDarklyHex = ref(appStore.bdDarklyHex);
+  const bdDarklyHex = appStore.bsDarklyHex;
+  const materialRedHex = appStore.materialRedHex;
+  const materialBaseHex = appStore.materialBaseHex;
 
-  // const darklyColors = reactive(appStore.bsDarklyHex);
+  // const bdDarklyHex = reactive(appStore.bsDarklyHex);
 
   /**
    * Defines the open/close state of the menu drawer.
@@ -167,8 +197,16 @@
     // console.log(" - vBlue: ", vBlue);
     // console.log(" - bsBlue: ", bsBlue);
 
-    console.log(" - darklyColors: ", darklyColors);
+    console.log(" - bdDarklyHex: ", bdDarklyHex);
+    console.log(" - materialRedHex: ", materialRedHex);
+    console.log(" - materialBaseHex: ", materialBaseHex);
     // console.log(" - materialColors: ", appStore.materialColors);
+
+    console.log(" - vuetify theme name: ", theme.name.value);
+    console.log(" - vuetify current theme: ", theme.current.value);
+    console.log(" - vuetify global theme name: ", theme.global.name.value);
+
+    // console.log(" - theme.primary: ", $vuetify.theme.primary);
 
     // console.log(" - selectedColor: ", selectedColor.value);
   });
@@ -240,4 +278,32 @@
   // .color-tertiary {
   //   color: $color-tertiary;
   // }
+
+  // change color picker swatches padding and justify-content
+  .v-color-picker-swatches {
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between !important;
+      padding: 0px !important;
+      // INFO: swatches border should be disabled
+      // border: 1px solid #000;
+    }
+  }
+
+  // change color picker swatches direction
+  .v-color-picker-swatches__swatch {
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    // vuetify default is 10px
+    // margin-bottom: 20px !important;
+  }
+
+  // change color picker swatches width and height
+  .v-color-picker-swatches__color {
+    height: 20px !important;
+    max-height: 20px !important;
+    width: 20px !important;
+  }
 </style>

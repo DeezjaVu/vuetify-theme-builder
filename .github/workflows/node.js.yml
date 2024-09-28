@@ -20,6 +20,12 @@ jobs:
       - name: Install all dependencies
         run: npm install
 
+      - name: Update outdated dependency rimraf
+        run: npm update rimraf
+
+      - name: Update outdated dependency glob
+        run: npm update glob
+
       - name: Build
         run: npm run build --if-present
 

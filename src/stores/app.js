@@ -28,8 +28,6 @@ const materialColorNames = [
 
 const materialColors = colors;
 
-const privateColors = colors;
-
 // Pinia: https://pinia.esm.dev/
 export const useAppStore = defineStore("app", {
   /**
@@ -96,6 +94,69 @@ export const useAppStore = defineStore("app", {
       ],
       ["#303030", "#f8f9fa", "#ebebeb", "#dee2e6", "#ced4da", "#adb5bd", "#888", "#444", "#303030", "#222"],
       ["#375a7f", "#444", "#00bc8c", "#3498db", "#f39c12", "#e74c3c", "#adb5bd", "#303030"]
+    ],
+    materialRedHex: [
+      [colors.red.base, colors.red.lighten5, colors.red.lighten4, colors.red.lighten3, colors.red.lighten2, colors.red.lighten1],
+      [colors.red.darken1, colors.red.darken2, colors.red.darken3, colors.red.darken4],
+      [colors.red.accent1, colors.red.accent2, colors.red.accent3, colors.red.accent4]
+    ],
+    // ColorPicker default color order (columns)
+    // materialBaseHex: [
+    //   [colors.red.base, colors.pink.base],
+    //   [colors.purple.base, colors.deepPurple.base],
+    //   [colors.indigo.base, colors.blue.base],
+    //   [colors.lightBlue.base, colors.cyan.base],
+    //   [colors.teal.base, colors.green.base],
+    //   [colors.lightGreen.base, colors.lime.base],
+    //   [colors.yellow.base, colors.amber.base],
+    //   [colors.orange.base, colors.deepOrange.base],
+    //   [colors.brown.base, colors.blueGrey.base, colors.grey.base]
+    // ],
+
+    // ColorPicker default color order (rows  )
+    materialBaseHex: [
+      [
+        colors.red.base,
+        colors.pink.base,
+        colors.purple.base,
+        colors.deepPurple.base,
+        colors.indigo.base,
+        colors.blue.base,
+        colors.lightBlue.base,
+        colors.cyan.base,
+        colors.teal.base,
+        colors.green.base,
+        colors.lightGreen.base,
+        colors.lime.base,
+        colors.yellow.base,
+        colors.amber.base,
+        colors.orange.base,
+        colors.deepOrange.base,
+        colors.brown.base,
+        colors.blueGrey.base,
+        colors.grey.base
+      ],
+      [
+        colors.red.base,
+        colors.pink.base,
+        colors.purple.base,
+        colors.deepPurple.base,
+        colors.indigo.base,
+        colors.blue.base,
+        colors.lightBlue.base,
+        colors.cyan.base
+        // colors.teal.base,
+        // colors.green.base,
+        // colors.lightGreen.base,
+        // colors.lime.base,
+        // colors.yellow.base,
+        // colors.amber.base,
+        // colors.orange.base,
+        // colors.deepOrange.base,
+        // colors.brown.base,
+        // colors.blueGrey.base,
+        // colors.grey.base
+      ]
     ]
   }),
 

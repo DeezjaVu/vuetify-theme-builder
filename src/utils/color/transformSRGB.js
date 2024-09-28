@@ -6,7 +6,7 @@
  */
 
 // imports
-import { clamp } from "../helpers.mjs";
+import { clamp } from "../helpers.js";
 
 // For converting XYZ to sRGB
 const srgbForwardMatrix = [
@@ -35,9 +35,7 @@ export function fromXYZ(xyz) {
   // Matrix transform, then gamma adjustment
   for (let i = 0; i < 3; ++i) {
     // Rescale back to [0, 255]
-    rgb[i] = Math.round(
-      clamp(transform(matrix[i][0] * xyz[0] + matrix[i][1] * xyz[1] + matrix[i][2] * xyz[2])) * 255
-    );
+    rgb[i] = Math.round(clamp(transform(matrix[i][0] * xyz[0] + matrix[i][1] * xyz[1] + matrix[i][2] * xyz[2])) * 255);
   }
   return {
     r: rgb[0],

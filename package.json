@@ -2,7 +2,8 @@
   "name": "vuetify-theme-builder",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite",
+    "dev:open": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore"
