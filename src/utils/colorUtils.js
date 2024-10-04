@@ -3,12 +3,15 @@
  *
  * Code borrowed from Vuetify to prevent things from braking
  * when the Vuetify repo gets updated.
+ *
+ * Original code: node_modules\vuetify\lib\utils\colorUtils.js
+ * Github: https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/colorUtils.ts
  */
 
 // imports
 import * as CIELAB from "./color/transformCIELAB.js";
 import * as sRGB from "./color/transformSRGB.js";
-import { chunk, padEnd } from "./helpers.js";
+import { chunk, has, padEnd } from "./helpers.js";
 
 const cssColorRe = /^(?<fn>(?:rgb|hsl)a?)\((?<values>.+)\)/;
 

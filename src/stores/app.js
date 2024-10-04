@@ -3,28 +3,30 @@ import { defineStore } from "pinia";
 
 // Vuetify material colors.
 import colors from "vuetify/lib/util/colors";
+import flatColors from "@/utils/color/flat-colors";
+import greyscale from "@/utils/color/greyscale";
 
-const materialColorNames = [
-  "red",
-  "pink",
-  "purple",
-  "deep-purple",
-  "indigo",
-  "blue",
-  "light-blue",
-  "cyan",
-  "teal",
-  "green",
-  "light-green",
-  "lime",
-  "yellow",
-  "amber",
-  "orange",
-  "deep-orange",
-  "brown",
-  "grey",
-  "blue-grey"
-];
+// const materialColorNames = [
+//   "red",
+//   "pink",
+//   "purple",
+//   "deep-purple",
+//   "indigo",
+//   "blue",
+//   "light-blue",
+//   "cyan",
+//   "teal",
+//   "green",
+//   "light-green",
+//   "lime",
+//   "yellow",
+//   "amber",
+//   "orange",
+//   "deep-orange",
+//   "brown",
+//   "grey",
+//   "blue-grey"
+// ];
 
 const materialColors = colors;
 
@@ -113,7 +115,7 @@ export const useAppStore = defineStore("app", {
     //   [colors.brown.base, colors.blueGrey.base, colors.grey.base]
     // ],
 
-    // ColorPicker default color order (rows  )
+    // ColorPicker color order (rows  )
     materialBaseHex: [
       [
         colors.red.base,
@@ -166,14 +168,6 @@ export const useAppStore = defineStore("app", {
    */
   getters: {
     /**
-     * Example of a getter.
-     * This is a placeholder for a real getter.
-     */
-    exampleGetter(state) {
-      console.log("AppStore ::: exampleGetter");
-    },
-
-    /**
      * Vuetify Material Colors
      *
      * @param {*} state
@@ -192,19 +186,95 @@ export const useAppStore = defineStore("app", {
       console.log("AppStore ::: darklyColors");
       // let hex = Object.values(this.bsDarkly);
       // Object.values(this.bsDarklyHex).flat()
-      let hex = this.bsDarklyHex;
+      let hex = state.bsDarklyHex;
       console.log(" - hex: ", hex);
       return hex;
     },
 
     /**
-     * Get the Vuetify theme colors as an array of hex strings.
+     * The Vuetify theme colors (material colors) as an array of hex strings.
+     *
      * @returns {string[]} An array of hex strings, each representing a color in the Vuetify theme.
      */
     vuetifyColors(state) {
       console.log("AppStore ::: vuetifyColors");
       let hex = Object.values(state.materialColors);
       console.log(" - hex: ", hex);
+      return hex;
+    },
+
+    /**
+     * All the colors in the state as an array of hex strings.
+     *
+     * @param {*} state
+     * @returns {string[]} An array of hex strings.
+     */
+    colorsHex(state) {
+      console.log("AppStore ::: colorsHex");
+      // let hex = [state.materialBaseHex[0], [flatColors.turquoiseHex]];
+      let hex = [state.materialBaseHex[0], Object.values(state.bsDarkly), flatColors.turquoiseHex];
+      console.log(" - colorsHex - hex: ", hex);
+      return hex;
+    },
+
+    /**
+     * All the flat colors as a nested array of hex strings.
+     *
+     * @param {*} state
+     * @returns {string[]} A nested array of hex strings.
+     */
+    flatColorsHex() {
+      console.log("AppStore ::: flatColorsHex");
+      let hex = [
+        flatColors.turquoiseHex,
+        flatColors.greenSeaHex,
+        flatColors.emeraldHex,
+        flatColors.nephritisHex,
+        flatColors.peterRiverHex,
+        flatColors.belizeHoleHex,
+        flatColors.amethystHex,
+        flatColors.wisteriaHex,
+        flatColors.wetAsphaltHex,
+        flatColors.midnightBlueHex,
+        flatColors.sunflowerHex,
+        flatColors.orangeHex,
+        flatColors.carrotHex,
+        flatColors.pumpkinHex,
+        flatColors.alizarinHex,
+        flatColors.concreteHex,
+        flatColors.asbestosHex
+      ];
+      console.log(" - flatColorsHex - hex: ", hex);
+      return hex;
+    },
+
+    flatBaseColors() {
+      console.log("AppStore ::: flatBaseColors");
+      let base = flatColors.flatBaseColors;
+      console.log(" - flatBaseColors: ", base);
+      return base;
+    },
+
+    /**
+     * Get the greyscale colors as an object with string keys and hex values.
+     * @returns {Object<string, string>} An object with string keys and hex values.
+     */
+    greyscaleColors() {
+      console.log("AppStore ::: greyscaleColors");
+      let hex = greyscale.greyscaleColors;
+      console.log(" - greyscale colors: ", hex);
+      return hex;
+    },
+
+    /**
+     * The greyscale colors as an array of hex strings.
+     *
+     * @returns {string[]} An array of hex strings, each representing a color gradient from white to black.
+     */
+    greyscaleColorsHex() {
+      console.log("AppStore ::: greyscaleColorsHex");
+      let hex = greyscale.greyscaleColorsHex;
+      console.log(" - greyscale hex: ", hex);
       return hex;
     }
   },

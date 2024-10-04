@@ -4,7 +4,23 @@
  * Code borrowed from Vuetify to prevent things from braking
  * when the Vuetify repo gets updated.
  *
+ * Original code: node_modules\vuetify\lib\util\helpers.js
+ * Github: https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/helpers.ts
  */
+
+/**
+ * Checks if an object has a specified key path.
+ *
+ * @param {Object} obj The object to check.
+ * @param {Array<string>} key The key path to check.
+ * @returns {boolean} True if the object has the specified key path.
+ */
+export function has(obj, key) {
+  // Using Object.prototype.hasOwnProperty may break reactivity in Vue.
+  // So to avoid that, keep the original obj.hasOwnProperty here and ignore the eslint error.
+  // return key.every((k) => Object.prototype.hasOwnProperty.call(obj, k));
+  return key.every((k) => obj.hasOwnProperty(k));
+}
 
 /**
  * Pads the given string with a character until it reaches the specified length.

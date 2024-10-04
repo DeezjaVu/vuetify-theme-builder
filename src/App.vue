@@ -1,4 +1,6 @@
 <template>
+  <!-- MODAL PALETTE -->
+  <PaletteDialog v-model="modalPaletteOpen" :selected-theme="currentTheme" @cancel="paletteCancelHandler" @update="paletteUpdateHandler" />
   <v-app>
     <!-- APP TOOLBAR -->
     <v-app-bar class="flex-grow-0" color="primary">
@@ -12,18 +14,11 @@
 
       <!-- ADD ACCOUNT (STATIC) BUTTON -->
       <template v-slot:image>
-        <v-fab
-          color="secondary"
-          class="me-4"
-          location="bottom right"
-          icon="mdi-plus"
-          offset
-          absolute
-          @click="menuItemClickHandler('account-create')"
-        >
-        </v-fab>
+        <!-- location="bottom right" -->
+        <v-fab color="secondary" class="me-4" icon="mdi-palette" offset absolute @click="paletteClickHandler()"> </v-fab>
       </template>
     </v-app-bar>
+    <!-- <AppFooter /> -->
 
     <v-navigation-drawer v-model="menuOpen" width="300" mobile-breakpoint="md" permanent>
       <v-list density="compact" nav>
@@ -44,18 +39,7 @@
 
         <v-row>
           <v-col class="d-flex flex-column">
-            <!-- 
-            <v-btn :color="vBlue" class="my-2" @click="blueClickHandler()"> Vuetify Blue </v-btn>
-            <v-btn :color="bsBlue" class="my-2"> Darkly Blue </v-btn>
-            <v-btn :color="bsPrimary" class="my-2"> Darkly Primary </v-btn>
-            <v-btn :color="bsSecondary" class="my-2"> Darkly Secondary </v-btn> 
-            -->
-            <!-- 
-              <v-btn color="color-primary" class="my-2"> Color Primary </v-btn>
-            <v-btn color="color-secondary" class="my-2"> Color Secondary </v-btn>
-            <v-btn color="color-tertiary" class="my-2"> Color Tertiary </v-btn>
-             -->
-            <v-btn :color="selectedColor" class="mt-2"> Selected Color </v-btn>
+            <v-btn :color="selectedColor" class="mt-2" @click="switchThemeClickHandler()"> Selected Color </v-btn>
           </v-col>
         </v-row>
         <v-row>
@@ -65,26 +49,26 @@
               dot-size="16"
               mode="hex"
               :modes="cpModes"
-              :swatches="materialBaseHex"
+              :swatches="flatColorsHex"
               :model-value="selectedColor"
               hide-sliders
               show-swatches
-              swatches-max-height="320"
+              swatches-max-height="300"
               rounded="md"
-              class="my-0"
+              class="my-0 bg-transparent"
               @update:model-value="colorPickerUpdateHandler"
             ></v-color-picker>
           </v-col>
         </v-row>
         <v-divider></v-divider>
-        <v-row>
+        <!-- <v-row>
           <v-col class="d-flex flex-column">
-            <v-btn class="mt-2 my-1" color="error" title="Error">Error</v-btn>
-            <v-btn class="my-1" color="info" title="Info">Info</v-btn>
-            <v-btn class="my-1" color="success" title="Success">Success</v-btn>
-            <v-btn class="my-1" color="warning" title="Warning">Warning</v-btn>
+            <v-btn class="mt-2 my-1" color="error">Error</v-btn>
+            <v-btn class="my-1" color="info">Info</v-btn>
+            <v-btn class="my-1" color="success">Success</v-btn>
+            <v-btn class="my-1" color="warning">Warning</v-btn>
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -95,15 +79,17 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, reactive } from "vue";
+  import { ref, onMounted } from "vue";
 
   import colors from "vuetify/lib/util/colors";
   // import * as colorUtils from "./utils/colorUtils.mjs";
   import { useTheme } from "vuetify";
   import { useAppStore } from "@/stores/app";
+  import PaletteDialog from "./components/modal/PaletteDialog.vue";
 
   // const appContext = getCurrentInstance();
-  // const $vuetify = appContext.config.globalProperties.$vuetify;
+
+  const modalPaletteOpen = ref(false);
 
   /**
    * interface ThemeInstance {
@@ -122,12 +108,31 @@
    */
   const theme = useTheme();
 
+  const computedThemes = theme.computedThemes;
+  // const themeClasses = theme.themeClasses;
+  // const themeStyles = theme.styles;
+
+  // console.log(" - computed themes: ", computedThemes);
+  // console.log(" - theme classes: ", themeClasses);
+  // console.log(" - theme styles: ", themeStyles);
+
+  const builderTheme = computedThemes.value["builder-dark"];
+  console.log(" - builder theme: ", builderTheme);
+
+  const currentTheme = ref("dark");
+
   const appStore = useAppStore();
 
   // const bdDarklyHex = ref(appStore.bdDarklyHex);
   const bdDarklyHex = appStore.bsDarklyHex;
   const materialRedHex = appStore.materialRedHex;
   const materialBaseHex = appStore.materialBaseHex;
+  const colorsHex = appStore.colorsHex;
+  const flatColorsHex = appStore.flatColorsHex;
+  const flatBaseColors = appStore.flatBaseColors;
+
+  const greyscaleColors = appStore.greyscaleColors;
+  const greyscaleColorsHex = appStore.greyscaleColorsHex;
 
   // const bdDarklyHex = reactive(appStore.bsDarklyHex);
 
@@ -201,12 +206,13 @@
     console.log(" - materialRedHex: ", materialRedHex);
     console.log(" - materialBaseHex: ", materialBaseHex);
     // console.log(" - materialColors: ", appStore.materialColors);
+    console.log(" - colorsHex: ", colorsHex);
+    console.log(" - flatColorsHex: ", flatColorsHex);
+    console.log(" - flatBaseColors: ", flatBaseColors);
 
     console.log(" - vuetify theme name: ", theme.name.value);
     console.log(" - vuetify current theme: ", theme.current.value);
     console.log(" - vuetify global theme name: ", theme.global.name.value);
-
-    // console.log(" - theme.primary: ", $vuetify.theme.primary);
 
     // console.log(" - selectedColor: ", selectedColor.value);
   });
@@ -237,8 +243,15 @@
    * @param {string} item - The title of the menu item clicked.
    */
   function menuItemClickHandler(item) {
-    console.log("APP :::menuItemClickHandler");
+    console.log("APP ::: menuItemClickHandler");
     console.log(" - item", item);
+  }
+
+  function paletteClickHandler() {
+    console.log("APP ::: paletteClickHandler");
+    console.log(" - modalPaletteOpen before: ", modalPaletteOpen.value);
+    modalPaletteOpen.value = !modalPaletteOpen.value;
+    console.log(" - modalPaletteOpen after: ", modalPaletteOpen.value);
   }
 
   /**
@@ -266,6 +279,42 @@
       console.log(" - selectedColor was NOT updated");
     }
   }
+
+  /**
+   * Closes the PaletteDialog modal.
+   */
+  function paletteCancelHandler() {
+    console.log("APP ::: paletteCancelHandler");
+    modalPaletteOpen.value = false;
+  }
+
+  /**
+   * Handles the update of the selected theme from the PaletteDialog.
+   * Sets the App's current theme to the selected theme and closes the PaletteDialog modal.
+   *
+   * @todo Figure out wether to use this or dismiss it entirely.
+   *
+   * @param {string} theme - The selected theme name.
+   */
+  function paletteUpdateHandler(theme) {
+    console.log("APP ::: paletteUpdateHandler");
+    console.log(" - current theme before: ", currentTheme.value);
+    console.log(" - selected theme: ", theme);
+    currentTheme.value = theme;
+    console.log(" - current theme after: ", currentTheme.value);
+    modalPaletteOpen.value = false;
+  }
+
+  /**
+   * Toggles the global theme between light and dark modes.
+   * @todo Add automatic saving of theme preference.
+   */
+  function switchThemeClickHandler() {
+    console.log("APP :::switchThemeClickHandler");
+    let newTheme = theme.global.name.value === "light" ? "dark" : "light";
+    console.log(" - newTheme: ", newTheme);
+    theme.global.name.value = newTheme;
+  }
 </script>
 
 <style lang="scss">
@@ -279,31 +328,36 @@
   //   color: $color-tertiary;
   // }
 
-  // change color picker swatches padding and justify-content
+  // Change color picker swatches padding and justify-content.
   .v-color-picker-swatches {
     > div {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between !important;
-      padding: 0px !important;
-      // INFO: swatches border should be disabled
+      // justify-content: space-between !important;
+      // padding: 0px !important;
+      // WARNING: swatches border should be disabled
       // border: 1px solid #000;
     }
   }
 
-  // change color picker swatches direction
+  // Change color picker swatches direction to row
+  // and make rows wrap.
+  // Decrease margin-bottom.
   .v-color-picker-swatches__swatch {
     display: flex;
     flex-direction: row !important;
     flex-wrap: wrap !important;
-    // vuetify default is 10px
+    // vuetify default margin-bottom is 10px
     // margin-bottom: 20px !important;
+    margin-bottom: 2px !important;
   }
 
-  // change color picker swatches width and height
+  // Change color picker swatches width and height
+  // and reduce margins.
   .v-color-picker-swatches__color {
+    width: 20px !important;
     height: 20px !important;
     max-height: 20px !important;
-    width: 20px !important;
+    margin: 2px !important;
   }
 </style>

@@ -8,6 +8,6 @@
   import { onMounted } from "vue";
 
   onMounted(() => {
-    console.log("BUILDER ::: VARIABLES ::: onMounted");
+    console.log("PAGES ::: /builder/variables ::: onMounted");
   });
 </script>

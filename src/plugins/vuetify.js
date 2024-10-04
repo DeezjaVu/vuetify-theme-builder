@@ -37,8 +37,23 @@ export default createVuetify({
           error: "#E74C3C",
           info: "#3498DB",
           success: "#00BC8C",
-          warning: "#F39C12"
+          // warning: "#F39C12"
+          warning: "#CF7F00"
+          // surface: "#E91E63",
+          // "on-surface": "#FFEB3B"
+          // "surface-bright": "#ccbfd6",
+          // "surface-light": "#424242",
+          // "surface-variant": "#a3a3a3"
         }
+      },
+      // By default, Vuetify will generate the theme colors and variables by calling
+      // the genDefaults() function in the theme.mjs module (node_modules/vuetify/lib/composables/theme.mjs).
+      // They'll be set to default values, based on the given light or dark value.
+      "builder-light": {
+        light: true
+      },
+      "builder-dark": {
+        dark: true
       }
     }
   }

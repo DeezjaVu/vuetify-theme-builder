@@ -3,6 +3,10 @@
  *
  * Code borrowed from Vuetify to prevent things from braking
  * when the Vuetify repo gets updated.
+ *
+ * Original code: node_modules\vuetify\lib\util\color\transformSRGB.mjs
+ * Github: https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/color/transformSRGB.ts
+ *
  */
 
 // imports
