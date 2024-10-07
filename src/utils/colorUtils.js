@@ -220,7 +220,7 @@ export function HSLtoHSV(hsl) {
 }
 
 /**
- * Converts an RGB color object to a hex color string
+ * Converts an RGB color object (`{ r, g, b, [a] }`) to a hex color string (`"#FF0000"`).
  *
  * @param {object} rgb - The RGB color object to convert
  * @param {number} rgb.r - The red component, in the range [0, 255]
@@ -309,4 +309,93 @@ export function HSVtoRGB(hsva) {
  */
 export function HSLtoRGB(hsla) {
   return HSVtoRGB(HSLtoHSV(hsla));
+}
+
+/**
+ * Converts an RGB color value to HSL. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes r, g, and b are contained in the set [0, 255] and
+ * returns h, s, and l in the set [0, 1].
+ *
+ * @param   Number  r       The red color value
+ * @param   Number  g       The green color value
+ * @param   Number  b       The blue color value
+ * @return  Array           The HSL representation
+ *
+ * @see https://stackoverflow.com/a/6445104
+ */
+export function RGBtoHSL(r, g, b) {
+  (r /= 255), (g /= 255), (b /= 255);
+  var max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  var h,
+    s,
+    l = (max + min) / 2;
+
+  if (max == min) {
+    h = s = 0; // achromatic
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+  return [h, s, l];
+}
+
+/**
+ * Mixes two colors together, according to a specified weight.
+ *
+ * @param {string} color_1 - The first color to mix
+ * @param {string} color_2 - The second color to mix
+ * @param {number} [weight] - The proportion of color_1 to use, in the range [0, 100]
+ *
+ * @returns {string} The mixed color, in hexadecimal form
+ *
+ * @example
+ * const mixed = mix("#ff0000", "#00ff00", 50) // "#7f7f00"
+ * const mixed = mix('ff0000', '0000bb', 75); // returns #bf002e
+ *
+ * @see https://gist.github.com/jedfoster/7939513
+ */
+export function mix(color_1, color_2, weight) {
+  color_1 = color_1.replace(/#/g, "");
+  color_2 = color_2.replace(/#/g, "");
+  // convert a decimal value to hex
+  const d2h = (d) => d.toString(16).padStart(2, "0");
+  // convert a hex value to decimal
+  const h2d = (h) => parseInt(h, 16);
+
+  // set the weight to 50%, if that argument is omitted
+  weight = typeof weight !== "undefined" ? weight : 50;
+
+  var color = "#";
+
+  // loop through each of the 3 hex pairs—red, green, and blue
+  for (var i = 0; i <= 5; i += 2) {
+    // extract the current pairs
+    var v1 = h2d(color_1.substr(i, 2)),
+      v2 = h2d(color_2.substr(i, 2)),
+      // combine the current pairs from each source color, according to the specified weight
+      val = d2h(Math.round(v2 + (v1 - v2) * (weight / 100.0)));
+
+    // prepend a '0' if val results in a single digit
+    while (val.length < 2) {
+      val = "0" + val;
+    }
+    // concatenate val to our new color string
+    color += val;
+  }
+
+  return color.toUpperCase();
 }

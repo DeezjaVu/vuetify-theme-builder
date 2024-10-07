@@ -1,13 +1,7 @@
 <template>
-  <!-- <v-card :title="title" :subtitle="subtitle" :variant="variant"> -->
-  <v-card>
-    <v-card-text class="d-flex ga-2">
-      <v-btn color="primary" :variant="btnVariant">Primary</v-btn>
-      <v-btn color="secondary" :variant="btnVariant">Secondary</v-btn>
-      <v-btn color="success" :variant="btnVariant">Success</v-btn>
-      <v-btn color="info" :variant="btnVariant">Info</v-btn>
-      <v-btn color="warning" :variant="btnVariant">Warning</v-btn>
-      <v-btn color="error" :variant="btnVariant">Error</v-btn>
+  <v-card class="elevation-2">
+    <v-card-text class="d-flex flex-column ga-2">
+      <v-btn v-for="item in btnsList" :text="item.text" :color="item.color" :variant="btnVariant" />
     </v-card-text>
   </v-card>
 </template>
@@ -16,6 +10,33 @@
   import { onMounted } from "vue";
 
   const props = defineProps(["btn-variant"]);
+
+  const btnsList = [
+    {
+      text: "Primary",
+      color: "primary"
+    },
+    {
+      text: "Secondary",
+      color: "secondary"
+    },
+    {
+      text: "Success",
+      color: "success"
+    },
+    {
+      text: "Info",
+      color: "info"
+    },
+    {
+      text: "Warning",
+      color: "warning"
+    },
+    {
+      text: "Error",
+      color: "error"
+    }
+  ];
 
   onMounted(() => {
     console.log("ColorButtonCard ::: onMounted");

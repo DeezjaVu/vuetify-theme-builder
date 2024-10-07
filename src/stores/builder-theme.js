@@ -142,9 +142,9 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
           warning: "#FB8C00",
           background: "#121212",
           surface: "#212121",
-          "surface-bright": "#ccbfd6",
+          "surface-bright": "#CCBFD6",
           "surface-light": "#424242",
-          "surface-variant": "#a3a3a3",
+          "surface-variant": "#A3A3A3",
           "on-surface-variant": "#424242"
         }
       }
@@ -197,7 +197,7 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
           surface: "#212121",
           "surface-bright": "#ccbfd6",
           "surface-light": "#424242",
-          "surface-variant": "#a3a3a3",
+          "surface-variant": "#A3A3A3",
           "on-surface-variant": "#424242",
           primary: "#2196F3",
           "primary-darken-1": "#277CC1",
@@ -299,7 +299,7 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
      * })
      */
     setColors(colors) {
-      this.colors = colors;
+      // this.colors = colors;
       /**
        * const target = { a: 1, b: 2 };
        * const source = { b: 4, c: 5 };

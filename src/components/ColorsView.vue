@@ -1,20 +1,9 @@
 <template>
   <v-container class="fill-height px-12 mx-auto" grid-list-xs>
-    <!-- <v-responsive class="align-centerfill-height mx-auto"> -->
-    <!-- <div class="text-center"> -->
-    <!-- <v-icon icon="mdi-account-box"></v-icon> -->
-    <!-- <v-icon icon="$vuetify"></v-icon> -->
-    <!-- <h1 class="text-h2 font-weight-bold">Theme Builder Colors</h1> -->
-    <!-- </div> -->
-    <!-- </v-responsive> -->
-
-    <!-- <v-container> -->
     <v-row class="align-sm-stretch">
       <!-- LEFT SIDE COLUMN - COLOR MENU -->
       <v-col class="d-flex flex-column col-menu">
         <!-- COLOR DIALOG -->
-        <!-- :selected-color="selectedColor" -->
-        <!-- @change="changeColorHandler" -->
         <ColorDialog
           :modal-color-open="modalColorOpen"
           :color-name="selectedColorName"
@@ -23,33 +12,47 @@
           @update="editColorUpdateHandler"
           @cancel="editColorCancelHandler"
         />
+        <!-- THEME COLORS LIST MENU -->
+        <!-- <v-card title="Theme Colors" subtitle="Material Design" variant="outlined"> -->
+        <v-card variant="outlined">
+          <!-- V-CARD HEADER -->
+          <v-card-item>
+            <v-card-title> Theme Colors </v-card-title>
+            <v-card-subtitle> Material Design </v-card-subtitle>
+            <template v-slot:append>
+              <!-- Offset button bottom-margin by 24px (mb-6) to place it in line with the card title -->
+              <!-- <v-btn icon="mdi-palette" variant="tonal" density="comfortable" class="mb-6" /> -->
+              <v-btn icon density="compact" class="mb-6">
+                <v-icon>mdi-dots-vertical</v-icon>
+                <v-menu activator="parent" location="end" open-on-hover>
+                  <v-list density="comfortable" @update:selected="presetSwatchesUpdateHandler">
+                    <v-list-item
+                      v-for="(item, index) in presetSwatches"
+                      :key="index"
+                      :value="item.value"
+                      @click="presetSwatchesClickHandler(item.value)"
+                    >
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn>
+            </template>
+          </v-card-item>
 
-        <v-card title="Theme Colors" subtitle="Material Design" variant="outlined">
+          <!-- V-CARD TEXT -->
           <v-card-text>
             <v-list class="d-flex flex-column" density="compact" lines="two" active-class="active-disabled">
-              <v-list-item title="Primary:" value="primary" @click="editColorClickHandler('primary')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.primary"> color: {{ themeColors.primary }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Secondary:" value="secondary" @click="editColorClickHandler('secondary')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.secondary"> color: {{ themeColors.secondary }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Surface:" value="surface" @click="editColorClickHandler('surface')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.surface"> color: {{ themeColors.surface }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Background:" value="background" @click="editColorClickHandler('background')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.background"> color: {{ themeColors.background }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Success:" value="success" @click="editColorClickHandler('success')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.success"> color: {{ themeColors.success }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Info:" value="info" @click="editColorClickHandler('info')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.info"> color: {{ themeColors.info }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Warning:" value="warning" @click="editColorClickHandler('warning')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.warning"> color: {{ themeColors.warning }} </v-sheet>
-              </v-list-item>
-              <v-list-item title="Error:" value="error" @click="editColorClickHandler('error')">
-                <v-sheet class="px-2 my-1 border-thin" :color="themeColors.error"> color: {{ themeColors.error }} </v-sheet>
+              <v-list-item
+                v-for="item in menuItems"
+                :title="item.title"
+                :value="item.value"
+                :active="false"
+                @click="editColorClickHandler(item.value)"
+              >
+                <v-sheet class="px-2 my-1 py-1 border-thin" :color="themeColors[item.value]">
+                  color: {{ themeColors[item.value] }}
+                </v-sheet>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -63,47 +66,19 @@
           <v-card title="Button Components" subtitle="Dark Theme" variant="outlined">
             <!-- V-CARD TEXT -->
             <v-card-text>
-              <v-row>
-                <v-col>
-                  <ColorButtonCard subtitle="Elevated Variant" btn-variant="elevated" />
-                </v-col>
-                <v-col>
-                  <ColorButtonCard subtitle="Flat Variant" btn-variant="flat" />
-                </v-col>
-                <v-col>
-                  <ColorButtonCard subtitle="Outlined Variant" btn-variant="outlined" />
-                </v-col>
-                <v-col>
-                  <ColorButtonCard subtitle="Plain Variant" btn-variant="plain" />
-                </v-col>
-                <v-col>
-                  <ColorButtonCard subtitle="Tonal Variant" btn-variant="tonal" />
-                </v-col>
-                <v-col>
-                  <ColorButtonCard subtitle="Text Variant" btn-variant="text" />
+              <v-row class="d-flex flex-wrap">
+                <!-- COLOR BUTTON CARDS LOOP -->
+                <v-col v-for="item in variantCards" :key="item" lg="4" xl="2">
+                  <ColorButtonCard :subtitle="item.title" :btn-variant="item.variant" />
                 </v-col>
               </v-row>
             </v-card-text>
             <v-divider></v-divider>
-            <!-- V-CARD ACTIONS -->
-            <!-- 
-              <v-card-actions>
-                <v-btn color="success">Success</v-btn>
-                <v-btn color="info">Info</v-btn>
-                <v-btn color="warning">Warning</v-btn>
-                <v-btn color="error">Error</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn color="secondary">Secondary</v-btn>
-                <v-btn color="primary">Primary</v-btn>
-              </v-card-actions> 
-              -->
             <!-- <v-overlay opacity="0.12" scrim="warning" contained model-value persistent /> -->
           </v-card>
         </v-theme-provider>
       </v-col>
     </v-row>
-    <!-- </v-container> -->
-    <!-- </v-responsive> -->
   </v-container>
 </template>
 
@@ -113,9 +88,17 @@
 
   import { useBuilderThemeStore } from "@/stores/builder-theme";
 
+  import { blue, blueHex } from "@/utils/color/bootstrap-colors";
+
   console.log("=========================");
   console.log("ColorsView ::: setup");
   console.log("=========================");
+
+  const bsBlue = blue;
+  console.log("ColorsView ::: bsBlue: ", bsBlue);
+
+  const bsBlueHex = blueHex;
+  console.log("ColorsView ::: bsBlueHex: ", bsBlueHex);
 
   const themeStore = useBuilderThemeStore();
 
@@ -133,13 +116,69 @@
   const tempColor = ref("");
   const selectedColorName = ref("");
 
+  const presetThemes = [
+    { title: "Material Design (default)" },
+    { title: "Bootswatch Darkly" },
+    { title: "Bootstrap 5 Dark" },
+    { title: "Bootstrap 5 Light" }
+  ];
+
+  const presetSwatches = [
+    { title: "Material Design (default)", value: "material" },
+    { title: "Flat Colors", value: "flat" },
+    { title: "Bootstrap Colors", value: "bootstrap" }
+  ];
+
+  const menuItems = [
+    { title: "Primary Color", value: "primary" },
+    { title: "Secondary Color", value: "secondary" },
+    { title: "Surface Color", value: "surface" },
+    { title: "Background Color", value: "background" },
+    { title: "Success Color", value: "success" },
+    { title: "Info Color", value: "info" },
+    { title: "Warning Color", value: "warning" },
+    { title: "Error Color", value: "error" }
+  ];
+
+  const variantCards = [
+    { title: "Elevated Variant", variant: "elevated" },
+    { title: "Flat Variant", variant: "flat" },
+    { title: "Outlined Variant", variant: "outlined" },
+    { title: "Plain Variant", variant: "plain" },
+    { title: "Tonal Variant", variant: "tonal" },
+    { title: "Text Variant", variant: "text" }
+  ];
+
   onMounted(() => {
     console.log("ColorsView onMounted");
     // set default colors
     let colors = builderThemeDark.colors;
-
     console.log(" - themeStore - currentThemeName: ", themeStore.currentThemeName);
   });
+
+  function presetSwatchesUpdateHandler(value) {
+    console.log("ColorsView ::: presetSwatchesUpdateHandler");
+    console.log(" - value: ", value);
+    if (value === "material") {
+      //
+    } else if (value === "flat") {
+      //
+    } else if (value === "bootstrap") {
+      //
+    }
+  }
+
+  function presetSwatchesClickHandler(value) {
+    console.log("ColorsView ::: presetSwatchesClickHandler");
+    console.log(" - value: ", value);
+    if (value === "material") {
+      //
+    } else if (value === "flat") {
+      //
+    } else if (value === "bootstrap") {
+      //
+    }
+  }
 
   /**
    * Handles the click event on the colors view component.
@@ -215,13 +254,12 @@
   // Disables the active state of list items.
   // @see https://github.com/vuetifyjs/vuetify/issues/11149#issuecomment-1030649721
   .active-disabled :deep(.v-list-item__overlay) {
-    opacity: 0;
+    opacity: 0 !important;
   }
+
   // sets border color of outlined v-card
   .v-card--variant-outlined {
-    /* eslint-disable */
     border: thin solid #37474f !important;
-    /* eslint-enable */
   }
   .col-grow-2 {
     flex-grow: 2;
@@ -232,9 +270,7 @@
   }
 
   .col-menu {
-    // grow 1
-    // shrink 1
-    // basis 300px
+    // grow 1 - shrink 1 - basis 300px
     flex: 1 1 300px !important;
   }
 

@@ -3,40 +3,51 @@
   <PaletteDialog v-model="modalPaletteOpen" :selected-theme="currentTheme" @cancel="paletteCancelHandler" @update="paletteUpdateHandler" />
   <v-app>
     <!-- APP TOOLBAR -->
-    <v-app-bar class="flex-grow-0" color="primary">
-      <!-- <template v-if="$vuetify.display.mdAndDown"> -->
-      <v-app-bar-nav-icon @click="menuOpen = !menuOpen" />
+    <!-- <v-app-bar class="flex-grow-0" color="primary"> -->
+    <v-app-bar class="px-12 mx-auto" color="primary">
+      <!-- <template v-slot:prepend v-if="$vuetify.display.mdAndDown"> -->
       <!-- </template> -->
 
-      <v-toolbar-title class="text-uppercase pl-2">
-        <span>Vuetify Theme Builder</span>
-      </v-toolbar-title>
+      <v-toolbar-title class="text-uppercase pr-8"> Vuetify Theme Builder </v-toolbar-title>
+
+      <v-tabs align-tabs="start" @update:model-value="tabUpdateHandler">
+        <v-tab v-for="item in menuItems" :key="item" :text="item.title" :value="item.value" :to="item.href"></v-tab>
+      </v-tabs>
+
+      <v-spacer></v-spacer>
+      <template v-slot:append>
+        <v-btn icon="mdi-dots-vertical"></v-btn>
+      </template>
 
       <!-- ADD ACCOUNT (STATIC) BUTTON -->
-      <template v-slot:image>
-        <!-- location="bottom right" -->
+      <!-- location="bottom right" -->
+      <!-- <template v-slot:image>
         <v-fab color="secondary" class="me-4" icon="mdi-palette" offset absolute @click="paletteClickHandler()"> </v-fab>
       </template>
+       -->
     </v-app-bar>
     <!-- <AppFooter /> -->
+    <!-- APP DRAWER -->
+    <!-- 
+      <v-navigation-drawer v-model="menuOpen" width="300" mobile-breakpoint="md" permanent>
+        <v-list density="compact" nav>
+          <v-list-subheader class="text-uppercase font-weight-black"> Navigate </v-list-subheader>
+          
+          <v-divider></v-divider>
+          
+          <v-list-item title="Home" to="/"></v-list-item>
+          <v-list-item title="About" to="/about"></v-list-item>
+          
+          <v-list-subheader class="text-uppercase font-weight-black"> Theme Builder </v-list-subheader>
+          <v-divider></v-divider>
+          
+          <v-list-item title="Colors" to="/builder/colors"></v-list-item>
+          <v-list-item title="Variables" to="/builder/variables"></v-list-item>
+          
+          <v-divider></v-divider>
+          -->
 
-    <v-navigation-drawer v-model="menuOpen" width="300" mobile-breakpoint="md" permanent>
-      <v-list density="compact" nav>
-        <v-list-subheader class="text-uppercase font-weight-black"> Navigate </v-list-subheader>
-
-        <v-divider></v-divider>
-
-        <v-list-item title="Home" value="home" to="/"></v-list-item>
-        <v-list-item title="About" value="about" to="/about"></v-list-item>
-
-        <v-list-subheader class="text-uppercase font-weight-black"> Theme Builder </v-list-subheader>
-        <v-divider></v-divider>
-
-        <v-list-item title="Colors" value="colors-view" to="/builder/colors"></v-list-item>
-        <v-list-item title="Variables" value="variables-view" to="/builder/variables"></v-list-item>
-
-        <v-divider></v-divider>
-
+    <!-- 
         <v-row>
           <v-col class="d-flex flex-column">
             <v-btn :color="selectedColor" class="mt-2" @click="switchThemeClickHandler()"> Selected Color </v-btn>
@@ -59,18 +70,23 @@
               @update:model-value="colorPickerUpdateHandler"
             ></v-color-picker>
           </v-col>
-        </v-row>
-        <v-divider></v-divider>
-        <!-- <v-row>
+        </v-row> 
+        -->
+    <!-- <v-divider></v-divider> -->
+    <!-- <v-row>
           <v-col class="d-flex flex-column">
             <v-btn class="mt-2 my-1" color="error">Error</v-btn>
             <v-btn class="my-1" color="info">Info</v-btn>
             <v-btn class="my-1" color="success">Success</v-btn>
             <v-btn class="my-1" color="warning">Warning</v-btn>
           </v-col>
-        </v-row> -->
+        </v-row> 
+        -->
+
+    <!-- 
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> 
+    -->
 
     <v-main>
       <router-view />
@@ -123,6 +139,14 @@
 
   const appStore = useAppStore();
 
+  // const tab = "about";
+  const menuItems = [
+    { title: "Home", value: "home", href: "/" },
+    { title: "About", value: "about", href: "/about" },
+    { title: "Colors", value: "colors-view", href: "/builder/colors" },
+    { title: "Variables", value: "variables-view", href: "/builder/variables" }
+  ];
+
   // const bdDarklyHex = ref(appStore.bdDarklyHex);
   const bdDarklyHex = appStore.bsDarklyHex;
   const materialRedHex = appStore.materialRedHex;
@@ -168,8 +192,8 @@
    */
   onMounted(() => {
     console.log("APP ::: onMounted");
-    console.log(" - deepOrange: ", deepOrange);
-    console.log(" - deepOrange base:", deepOrange.base);
+    // console.log(" - deepOrange: ", deepOrange);
+    // console.log(" - deepOrange base:", deepOrange.base);
     // console.log(" - parseColor - deepOrange.base: ", baseOrange);
     // console.log(" - parseHex - deepOrange.base: ", baseOrangeHex);
 
@@ -202,20 +226,28 @@
     // console.log(" - vBlue: ", vBlue);
     // console.log(" - bsBlue: ", bsBlue);
 
-    console.log(" - bdDarklyHex: ", bdDarklyHex);
-    console.log(" - materialRedHex: ", materialRedHex);
-    console.log(" - materialBaseHex: ", materialBaseHex);
-    // console.log(" - materialColors: ", appStore.materialColors);
-    console.log(" - colorsHex: ", colorsHex);
-    console.log(" - flatColorsHex: ", flatColorsHex);
-    console.log(" - flatBaseColors: ", flatBaseColors);
+    // console.log(" - bdDarklyHex: ", bdDarklyHex);
+    // console.log(" - materialRedHex: ", materialRedHex);
+    // console.log(" - materialBaseHex: ", materialBaseHex);
+    // console.log(" - colorsHex: ", colorsHex);
+    // console.log(" - flatColorsHex: ", flatColorsHex);
+    // console.log(" - flatBaseColors: ", flatBaseColors);
 
-    console.log(" - vuetify theme name: ", theme.name.value);
-    console.log(" - vuetify current theme: ", theme.current.value);
-    console.log(" - vuetify global theme name: ", theme.global.name.value);
+    // console.log(" - vuetify theme name: ", theme.name.value);
+    // console.log(" - vuetify current theme: ", theme.current.value);
+    // console.log(" - vuetify global theme name: ", theme.global.name.value);
 
     // console.log(" - selectedColor: ", selectedColor.value);
   });
+
+  /**
+   * Handles the tab update event.
+   * @param {string} tabValue - The newly selected tab value.
+   */
+  function tabUpdateHandler(tabValue) {
+    console.log("App ::: tabUpdateHandler");
+    console.log(" - param tabValue: ", tabValue);
+  }
 
   /**
    *
@@ -328,6 +360,12 @@
   //   color: $color-tertiary;
   // }
 
+  .v-toolbar-title {
+    flex: 0 1 fit-content;
+    // font-size: 1.25rem;
+    min-width: fit-content;
+  }
+
   // Change color picker swatches padding and justify-content.
   .v-color-picker-swatches {
     > div {
@@ -337,6 +375,12 @@
       // padding: 0px !important;
       // WARNING: swatches border should be disabled
       // border: 1px solid #000;
+    }
+  }
+
+  .v-swatches-pt-0 {
+    > div div {
+      padding-top: 0px !important;
     }
   }
 
