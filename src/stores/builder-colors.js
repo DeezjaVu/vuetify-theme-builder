@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 // Vuetify material colors.
 import colors from "vuetify/lib/util/colors";
 import flatColors from "@/utils/color/flat-colors";
+// import metro from "@/utils/color/metro-colors";
 import greyscale from "@/utils/color/greyscale";
 
 // const materialColorNames = [
@@ -42,6 +43,7 @@ export const useBuilderColorsStore = defineStore("builderColors", {
      * Vuetify Material colors.
      */
     colors: materialColors,
+
     /**
      * Bootswatch Darkly colors.
      */
@@ -78,30 +80,33 @@ export const useBuilderColorsStore = defineStore("builderColors", {
       "bs-light": "#adb5bd",
       "bs-dark": "#303030"
     },
+
     bsDarklyHex: [
       [
-        "#375a7f",
-        "#6610f2",
-        "#6f42c1",
-        "#e83e8c",
-        "#e74c3c",
-        "#fd7e14",
-        "#f39c12",
-        "#00bc8c",
-        "#20c997",
-        "#3498db",
-        "#000",
-        "#fff",
-        "#888"
+        "#375A7F",
+        "#6610F2",
+        "#6F42C1",
+        "#E83E8C",
+        "#E74C3C",
+        "#FD7E14",
+        "#F39C12",
+        "#00BC8C",
+        "#20C997",
+        "#3498DB",
+        "#000000",
+        "#FFFFFF",
+        "#888888"
       ],
-      ["#303030", "#f8f9fa", "#ebebeb", "#dee2e6", "#ced4da", "#adb5bd", "#888", "#444", "#303030", "#222"],
-      ["#375a7f", "#444", "#00bc8c", "#3498db", "#f39c12", "#e74c3c", "#adb5bd", "#303030"]
+      ["#303030", "#F8F9FA", "#EBEBEB", "#DEE2E6", "#CED4DA", "#ADB5BD", "#888888", "#444444", "#303030", "#222222"],
+      ["#375A7F", "#444444", "#00BC8C", "#3498DB", "#F39C12", "#E74C3C", "#ADB5BD", "#303030"]
     ],
+
     materialRedHex: [
       [colors.red.base, colors.red.lighten5, colors.red.lighten4, colors.red.lighten3, colors.red.lighten2, colors.red.lighten1],
       [colors.red.darken1, colors.red.darken2, colors.red.darken3, colors.red.darken4],
       [colors.red.accent1, colors.red.accent2, colors.red.accent3, colors.red.accent4]
     ],
+
     // ColorPicker default color order (columns)
     // materialBaseHex: [
     //   [colors.red.base, colors.pink.base],
@@ -115,7 +120,7 @@ export const useBuilderColorsStore = defineStore("builderColors", {
     //   [colors.brown.base, colors.blueGrey.base, colors.grey.base]
     // ],
 
-    // ColorPicker color order (rows  )
+    // ColorPicker color order (rows)
     materialBaseHex: [
       [
         colors.red.base,
@@ -250,8 +255,8 @@ export const useBuilderColorsStore = defineStore("builderColors", {
 
     flatBaseColors() {
       console.log("AppStore ::: flatBaseColors");
-      let base = flatColors.flatBaseColors;
-      console.log(" - flatBaseColors: ", base);
+      let base = flatColors.baseColors;
+      console.log(" - flat baseColors: ", base);
       return base;
     },
 
@@ -277,6 +282,20 @@ export const useBuilderColorsStore = defineStore("builderColors", {
       console.log(" - greyscale hex: ", hex);
       return hex;
     }
+
+    // metroHex() {
+    //   console.log("AppStore ::: metroHex");
+    //   let hex = metro.materialBaseHex;
+    //   console.log(" - hex: ", hex);
+    //   return hex;
+    // },
+
+    //   metroGreen() {
+    //     console.log("AppStore ::: metroGreen");
+    //     let clr = metro.green;
+    //     console.log(" - green: ", clr);
+    //     return clr;
+    //   }
   },
 
   /**

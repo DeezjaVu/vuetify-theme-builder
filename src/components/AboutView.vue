@@ -1,86 +1,125 @@
 <template>
   <v-container class="fill-height px-12 mx-auto" grid-list-xs>
     <v-responsive class="align-centerfill-height mx-auto">
-      <div class="text-center">
-        <!-- <v-icon icon="mdi-account-box"></v-icon> -->
-        <!-- <v-icon icon="$vuetify"></v-icon> -->
-        <!-- <h1 class="text-h2 font-weight-bold">About Theme Builder</h1> -->
-        <v-card color="primary" height="auto">
-          <v-card-text>
-            <v-row>
-              <!-- BOOTSTRAP COLOR LIST COLUMN  -->
-              <v-col>
-                <v-select
-                  min-width="200"
-                  :items="bsColorNames"
-                  v-model="selectedBootstrapName"
-                  label="Bootstrap Colors"
-                  item-title="name"
-                  item-value="name"
-                  @update:model-value="bsNameUpdateHandler"
-                ></v-select>
-                <v-list min-width="200">
-                  <v-list-item v-for="(item, key) of selectedBSColor" :value="key" :base-color="item" @click="selectedItem = item">
-                    {{ key }} - {{ item }}
-                  </v-list-item>
-                </v-list>
-              </v-col>
+      <!-- <div class="text-center"> -->
+      <!-- <v-icon icon="mdi-account-box"></v-icon> -->
+      <!-- <v-icon icon="$vuetify"></v-icon> -->
+      <!-- <h1 class="text-h2 font-weight-bold">About Theme Builder</h1> -->
+      <v-card color="primary" height="auto">
+        <v-card-text>
+          <v-row>
+            <!-- BOOTSTRAP COLOR LIST COLUMN  -->
+            <v-col>
+              <v-select
+                min-width="200"
+                :items="bsColorNames"
+                v-model="selectedBootstrapName"
+                label="Bootstrap Colors"
+                item-title="title"
+                item-value="name"
+                @update:model-value="bsNameUpdateHandler"
+              ></v-select>
 
-              <!-- BOOTSTRAP DARK & LIGHT GENERATED COLORS COLUMN -->
-              <v-col>
-                <div class="text-body-1 my-7">Base Color: {{ selectedBSColor.base }}</div>
-                <v-list min-width="200">
-                  <v-list-item v-for="(item, key) of bsMixColors" :value="key" :base-color="item" @click="selectedItem = item">
-                    {{ key }} - {{ item }}
-                  </v-list-item>
-                </v-list>
-              </v-col>
-
-              <!-- COLOR PICKER COLUMN -->
-              <v-col>
-                <v-color-picker
-                  mode="hex"
-                  :model-value="selectedColor"
-                  :swatches="bsColorsHex"
-                  hide-sliders
-                  show-swatches
-                  swatches-max-height="300"
+              <v-list min-width="200" color="surface-variant">
+                <v-list-item
+                  v-for="(clr, key) of selectedBSColor"
+                  :value="clr.toUpperCase()"
+                  :base-color="clr"
+                  :active="selectedColor === clr.toUpperCase()"
+                  @click="setSelection(clr, key)"
                 >
-                </v-color-picker>
-              </v-col>
+                  {{ key }} - {{ clr }}
+                </v-list-item>
+              </v-list>
+            </v-col>
 
-              <!-- MATERIAL COLOR LIST COLUMN  -->
-              <v-col>
-                <v-select
-                  min-width="200"
-                  :items="materialColorsNames"
-                  v-model="selectedMaterialName"
-                  label="Material Colors"
-                  item-title="name"
-                  item-value="name"
-                  @update:model-value="materialNameUpdateHandler"
-                ></v-select>
-                <v-list min-width="200">
-                  <v-list-item v-for="(item, key) of selectedMaterialColor" :value="key" :base-color="item" @click="selectedItem = item">
-                    {{ key }} - {{ item }}
-                  </v-list-item>
-                </v-list>
-              </v-col>
+            <!-- BOOTSTRAP DARK & LIGHT GENERATED COLORS COLUMN -->
+            <v-col>
+              <div class="text-body-1 my-7">Base Color: {{ selectedBSColor.base }}</div>
 
-              <!-- GENERATE BOOTSTRAP DARK / LIGHT COLOR COLUMN -->
-              <v-col>
-                <div class="text-body-1 my-7">Base Color: {{ selectedMaterialColor.base }}</div>
-                <v-list min-width="200">
-                  <v-list-item v-for="(item, key) of materialMixColors" :value="key" :base-color="item" @click="selectedItem = item">
-                    {{ key }} - {{ item }}
-                  </v-list-item>
-                </v-list>
-              </v-col>
-              <v-col></v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </div>
+              <v-list min-width="200" color="surface-variant">
+                <v-list-item
+                  v-for="(clr, key) of bsMixColors"
+                  :value="clr.toUpperCase()"
+                  :base-color="clr"
+                  :active="selectedColor === clr.toUpperCase()"
+                  @click="
+                    selectedItem = key;
+                    selectedColor = clr.toUpperCase();
+                  "
+                >
+                  {{ key }} - {{ clr }}
+                </v-list-item>
+              </v-list>
+            </v-col>
+
+            <!-- COLOR PICKER COLUMN -->
+            <!-- :model-value="selectedColor" -->
+            <v-col>
+              <v-color-picker
+                mode="hex"
+                v-model="selectedColor"
+                :swatches="bsColorsHex"
+                hide-sliders
+                show-swatches
+                swatches-max-height="300"
+                @update:model-value="colorPickerUpdateHandler"
+              >
+              </v-color-picker>
+            </v-col>
+
+            <!-- MATERIAL COLOR LIST COLUMN  -->
+            <v-col>
+              <v-select
+                min-width="200"
+                :items="materialColorsNames"
+                v-model="selectedMaterialName"
+                label="Material Colors"
+                item-title="name"
+                item-value="name"
+                @update:model-value="materialNameUpdateHandler"
+              ></v-select>
+
+              <v-list min-width="200" color="surface-variant">
+                <v-list-item
+                  v-for="(clr, key) of selectedMaterialColor"
+                  :value="clr.toUpperCase()"
+                  :active="selectedColor === clr.toUpperCase()"
+                  :base-color="clr"
+                  @click="
+                    selectedItem = key;
+                    selectedColor = clr.toUpperCase();
+                  "
+                >
+                  {{ key }}: {{ clr.toUpperCase() }}
+                </v-list-item>
+              </v-list>
+            </v-col>
+
+            <!-- GENERATE BOOTSTRAP DARK / LIGHT COLOR COLUMN -->
+            <v-col>
+              <div class="text-body-1 my-7">Base Color: {{ selectedMaterialColor.base }}</div>
+
+              <v-list min-width="200" color="surface-variant">
+                <v-list-item
+                  v-for="(clr, key) of materialMixColors"
+                  :value="clr.toUpperCase()"
+                  :active="selectedColor === clr.toUpperCase()"
+                  :base-color="clr"
+                  @click="
+                    selectedItem = key;
+                    selectedColor = clr.toUpperCase();
+                  "
+                >
+                  {{ key }} - {{ clr }}
+                </v-list-item>
+              </v-list>
+            </v-col>
+            <v-col></v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+      <!-- </div> -->
     </v-responsive>
   </v-container>
 </template>
@@ -88,7 +127,7 @@
 <script setup>
   import { onMounted, ref } from "vue";
   import * as bootstrap from "@/utils/color/bootstrap-colors";
-  import { mix, darken, lighten, parseColor, RGBtoHex } from "@/utils/colorUtils";
+  import { mix, darken, lighten, parseColor, RGBtoHex } from "@/utils/colorUtils.js";
   import { useAppStore } from "@/stores/app";
   import { useBuilderColorsStore } from "@/stores/builder-colors";
 
@@ -120,7 +159,6 @@
 
   const selectedColor = ref("#0d6efd");
   const selectedItem = ref("");
-  const selectedWeight = ref(50);
 
   const lightHex = "#FFFFFF";
   const darkHex = "#000000";
@@ -139,7 +177,7 @@
     lighten2: mix("FFFFFF", "0d6efd", 40),
     lighten1: mix("FFFFFF", "0d6efd", 20)
   };
-  console.log("AboutView ::: mixedLighten: ", mixedLighten);
+  console.log("AboutView ::: mixedLighten: ", JSON.stringify(mixedLighten, null, 2));
 
   const mixedDarken = {
     darken4: mix("000000", "0d6efd", 80),
@@ -147,17 +185,32 @@
     darken2: mix("000000", "0d6efd", 40),
     darken1: mix("000000", "0d6efd", 20)
   };
-  console.log("AboutView ::: mixedDarken: ", mixedDarken);
+  console.log("AboutView ::: mixedDarken: ", JSON.stringify(mixedDarken, null, 2));
 
   console.log("AboutView ::: bootstrap red: ", bootstrap.red);
   console.log("AboutView ::: bootstrap orange: ", bootstrap.orange);
+
+  const selectedSwatch = ref("");
 
   onMounted(() => {
     console.log("AboutView ::: onMounted");
   });
 
-  function weightUpdateHandler(value) {
-    selectedWeight.value = value;
+  function setSelection(clr, key) {
+    console.log("AboutView ::: setSelection");
+    console.log(" - clr: ", clr);
+    console.log(" - key: ", key);
+    selectedColor.value = clr.toUpperCase();
+    selectedItem.value = key;
+  }
+
+  function colorPickerUpdateHandler(value) {
+    console.log("AboutView ::: colorPickerUpdateHandler");
+    console.log(" - value:", value);
+    let val = String(value).toUpperCase();
+    console.log(" - val: ", val);
+    console.log(" - selectedColor: ", selectedColor.value);
+    console.log(" - selectedItem value: ", selectedItem.value);
   }
 
   function bsNameUpdateHandler(value) {
@@ -188,7 +241,7 @@
       darken4: RGBtoHex(darken(parsedBase, 5)),
       base: base
     };
-    console.log(" - colors: ", colors);
+    console.log(" - colors: ", JSON.stringify(colors, null, 2));
     bsMixColors.value = colors;
     // dark shades
     let darkshades = {};
@@ -206,8 +259,8 @@
       if (lshade !== "#FFFFFF") lightshades["lighten" + i] = lshade;
       else break;
     }
-    console.log(" - dark shades: ", darkshades);
-    console.log(" - light shades: ", lightshades);
+    console.log(" - dark shades: ", JSON.stringify(darkshades, null, 2));
+    console.log(" - light shades: ", JSON.stringify(lightshades, null, 2));
 
     const swatches = [
       Object.values(selectedBSColor.value).reverse(),
@@ -215,7 +268,7 @@
       Object.values(darkshades).reverse(),
       Object.values(lightshades)
     ];
-    console.log(" - swatches: ", swatches);
+    console.log(" - swatches: ", JSON.stringify(swatches, null, 2));
 
     bsColorsHex.value = swatches;
   }
@@ -269,11 +322,11 @@
 
     const swatches = [Object.values(selectedMaterialColor.value), Object.values(colors)];
     // const swatches = [[matLighten1, matLighten2, matLighten3, matLighten4, matLighten5], Object.values(matShades)];
-    console.log(" - swatches: ", swatches);
+    console.log(" - swatches: ", JSON.stringify(swatches, null, 2));
 
     bsColorsHex.value = swatches;
 
-    console.log(" - colors: ", colors);
+    console.log(" - colors: ", JSON.stringify(colors, null, 2));
     materialMixColors.value = colors;
   }
 </script>

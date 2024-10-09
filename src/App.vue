@@ -366,13 +366,21 @@
     min-width: fit-content;
   }
 
+  /**
+   * V-COLOR-PICKER OVERRIDES
+   */
+
   // Change color picker swatches padding and justify-content.
   .v-color-picker-swatches {
     > div {
       display: flex;
       flex-wrap: wrap;
-      // justify-content: space-between !important;
+      justify-content: normal !important;
       // padding: 0px !important;
+      // limit width of swatch rows
+      max-width: 260px !important;
+      // add margin to swatch rows, so it centers nicely
+      margin: auto !important;
       // WARNING: swatches border should be disabled
       // border: 1px solid #000;
     }

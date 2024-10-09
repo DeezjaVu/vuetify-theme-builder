@@ -2,197 +2,198 @@
  *
  *
  * @see https://htmlcolorcodes.com/color-chart/flat-design-color-chart/
+ * @see https://materialui.co/flatuicolors
  */
 
 export const turquoise = {
   lighten5: "#E8F8F5",
-  lighten4: "#d1f2eb",
-  lighten3: "#a3e4d7",
-  lighten2: "#76d7c4",
-  lighten1: "#48c9b0",
-  base: "#1abc9c",
-  darken1: "#17a589",
-  darken2: "#148f77",
+  lighten4: "#D1F2EB",
+  lighten3: "#A3E4D7",
+  lighten2: "#76D7C4",
+  lighten1: "#48C9B0",
+  base: "#1ABC9C",
+  darken1: "#17A589",
+  darken2: "#148F77",
   darken3: "#117864",
-  darken4: "#0e6251"
+  darken4: "#0E6251"
 };
 
 export const turquoiseHex = Object.values(turquoise).reverse();
 
 export const greenSea = {
-  lighten5: "#e8f6f3",
-  lighten4: "#d0ece7",
-  lighten3: "#a2d9ce",
-  lighten2: "#73c6b6",
-  lighten1: "#45b39d",
-  base: "#16a085",
-  darken1: "#138d75",
-  darken2: "#117a65",
-  darken3: "#0e6655",
-  darken4: "#0b5345"
+  lighten5: "#E8F6F3",
+  lighten4: "#D0ECE7",
+  lighten3: "#A2D9CE",
+  lighten2: "#73C6B6",
+  lighten1: "#45B39D",
+  base: "#16A085",
+  darken1: "#138D75",
+  darken2: "#117A65",
+  darken3: "#0E6655",
+  darken4: "#0B5345"
 };
 
 export const greenSeaHex = Object.values(greenSea).reverse();
 
 export const emerald = {
-  lighten5: "#eafaf1",
-  lighten4: "#d5f5e3",
-  lighten3: "#abebc6",
-  lighten2: "#82e0aa",
-  lighten1: "#58d68d",
-  base: "#2ecc71",
-  darken1: "#28b463",
-  darken2: "#239b56",
-  darken3: "#1d8348",
-  darken4: "#186a3b"
+  lighten5: "#EAF9F1",
+  lighten4: "#D5F7E3",
+  lighten3: "#ABF2C6",
+  lighten2: "#82E3AA",
+  lighten1: "#58D7A9",
+  base: "#2ECC71",
+  darken1: "#28B481",
+  darken2: "#239C56",
+  darken3: "#1D8458",
+  darken4: "#186B3B"
 };
 
 export const emeraldHex = Object.values(emerald).reverse();
 
 export const nephritis = {
-  lighten5: "#e9f7ef",
-  lighten4: "#d4efdf",
-  lighten3: "#a9dfbf",
-  lighten2: "#7dcea0",
-  lighten1: "#52be80",
-  base: "#27ae60",
+  lighten5: "#E9F7EF",
+  lighten4: "#D4EFDF",
+  lighten3: "#A9DFBF",
+  lighten2: "#7DCEA0",
+  lighten1: "#52BE80",
+  base: "#27AE60",
   darken1: "#229954",
-  darken2: "#1e8449",
-  darken3: "#196f3d",
-  darken4: "#145a32"
+  darken2: "#1E8449",
+  darken3: "#196F3D",
+  darken4: "#145A32"
 };
 
 export const nephritisHex = Object.values(nephritis).reverse();
 
 export const peterRiver = {
-  lighten5: "#ebf5fb",
-  lighten4: "#d6eaf8",
-  lighten3: "#aed6f1",
-  lighten2: "#85c1e9",
-  lighten1: "#5dade2",
-  base: "#3498db",
-  darken1: "#2e86c1",
-  darken2: "#2874a6",
-  darken3: "#21618c",
-  darken4: "#1b4f72"
+  lighten5: "#EBF5FB",
+  lighten4: "#D6EAF8",
+  lighten3: "#AED6F1",
+  lighten2: "#85C1E9",
+  lighten1: "#5DADE2",
+  base: "#3498DB",
+  darken1: "#2E86C1",
+  darken2: "#2874A6",
+  darken3: "#21618C",
+  darken4: "#1B4F72"
 };
 
 export const peterRiverHex = Object.values(peterRiver).reverse();
 
 export const belizeHole = {
-  lighten5: "#eaf2f8",
-  lighten4: "#d4e6f1",
-  lighten3: "#a9cce3",
-  lighten2: "#7fb3d5",
-  lighten1: "#5499c7",
-  base: "#2980b9",
-  darken1: "#2471a3",
-  darken2: "#1f618d",
-  darken3: "#1a5276",
+  lighten5: "#EAF2F8",
+  lighten4: "#D4E6F1",
+  lighten3: "#A9CCE3",
+  lighten2: "#7FB3D5",
+  lighten1: "#5499C7",
+  base: "#2980B9",
+  darken1: "#2471A3",
+  darken2: "#1F618D",
+  darken3: "#1A5276",
   darken4: "#154360"
 };
 
 export const belizeHoleHex = Object.values(belizeHole).reverse();
 
 export const amethyst = {
-  lighten5: "#f5eef8",
-  lighten4: "#ebdef0",
-  lighten3: "#d7bde2",
-  lighten2: "#c39bd3",
-  lighten1: "#af7ac5",
-  base: "#9b59b6",
-  darken1: "#884ea0",
-  darken2: "#76448a",
+  lighten5: "#F5EEF8",
+  lighten4: "#EBDEF0",
+  lighten3: "#D7BDE2",
+  lighten2: "#C39BD3",
+  lighten1: "#AF7AC5",
+  base: "#9B59B6",
+  darken1: "#884EA0",
+  darken2: "#76448A",
   darken3: "#633974",
-  darken4: "#512e5f"
+  darken4: "#512E5F"
 };
 
 export const amethystHex = Object.values(amethyst).reverse();
 
 export const wisteria = {
-  lighten5: "#f4ecf7",
-  lighten4: "#e8daef",
-  lighten3: "#d2b4de",
-  lighten2: "#bb8fce",
-  lighten1: "#a569bd",
-  base: "#8e44ad",
-  darken1: "#7d3c98",
-  darken2: "#6c3483",
-  darken3: "#5b2c6f",
-  darken4: "#4a235a"
+  lighten5: "#F4ECF7",
+  lighten4: "#E8DAEF",
+  lighten3: "#D2B4DE",
+  lighten2: "#BB8FCE",
+  lighten1: "#A569BD",
+  base: "#8E44AD",
+  darken1: "#7D3C98",
+  darken2: "#6C3483",
+  darken3: "#5B2C6F",
+  darken4: "#4A235A"
 };
 
 export const wisteriaHex = Object.values(wisteria).reverse();
 
 export const wetAsphalt = {
-  lighten5: "#ebedef",
-  lighten4: "#d6dbdf",
-  lighten3: "#aeb6bf",
-  lighten2: "#85929e",
-  lighten1: "#5d6d7e",
-  base: "#34495e",
-  darken1: "#2e4053",
+  lighten5: "#EBEDEF",
+  lighten4: "#D6DBDF",
+  lighten3: "#AEB6BF",
+  lighten2: "#85929E",
+  lighten1: "#5D6D7E",
+  base: "#34495E",
+  darken1: "#2E4053",
   darken2: "#283747",
-  darken3: "#212f3c",
-  darken4: "#1b2631"
+  darken3: "#212F3C",
+  darken4: "#1B2631"
 };
 
 export const wetAsphaltHex = Object.values(wetAsphalt).reverse();
 
 export const midnightBlue = {
-  lighten5: "#eaecee",
-  lighten4: "#d5d8dc",
-  lighten3: "#abb2b9",
-  lighten2: "#808b96",
+  lighten5: "#EAECEE",
+  lighten4: "#D5D8DC",
+  lighten3: "#ABB2B9",
+  lighten2: "#808B96",
   lighten1: "#566573",
-  base: "#2c3e50",
+  base: "#2C3E50",
   darken1: "#273746",
-  darken2: "#212f3d",
-  darken3: "#1c2833",
-  darken4: "#17202a"
+  darken2: "#212F3D",
+  darken3: "#1C2833",
+  darken4: "#17202A"
 };
 
 export const midnightBlueHex = Object.values(midnightBlue).reverse();
 
 export const sunflower = {
-  lighten5: "#fef9e7",
-  lighten4: "#fcf3cf",
-  lighten3: "#f9e79f",
-  lighten2: "#f7dc6f",
-  lighten1: "#f4d03f",
-  base: "#f1c40f",
-  darken1: "#d4ac0d",
-  darken2: "#b7950b",
-  darken3: "#9a7d0a",
-  darken4: "#7d6608"
+  lighten5: "#FEF9E7",
+  lighten4: "#FCF3CF",
+  lighten3: "#F9E79F",
+  lighten2: "#F7DC6F",
+  lighten1: "#F4D03F",
+  base: "#F1C40F",
+  darken1: "#D4AC0D",
+  darken2: "#B7950B",
+  darken3: "#9A7D0A",
+  darken4: "#7D6608"
 };
 
 export const sunflowerHex = Object.values(sunflower).reverse();
 
 export const orange = {
-  lighten5: "#fef5e7",
-  lighten4: "#fdebd0",
-  lighten3: "#fad7a0",
-  lighten2: "#f8c471",
-  lighten1: "#f5b041",
-  base: "#f39c12",
-  darken1: "#d68910",
-  darken2: "#b9770e",
-  darken3: "#9c640c",
-  darken4: "#7e5109"
+  lighten5: "#FEF5E7",
+  lighten4: "#FDEBD0",
+  lighten3: "#FAD7A0",
+  lighten2: "#F8C471",
+  lighten1: "#F5B041",
+  base: "#F39C12",
+  darken1: "#D68910",
+  darken2: "#B9770E",
+  darken3: "#9C640C",
+  darken4: "#7E5109"
 };
 
 export const orangeHex = Object.values(orange).reverse();
 
 export const carrot = {
-  lighten5: "#fdf2e9",
-  lighten4: "#fae5d3",
-  lighten3: "#f5cba7",
-  lighten2: "#f0b27a",
-  lighten1: "#eb984e",
-  base: "#e67e22",
-  darken1: "#ca6f1e",
-  darken2: "#af601a",
+  lighten5: "#FDF2E9",
+  lighten4: "#FAE5D3",
+  lighten3: "#F5CBA7",
+  lighten2: "#F0B27A",
+  lighten1: "#EB984E",
+  base: "#E67E22",
+  darken1: "#CA6F1E",
+  darken2: "#AF601A",
   darken3: "#935116",
   darken4: "#784212"
 };
@@ -200,105 +201,105 @@ export const carrot = {
 export const carrotHex = Object.values(carrot).reverse();
 
 export const pumpkin = {
-  lighten5: "#fbeee6",
-  lighten4: "#f6ddcc",
-  lighten3: "#edbb99",
-  lighten2: "#e59866",
-  lighten1: "#dc7633",
-  base: "#d35400",
-  darken1: "#ba4a00",
-  darken2: "#a04000",
+  lighten5: "#FBEEEE",
+  lighten4: "#F6DDCC",
+  lighten3: "#EDBB99",
+  lighten2: "#E59866",
+  lighten1: "#DC7633",
+  base: "#D35400",
+  darken1: "#BA4A00",
+  darken2: "#A04000",
   darken3: "#873600",
-  darken4: "#6e2c00"
+  darken4: "#6E2C00"
 };
 
 export const pumpkinHex = Object.values(pumpkin).reverse();
 
 export const alizarin = {
-  lighten5: "#fdedec",
-  lighten4: "#fadbd8",
-  lighten3: "#f5b7b1",
-  lighten2: "#f1948a",
-  lighten1: "#ec7063",
-  base: "#e74c3c",
-  darken1: "#cb4335",
-  darken2: "#b03a2e",
+  lighten5: "#FDEDCC",
+  lighten4: "#FADBDA",
+  lighten3: "#F5B7B1",
+  lighten2: "#F1948A",
+  lighten1: "#EC7063",
+  base: "#E74C3C",
+  darken1: "#CB4335",
+  darken2: "#B03A2E",
   darken3: "#943126",
-  darken4: "#78281f"
+  darken4: "#78281F"
 };
 
 export const alizarinHex = Object.values(alizarin).reverse();
 
 export const pomegranate = {
-  lighten5: "#f9ebea",
-  lighten4: "#f2d7d5",
-  lighten3: "#e6b0aa",
-  lighten2: "#d98880",
-  lighten1: "#cd6155",
-  base: "#c0392b",
-  darken1: "#a93226",
-  darken2: "#922b21",
-  darken3: "#7b241c",
-  darken4: "#641e16"
+  lighten5: "#F9EBEA",
+  lighten4: "#F2D7D5",
+  lighten3: "#E6B0AA",
+  lighten2: "#D98880",
+  lighten1: "#CD6155",
+  base: "#C0392B",
+  darken1: "#A93226",
+  darken2: "#922B21",
+  darken3: "#7B241C",
+  darken4: "#641E16"
 };
 
 export const pomegranateHex = Object.values(pomegranate).reverse();
 
 export const clouds = {
-  lighten5: "#fdfefe",
-  lighten4: "#fbfcfc",
-  lighten3: "#f7f9f9",
-  lighten2: "#f4f6f7",
-  lighten1: "#f0f3f4",
-  base: "#ecf0f1",
-  darken1: "#d0d3d4",
-  darken2: "#b3b6b7",
-  darken3: "#979a9a",
-  darken4: "#7b7d7d"
+  lighten5: "#FDFEFE",
+  lighten4: "#FBFCFC",
+  lighten3: "#F7F9F9",
+  lighten2: "#F4F6F7",
+  lighten1: "#F0F3F4",
+  base: "#ECF0F1",
+  darken1: "#D0D3D4",
+  darken2: "#B3B6B7",
+  darken3: "#979A9A",
+  darken4: "#7B7D7D"
 };
 
 export const cloudsHex = Object.values(clouds).reverse();
 
 export const silver = {
-  lighten5: "#f8f9f9",
-  lighten4: "#f2f3f4",
-  lighten3: "#e5e7e9",
-  lighten2: "#d7dbdd",
-  lighten1: "#cacfd2",
-  base: "#bdc3c7",
-  darken1: "#a6acaf",
+  lighten5: "#F8F9F9",
+  lighten4: "#F2F3F4",
+  lighten3: "#E5E7E9",
+  lighten2: "#D7DBDD",
+  lighten1: "#CACFD2",
+  base: "#BDC3C7",
+  darken1: "#A6ACAF",
   darken2: "#909497",
-  darken3: "#797d7f",
+  darken3: "#797D7F",
   darken4: "#626567"
 };
 
 export const silverHex = Object.values(silver).reverse();
 
 export const concrete = {
-  lighten5: "#f4f6f6",
-  lighten4: "#eaeded",
-  lighten3: "#d5dbdb",
-  lighten2: "#bfc9ca",
-  lighten1: "#aab7b8",
-  base: "#95a5a6",
+  lighten5: "#F4F6F6",
+  lighten4: "#EAEDED",
+  lighten3: "#D5DBDB",
+  lighten2: "#BFC9CA",
+  lighten1: "#AAB7B8",
+  base: "#95A5A6",
   darken1: "#839192",
-  darken2: "#717d7e",
-  darken3: "#5f6a6a",
-  darken4: "#4d5656"
+  darken2: "#717D7E",
+  darken3: "#5F6A6A",
+  darken4: "#4D5656"
 };
 
 export const concreteHex = Object.values(concrete).reverse();
 
 export const asbestos = {
-  lighten5: "#f2f4f4",
-  lighten4: "#e5e8e8",
-  lighten3: "#ccd1d1",
-  lighten2: "#b2babb",
-  lighten1: "#99a3a4",
-  base: "#7f8c8d",
-  darken1: "#707b7c",
-  darken2: "#616a6b",
-  darken3: "#515a5a",
+  lighten5: "#F2F4F4",
+  lighten4: "#E5E8E8",
+  lighten3: "#CCD1D1",
+  lighten2: "#B2BABB",
+  lighten1: "#99A3A4",
+  base: "#7F8C8D",
+  darken1: "#707B7C",
+  darken2: "#616A6B",
+  darken3: "#515A5A",
   darken4: "#424949"
 };
 
@@ -306,32 +307,67 @@ export const asbestosHex = Object.values(asbestos).reverse();
 
 export const shades = {
   black: "#000000",
-  white: "#ffffff",
-  transparent: "#ffffff00"
+  white: "#FFFFFF",
+  transparent: "#FFFFFF00"
 };
 export const shadesHex = Object.values(shades).reverse();
 
-export const flatBaseColors = [
-  { name: "turquoise", base: turquoise.base },
-  { name: "greenSea", base: greenSea.base },
-  { name: "emerald", base: emerald.base },
-  { name: "nephritis", base: nephritis.base },
-  { name: "peterRiver", base: peterRiver.base },
-  { name: "belizeHole", base: belizeHole.base },
-  { name: "amethyst", base: amethyst.base },
-  { name: "wisteria", base: wisteria.base },
-  { name: "midnightBlue", base: midnightBlue.base },
-  { name: "sunflower", base: sunflower.base },
-  { name: "orange", base: orange.base },
-  { name: "carrot", base: carrot.base },
-  { name: "pumpkin", base: pumpkin.base },
-  { name: "alizarin", base: alizarin.base },
-  { name: "pomegranate", base: pomegranate.base },
-  { name: "clouds", base: clouds.base },
-  { name: "silver", base: silver.base },
-  { name: "concrete", base: concrete.base },
-  { name: "asbestos", base: asbestos.base }
+export const baseColors = [
+  { title: "Turquoise", name: "turquoise", base: turquoise.base },
+  { title: "Green Sea", name: "greenSea", base: greenSea.base },
+  { title: "Emerald", name: "emerald", base: emerald.base },
+  { title: "Nephritis", name: "nephritis", base: nephritis.base },
+  { title: "Peter River", name: "peterRiver", base: peterRiver.base },
+  { title: "Belize Hole", name: "belizeHole", base: belizeHole.base },
+  { title: "Amethyst", name: "amethyst", base: amethyst.base },
+  { title: "Wisteria", name: "wisteria", base: wisteria.base },
+  { title: "Midnight Blue", name: "midnightBlue", base: midnightBlue.base },
+  { title: "Sunflower", name: "sunflower", base: sunflower.base },
+  { title: "Orange", name: "orange", base: orange.base },
+  { title: "Carrot", name: "carrot", base: carrot.base },
+  { title: "Pumpkin", name: "pumpkin", base: pumpkin.base },
+  { title: "Alizarin", name: "alizarin", base: alizarin.base },
+  { title: "Pomegranate", name: "pomegranate", base: pomegranate.base },
+  { title: "Clouds", name: "clouds", base: clouds.base },
+  { title: "Silver", name: "silver", base: silver.base },
+  { title: "Concrete", name: "concrete", base: concrete.base },
+  { title: "Asbestos", name: "asbestos", base: asbestos.base }
 ];
+
+export const swatches = [
+  [turquoiseHex],
+  [greenSeaHex],
+  [emeraldHex],
+  [nephritisHex],
+  [peterRiverHex],
+  [belizeHoleHex],
+  [amethystHex],
+  [wisteriaHex],
+  [midnightBlueHex],
+  [sunflowerHex],
+  [orangeHex],
+  [carrotHex],
+  [pumpkinHex],
+  [alizarinHex],
+  [pomegranateHex],
+  [cloudsHex],
+  [silverHex],
+  [concreteHex],
+  [asbestosHex],
+  [shadesHex]
+];
+
+// TODO: flat-colors.js ::: Set proper theme colors. This is just for testing.
+export const theme = {
+  primary: midnightBlue.base,
+  secondary: concrete.base,
+  success: amethyst.base,
+  info: peterRiver.base,
+  warning: sunflower.base,
+  danger: pomegranate.base,
+  light: silver.base,
+  dark: asbestos.base
+};
 
 export default {
   turquoise,
@@ -375,5 +411,6 @@ export default {
   asbestos,
   asbestosHex,
   shades,
-  flatBaseColors
+  baseColors,
+  theme
 };
