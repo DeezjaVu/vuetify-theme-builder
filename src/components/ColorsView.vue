@@ -1,11 +1,15 @@
 <template>
   <v-container class="fill-height px-12 mx-auto" grid-list-xs>
+    <!-- TODO: look into using the v-row component styles from vuetify docs -->
+    <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">
       <!-- LEFT SIDE COLUMN - COLOR MENU -->
       <v-col class="d-flex flex-column col-menu">
         <!-- COLOR DIALOG -->
+        <!-- :modal-color-open="modalColorOpen" -->
         <ColorDialog
-          :modal-color-open="modalColorOpen"
+          id="color-dialog"
+          v-model="modalColorOpen"
           :color-name="selectedColorName"
           v-model:picker-color="selectedColor"
           @update:picker-color="editColorChangeHandler"
@@ -50,7 +54,7 @@
                 :active="false"
                 @click="editColorClickHandler(item.value)"
               >
-                <v-sheet class="px-2 my-1 py-1 border-thin" :color="themeColors[item.value]">
+                <v-sheet class="px-2 my-1 py-1 border-thin font-mono" :color="themeColors[item.value]">
                   color: {{ themeColors[item.value] }}
                 </v-sheet>
               </v-list-item>

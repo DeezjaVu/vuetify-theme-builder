@@ -5,88 +5,25 @@
     <!-- APP TOOLBAR -->
     <!-- <v-app-bar class="flex-grow-0" color="primary"> -->
     <v-app-bar class="px-12 mx-auto" color="primary">
-      <!-- <template v-slot:prepend v-if="$vuetify.display.mdAndDown"> -->
-      <!-- </template> -->
-
       <v-toolbar-title class="text-uppercase pr-8"> Vuetify Theme Builder </v-toolbar-title>
 
       <v-tabs align-tabs="start" @update:model-value="tabUpdateHandler">
-        <v-tab v-for="item in menuItems" :key="item" :text="item.title" :value="item.value" :to="item.href"></v-tab>
+        <v-tab
+          class="font-weight-light"
+          v-for="item in menuItems"
+          :key="item"
+          :text="item.title"
+          :value="item.value"
+          :to="item.href"
+        ></v-tab>
       </v-tabs>
 
       <v-spacer></v-spacer>
       <template v-slot:append>
         <v-btn icon="mdi-dots-vertical"></v-btn>
       </template>
-
-      <!-- ADD ACCOUNT (STATIC) BUTTON -->
-      <!-- location="bottom right" -->
-      <!-- <template v-slot:image>
-        <v-fab color="secondary" class="me-4" icon="mdi-palette" offset absolute @click="paletteClickHandler()"> </v-fab>
-      </template>
-       -->
     </v-app-bar>
-    <!-- <AppFooter /> -->
-    <!-- APP DRAWER -->
-    <!-- 
-      <v-navigation-drawer v-model="menuOpen" width="300" mobile-breakpoint="md" permanent>
-        <v-list density="compact" nav>
-          <v-list-subheader class="text-uppercase font-weight-black"> Navigate </v-list-subheader>
-          
-          <v-divider></v-divider>
-          
-          <v-list-item title="Home" to="/"></v-list-item>
-          <v-list-item title="About" to="/about"></v-list-item>
-          
-          <v-list-subheader class="text-uppercase font-weight-black"> Theme Builder </v-list-subheader>
-          <v-divider></v-divider>
-          
-          <v-list-item title="Colors" to="/builder/colors"></v-list-item>
-          <v-list-item title="Variables" to="/builder/variables"></v-list-item>
-          
-          <v-divider></v-divider>
-          -->
-
-    <!-- 
-        <v-row>
-          <v-col class="d-flex flex-column">
-            <v-btn :color="selectedColor" class="mt-2" @click="switchThemeClickHandler()"> Selected Color </v-btn>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="d-flex flex-column">
-            <v-color-picker
-              width="100%"
-              dot-size="16"
-              mode="hex"
-              :modes="cpModes"
-              :swatches="flatColorsHex"
-              :model-value="selectedColor"
-              hide-sliders
-              show-swatches
-              swatches-max-height="300"
-              rounded="md"
-              class="my-0 bg-transparent"
-              @update:model-value="colorPickerUpdateHandler"
-            ></v-color-picker>
-          </v-col>
-        </v-row> 
-        -->
-    <!-- <v-divider></v-divider> -->
-    <!-- <v-row>
-          <v-col class="d-flex flex-column">
-            <v-btn class="mt-2 my-1" color="error">Error</v-btn>
-            <v-btn class="my-1" color="info">Info</v-btn>
-            <v-btn class="my-1" color="success">Success</v-btn>
-            <v-btn class="my-1" color="warning">Warning</v-btn>
-          </v-col>
-        </v-row> 
-        -->
-
-    <!-- 
-      </v-list>
-    </v-navigation-drawer> 
-    -->
+    <AppFooter />
 
     <v-main>
       <router-view />
@@ -95,13 +32,14 @@
 </template>
 
 <script setup>
+  import PaletteDialog from "./components/modal/PaletteDialog.vue";
+
   import { ref, onMounted } from "vue";
 
   import colors from "vuetify/lib/util/colors";
   // import * as colorUtils from "./utils/colorUtils.mjs";
   import { useTheme } from "vuetify";
   import { useAppStore } from "@/stores/app";
-  import PaletteDialog from "./components/modal/PaletteDialog.vue";
 
   // const appContext = getCurrentInstance();
 
@@ -144,7 +82,8 @@
     { title: "Home", value: "home", href: "/" },
     { title: "About", value: "about", href: "/about" },
     { title: "Colors", value: "colors-view", href: "/builder/colors" },
-    { title: "Variables", value: "variables-view", href: "/builder/variables" }
+    { title: "Variables", value: "variables-view", href: "/builder/variables" },
+    { title: "Utilities", value: "utilities-view", href: "/builder/utilities" }
   ];
 
   // const bdDarklyHex = ref(appStore.bdDarklyHex);

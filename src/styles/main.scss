@@ -1,0 +1,23 @@
+// Fonts are defined (and automatically loaded) in Vite config (./vite.config.mjs).
+
+// Custom SASS variables are defined in `_variables.scss`
+
+@use "variables" as *;
+
+code,
+pre {
+  font-family: $mono-font-family !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+}
+
+.font-mono {
+  font-family: $mono-font-family !important;
+  font-size: 0.85rem !important;
+}
+
+.font-mono--input {
+  input {
+    font-family: $mono-font-family !important;
+  }
+}

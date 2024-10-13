@@ -23,10 +23,11 @@
  * @see https://www.w3schools.com/Colors/colors_metro.asp
  */
 
-import { mix } from "../colorUtils.js";
+import { lightMix, darkMix } from "../colorUtils.js";
 
-const lightMix = (color, weight) => mix("#FFFFFF", color, weight);
-const darkMix = (color, weight) => mix("#000000", color, weight);
+// Moved to colorUtils
+// const lightMix = (color, weight) => mix("#FFFFFF", color, weight);
+// const darkMix = (color, weight) => mix("#000000", color, weight);
 
 const lightGreenColor = "#99B433";
 
@@ -311,7 +312,7 @@ export const swatches = [
   darkRedHex
 ];
 
-export const metroBaseColors = [
+export const baseColors = [
   { title: "Light Green", name: "lightGreen", base: lightGreen.base },
   { title: "Green", name: "green", base: green.base },
   { title: "Dark Green", name: "darkGreen", base: darkGreen.base },
@@ -339,8 +340,7 @@ export const theme = {
   info: lightBlue.base,
   warning: yellow.base,
   danger: red.base,
-  light: gray.lighten1,
-  dark: gray.darken3
+  dark: darken.darken3
 };
 
 export default {
@@ -378,6 +378,6 @@ export default {
   redHex,
   darkRed,
   darkRedHex,
-  metroBaseColors,
+  baseColors,
   theme
 };

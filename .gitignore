@@ -16,6 +16,7 @@ pnpm-debug.log*
 .idea
 .vscode
 .assets
+.templates
 *.suo
 *.ntvs*
 *.njsproj

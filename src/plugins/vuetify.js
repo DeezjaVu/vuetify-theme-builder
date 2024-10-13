@@ -12,6 +12,9 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import { VNumberInput } from "vuetify/labs/components";
 
+// Custom styles
+import "@/styles/main.scss";
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   components: {

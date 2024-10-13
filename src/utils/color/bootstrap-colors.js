@@ -22,10 +22,11 @@
  * @see https://sass-lang.com/documentation/modules/color/#mix
  */
 
-import { mix } from "../colorUtils.js";
+import { lightMix, darkMix } from "../colorUtils.js";
 
-const lightMix = (color, weight) => mix("#FFFFFF", color, weight);
-const darkMix = (color, weight) => mix("#000000", color, weight);
+// Moved to colorUtils
+// const lightMix = (color, weight) => mix("#FFFFFF", color, weight);
+// const darkMix = (color, weight) => mix("#000000", color, weight);
 
 const blueBase = "#0D6EFD";
 export const blue = {
@@ -211,6 +212,18 @@ export const shades = {
 
 export const shadesHex = Object.values(shades);
 
+/**
+ * Bootstrap base color list.
+ *
+ * Each item in the list is an object with the following properties:
+ * - title : name of the color in title case, usable for display.
+ * - name: name of the color in camel case.
+ * - base: base color of the color in hex.
+ *
+ * @returns {array} An array of objects.
+ *
+ * @see https://getbootstrap.com/docs/5.0/customize/color/
+ */
 export const baseColors = [
   { title: "Blue", name: "blue", base: blue.base },
   { title: "Indigo", name: "indigo", base: indigo.base },
@@ -242,6 +255,7 @@ export const swatches = [
   shadesHex
 ];
 
+// TODO: @bootstrap-colors ::: match the theme names to the vuetify names?
 export const theme = {
   primary: blueBase,
   secondary: "#6C757D",

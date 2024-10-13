@@ -1,5 +1,10 @@
 /**
- * PrimeVue Lara Preset Colors
+ * PrimeVue Preset Colors
+ *
+ * PrimeVue's theme colors for:
+ * - Aura
+ * - Nora
+ * - Lara
  *
  * @see https://primevue.org/theming/styled/
  *
@@ -319,11 +324,11 @@ export const baseColors = [
   { title: "Lime", name: "lime", base: lime.base },
   { title: "Red", name: "red", base: red.base },
   { title: "Orange", name: "orange", base: orange.base },
-  { title: "Yellow", name: "yellow", base: yellow.base },
   { title: "Amber", name: "amber", base: amber.base },
+  { title: "Yellow", name: "yellow", base: yellow.base },
   { title: "Teal", name: "teal", base: teal.base },
-  { title: "Sky", name: "sky", base: sky.base },
   { title: "Cyan", name: "cyan", base: cyan.base },
+  { title: "Sky", name: "sky", base: sky.base },
   { title: "Blue", name: "blue", base: blue.base },
   { title: "Indigo", name: "indigo", base: indigo.base },
   { title: "Violet", name: "violet", base: violet.base },
@@ -370,8 +375,8 @@ export const swatches = [
   yellowHex,
   amberHex,
   tealHex,
-  skyHex,
   cyanHex,
+  skyHex,
   blueHex,
   indigoHex,
   violetHex,

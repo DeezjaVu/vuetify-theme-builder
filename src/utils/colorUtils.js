@@ -399,3 +399,35 @@ export function mix(color_1, color_2, weight) {
 
   return color.toUpperCase();
 }
+
+/**
+ * Mixes a color with white (#FFFFFF), according to a specified weight,
+ * to achieve a lighter color variant.
+ *
+ * @param {*} color the color to be mixed with white, as a HEX string.
+ * @param {*} weight the percentage of white to be added to the color.
+ * @returns the mixed color.
+ */
+export const lightMix = (color, weight) => mix("#FFFFFF", color, weight);
+
+/**
+ * Mixes a color together with black (#000000), according to a specified weight,
+ * to achieve a darker color variant.
+ *
+ * @param {*} color the color to be mixed with black, as a HEX string.
+ * @param {*} weight the percentage of black to be added to the color.
+ * @returns the mixed color.
+ */
+export const darkMix = (color, weight) => mix("#000000", color, weight);
+
+/**
+ * Converts an integer color representation to a HEX color string.
+ *
+ * @param {number} int the integer representation of the color.
+ * @returns {string} the color as a HEX string.
+ */
+export function intToHex(int) {
+  const rgba = parseColor(int);
+  const hex = RGBtoHex(rgba);
+  return hex;
+}

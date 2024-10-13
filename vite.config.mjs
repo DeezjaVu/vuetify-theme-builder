@@ -33,15 +33,40 @@ export default defineConfig({
     ViteFonts({
       google: {
         families: [
-          {
-            name: "Roboto",
-            styles: "wght@100;300;400;500;700;900"
-          }
+          // { name: "Roboto", styles: "wght@100;300;400;500;700;900" },
+          { name: "Inter", styles: "wght@100;300;400;500;700;900" },
+          // { name: "Raleway", styles: "wght@100;300;400;500;700;900" },
+          // { name: "Noto Sans Mono", styles: "wght@100;300;400;500;700;900" },
+          { name: "IBM Plex Mono", styles: "wght@100;300;400;500;700;900" }
         ]
       }
     })
   ],
   define: { "process.env": {} },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        /**
+         * scss preprocessor.
+         * - legacy (default)
+         * - modern
+         * - modern-compiler
+         * @see https://vitejs.dev/config/shared-options#css-preprocessoroptions
+         */
+        api: "modern-compiler"
+      },
+      sass: {
+        /**
+         * sass preprocessor.
+         * - legacy (default)
+         * - modern
+         * - modern-compiler
+         * @see https://vitejs.dev/config/shared-options#css-preprocessoroptions
+         */
+        api: "modern-compiler"
+      }
+    }
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))

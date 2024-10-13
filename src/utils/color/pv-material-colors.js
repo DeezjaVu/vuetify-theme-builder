@@ -15,8 +15,8 @@ export const emerald = {
   darken1: "#35AF94",
   darken2: "#2D9B83",
   darken3: "#268873",
-  darken4: "#1A6657",
-  darken5: "#0D3329"
+  darken4: "#1A6657"
+  // darken5: "#0D3329"
 };
 
 export const green = {
@@ -29,8 +29,8 @@ export const green = {
   darken1: "#43A047",
   darken2: "#388E3C",
   darken3: "#2E7D32",
-  darken4: "#1B5E20",
-  darken5: "#0E2F10"
+  darken4: "#1B5E20"
+  // darken5: "#0E2F10"
 };
 
 export const lime = {
@@ -43,8 +43,8 @@ export const lime = {
   darken1: "#C0CA33",
   darken2: "#AFB42B",
   darken3: "#9E9D24",
-  darken4: "#827717",
-  darken5: "#413C0C"
+  darken4: "#827717"
+  // darken5: "#413C0C"
 };
 
 export const red = {
@@ -57,8 +57,8 @@ export const red = {
   darken1: "#E53935",
   darken2: "#D32F2F",
   darken3: "#C62828",
-  darken4: "#B71C1C",
-  darken5: "#8B0A0A"
+  darken4: "#B71C1C"
+  // darken5: "#8B0A0A"
 };
 
 export const orange = {
@@ -71,8 +71,8 @@ export const orange = {
   darken1: "#FF8C00",
   darken2: "#FF7F00",
   darken3: "#FF6F00",
-  darken4: "#FF5C00",
-  darken5: "#FF4500"
+  darken4: "#FF5C00"
+  // darken5: "#FF4500"
 };
 
 export const amber = {
@@ -85,8 +85,8 @@ export const amber = {
   darken1: "#FFB300",
   darken2: "#FFA000",
   darken3: "#FF8F00",
-  darken4: "#FF6F00",
-  darken5: "#FF3D00"
+  darken4: "#FF6F00"
+  // darken5: "#FF3D00"
 };
 
 export const yellow = {
@@ -99,8 +99,8 @@ export const yellow = {
   darken1: "#CCFF00",
   darken2: "#B3FF00",
   darken3: "#99FF00",
-  darken4: "#66FF00",
-  darken5: "#33FF00"
+  darken4: "#66FF00"
+  // darken5: "#33FF00"
 };
 
 export const teal = {
@@ -113,8 +113,8 @@ export const teal = {
   darken1: "#00796B",
   darken2: "#00695C",
   darken3: "#005C56",
-  darken4: "#004D40",
-  darken5: "#003B3F"
+  darken4: "#004D40"
+  // darken5: "#003B3F"
 };
 
 export const cyan = {
@@ -127,8 +127,8 @@ export const cyan = {
   darken1: "#00CCFF",
   darken2: "#00B3FF",
   darken3: "#0099FF",
-  darken4: "#0066FF",
-  darken5: "#0033FF"
+  darken4: "#0066FF"
+  // darken5: "#0033FF"
 };
 
 export const sky = {
@@ -141,8 +141,8 @@ export const sky = {
   darken1: "#97F7F7",
   darken2: "#87F7F7",
   darken3: "#77F7F7",
-  darken4: "#67F7F7",
-  darken5: "#57F7F7"
+  darken4: "#67F7F7"
+  // darken5: "#57F7F7"
 };
 
 export const blue = {
@@ -155,8 +155,8 @@ export const blue = {
   darken1: "#039BE5",
   darken2: "#0288D1",
   darken3: "#0277BD",
-  darken4: "#01579B",
-  darken5: "#014C7F"
+  darken4: "#01579B"
+  // darken5: "#014C7F"
 };
 
 export const indigo = {
@@ -169,8 +169,8 @@ export const indigo = {
   darken1: "#3949AB",
   darken2: "#303F9F",
   darken3: "#2F4EA7",
-  darken4: "#2B3F9E",
-  darken5: "#1A237E"
+  darken4: "#2B3F9E"
+  // darken5: "#1A237E"
 };
 
 export const violet = {
@@ -183,8 +183,8 @@ export const violet = {
   darken1: "#8E44AD",
   darken2: "#7B1FA2",
   darken3: "#6c1a8e",
-  darken4: "#5c1680",
-  darken5: "#4c1462"
+  darken4: "#5c1680"
+  // darken5: "#4c1462"
 };
 
 export const purple = {
@@ -197,8 +197,8 @@ export const purple = {
   darken1: "#6c2e8c",
   darken2: "#5c1a8c",
   darken3: "#4c1680",
-  darken4: "#3c1462",
-  darken5: "#2c0a4d"
+  darken4: "#3c1462"
+  // darken5: "#2c0a4d"
 };
 
 export const fuchsia = {
@@ -211,8 +211,8 @@ export const fuchsia = {
   darken1: "#A61C4C",
   darken2: "#8B0A1A",
   darken3: "#6F0039",
-  darken4: "#4C0026",
-  darken5: "#2C001F"
+  darken4: "#4C0026"
+  // darken5: "#2C001F"
 };
 
 export const pink = {
@@ -225,8 +225,8 @@ export const pink = {
   darken1: "#FF33CC",
   darken2: "#FF00CC",
   darken3: "#E600CC",
-  darken4: "#CC00CC",
-  darken5: "#B300CC"
+  darken4: "#CC00CC"
+  // darken5: "#B300CC"
 };
 
 export const rose = {
@@ -239,8 +239,8 @@ export const rose = {
   darken1: "#FF69B4",
   darken2: "#FF4D80",
   darken3: "#FF3366",
-  darken4: "#FF1A66",
-  darken5: "#E60066"
+  darken4: "#FF1A66"
+  // darken5: "#E60066"
 };
 
 export const slate = {
@@ -253,8 +253,8 @@ export const slate = {
   darken1: "#475569",
   darken2: "#334155",
   darken3: "#1e293b",
-  darken4: "#0f172a",
-  darken5: "#020617"
+  darken4: "#0f172a"
+  // darken5: "#020617"
 };
 
 export const gray = {
@@ -267,8 +267,8 @@ export const gray = {
   darken1: "#4B5563",
   darken2: "#374151",
   darken3: "#1F2937",
-  darken4: "#111827",
-  darken5: "#030712"
+  darken4: "#111827"
+  // darken5: "#030712"
 };
 
 export const zinc = {
@@ -281,8 +281,8 @@ export const zinc = {
   darken1: "#52525B",
   darken2: "#3F3F46",
   darken3: "#27272A",
-  darken4: "#18181B",
-  darken5: "#09090B"
+  darken4: "#18181B"
+  // darken5: "#09090B"
 };
 
 export const neutral = {
@@ -295,8 +295,8 @@ export const neutral = {
   darken1: "#525252",
   darken2: "#404040",
   darken3: "#262626",
-  darken4: "#171717",
-  darken5: "#0A0A0A"
+  darken4: "#171717"
+  // darken5: "#0A0A0A"
 };
 
 export const stone = {
@@ -309,10 +309,22 @@ export const stone = {
   darken1: "#57534E",
   darken2: "#44403C",
   darken3: "#292524",
-  darken4: "#1C1917",
-  darken5: "#0C0A09"
+  darken4: "#1C1917"
+  // darken5: "#0C0A09"
 };
 
+/**
+ * PrimeVue Material base color list.
+ *
+ * Each item in the list is an object with the following properties:
+ * - title : name of the color in title case, usable for display.
+ * - name: name of the color in camel case.
+ * - base: base color of the color in hex.
+ *
+ * @returns {array} An array of objects.
+ *
+ * @see https://tailwindcss.com/docs/customizing-colors
+ */
 export const baseColors = [
   { title: "Emerald", name: "emerald", base: emerald.base },
   { title: "Green", name: "green", base: green.base },
@@ -370,8 +382,8 @@ export const swatches = [
   yellowHex,
   amberHex,
   tealHex,
-  skyHex,
   cyanHex,
+  skyHex,
   blueHex,
   indigoHex,
   violetHex,
@@ -379,11 +391,11 @@ export const swatches = [
   fuchsiaHex,
   pinkHex,
   roseHex,
-  slateHex,
-  grayHex,
-  zincHex,
-  neutralHex,
-  stoneHex
+  // slateHex,
+  // grayHex,
+  zincHex
+  // neutralHex,
+  // stoneHex
 ];
 
 export const theme = {

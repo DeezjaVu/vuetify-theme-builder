@@ -1,21 +1,17 @@
 <template>
   <v-container class="fill-height" grid-list-xs>
-    <v-responsive class="align-centerfill-height mx-auto">
-      <!-- <div class="text-center"> -->
-      <!-- <v-icon icon="mdi-account-box"></v-icon> -->
-      <!-- <v-icon icon="$vuetify"></v-icon> -->
-      <!-- <h1 class="text-h2 font-weight-bold">Theme Builder Variables</h1> -->
-      <!-- </div> -->
+    <v-responsive class="align-centerfill-height mx-auto" style="max-width: 75vw">
       <v-card>
         <v-card-text>
           <v-row>
             <v-col cols="4">
               <v-color-picker
                 v-model="selectedColor"
-                :swatches="laraSwatches"
+                :swatches="pvLaraColorsHex"
                 mode="hex"
                 hide-sliders
                 show-swatches
+                swatches-max-height="420"
                 @update:model-value="colorPickerUpdateHandler"
               >
               </v-color-picker>
@@ -55,26 +51,64 @@
           </v-row>
         </v-card-text>
       </v-card>
-      <!-- PRIMEVUE COLORS -->
+
+      <!-- COLOR PALETTES CARD -->
       <v-card>
-        <v-container v-for="base in baseColors" :key="base" class="py-0">
-          <v-card class="my-0" density="compact" style="max-width: fit-content; margin: 0 auto">
-            <v-card-item class="pt-1 pb-0 pl-1">
-              <v-card-subtitle class="">{{ base.title }}</v-card-subtitle>
-            </v-card-item>
-            <v-row>
-              <v-col class="text-center" v-for="(clr, key) in laraColors[base.name]" :key="clr">
-                <v-btn v-bind="props" :color="clr" density="comfortable" style="min-width: 100%">
-                  {{ clr }}
-                </v-btn>
-                <div class="v-card-subtitle pt-1 pb-0">
-                  {{ key }}
-                </div>
-              </v-col>
-            </v-row>
-            <v-divider></v-divider>
-          </v-card>
-        </v-container>
+        <v-toolbar align-tabs="center">
+          <v-toolbar-title class="text-uppercase"> Color Palettes </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-tabs v-model="currentTab">
+            <v-tab class="font-weight-light" v-for="item in presetMenuItems" :key="item" :text="item.title" :value="item.value"></v-tab>
+          </v-tabs>
+          <v-spacer></v-spacer>
+          <v-btn icon="mdi-dots-vertical"></v-btn>
+        </v-toolbar>
+
+        <!-- COLOR PRESET TAB WINDOWS -->
+        <v-card-text>
+          <v-tabs-window v-model="currentTab">
+            <!-- PRIMEVUE LARA COLORS TABS WINDOW ITEM -->
+            <v-tabs-window-item :value="currentTab">
+              <!-- PRIMEVUE LARA COLORS -->
+              <v-container
+                v-for="base in colorSets[currentTab].baseColors"
+                :key="base"
+                class="text-body-2 font-mono"
+                style="padding-top: 2px; padding-bottom: 2px"
+              >
+                <v-card class="my-0" density="compact" style="max-width: fit-content; margin: 0 auto">
+                  <v-card-item class="pt-1 pb-0 pl-1">
+                    <v-card-subtitle class="text-body-2 font-mono">{{ base.title }}</v-card-subtitle>
+                  </v-card-item>
+                  <v-row>
+                    <v-col
+                      class="text-center"
+                      v-for="(clr, key) in colorSets[currentTab][base.name]"
+                      :key="clr"
+                      cols="auto"
+                      md="2"
+                      xl="auto"
+                    >
+                      <v-btn
+                        class="btn-hover-text font-mono"
+                        :color="clr"
+                        density="comfortable"
+                        style="min-width: 100%"
+                        @click="paletteButtonClickHandler(clr, key)"
+                      >
+                        {{ clr }}
+                      </v-btn>
+                      <div class="v-card-subtitle text-body-2 font-mono pt-1 pb-2">
+                        {{ key }}
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                </v-card>
+              </v-container>
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </v-card-text>
       </v-card>
     </v-responsive>
   </v-container>
@@ -84,13 +118,39 @@
   import { onMounted, ref } from "vue";
   import { useBuilderColorsStore } from "@/stores/builder-colors";
 
-  import laraColors from "@/utils/color/pv-lara-colors";
-
-  console.log("VariablesView ::: laraColors: ", laraColors.baseColors);
-  const baseColors = laraColors.baseColors;
-  const laraSwatches = laraColors.swatches;
+  import pvLaraColors from "@/utils/color/pv-lara-colors.js";
+  import pvMaterialColors from "@/utils/color/pv-material-colors";
+  import tailwindColors from "@/utils/color/tailwind-colors.js";
+  import bootstrapColors from "@/utils/color/bootstrap-colors";
+  import flatColors from "@/utils/color/flat-colors";
+  import metroColors from "@/utils/color/metro-colors";
 
   const colorsStore = useBuilderColorsStore();
+
+  const pvLaraBaseColors = pvLaraColors.baseColors;
+  console.log("VariablesView ::: pvLaraBaseColors: ", pvLaraBaseColors);
+  const pvLaraColorsHex = pvLaraColors.swatches;
+
+  const pvMaterialBaseColors = pvMaterialColors.baseColors;
+  console.log("VariablesView ::: pvMaterialColors: ", pvMaterialBaseColors);
+
+  const pvMaterialColorsHex = pvMaterialColors.swatches;
+
+  const twBaseColors = tailwindColors.baseColors;
+  console.log("VariablesView ::: twBaseColors: ", twBaseColors);
+  const twColorsHex = tailwindColors.swatches;
+
+  const bsBaseColors = bootstrapColors.baseColors;
+  console.log("VariablesView ::: bsBaseColors: ", bsBaseColors);
+  const bwColorsHex = bootstrapColors.swatches;
+
+  const flatBaseColors = flatColors.baseColors;
+  console.log("VariablesView ::: flatBaseColors: ", flatBaseColors);
+  const flatColorsHex = flatColors.swatches;
+
+  const metroBaseColors = metroColors.baseColors;
+  console.log("VariablesView ::: metroBaseColors: ", metroBaseColors);
+  const metroColorsHex = metroColors.swatches;
 
   const materialColors = colorsStore.materialColors;
   console.log("VariablesView ::: materialColors: ", materialColors);
@@ -108,9 +168,37 @@
   const selectedColor = ref("");
   const selectedItem = ref("");
 
+  const presetMenuItems = [
+    { title: "Tailwind", value: "tailwind" },
+    // { title: "PrimeView Lara", value: "lara" },
+    { title: "PrimeView Material", value: "material" },
+    { title: "Bootstrap", value: "bootstrap" },
+    { title: "Flat Colors", value: "flat" },
+    { title: "Metro UI", value: "metro" }
+  ];
+
+  const colorSets = {
+    // lara: pvLaraColors,
+    material: pvMaterialColors,
+    tailwind: tailwindColors,
+    bootstrap: bootstrapColors,
+    flat: flatColors,
+    metro: metroColors
+  };
+
+  // TODO: VariablesView ::: move the currentXYZ constants to a VariablesViewStore store.
+  const currentTab = ref("tailwind");
+  /**
+   * LIFECYCLE HOOKS
+   */
   onMounted(() => {
     console.log("VariablesView ::: onMounted");
   });
+
+  /**
+   * Handles color changes from the color picker.
+   * @param value - The color value chosen by the user.
+   */
   function colorPickerUpdateHandler(value) {
     console.log("VariablesView ::: colorPickerUpdateHandler");
     console.log(" - value:", value);
@@ -120,11 +208,42 @@
     console.log(" - selectedColor value: ", selectedColor.value);
     console.log(" - selectedItem value: ", selectedItem.value);
   }
+
+  /**
+   * Handles color button clicks from the color palettes.
+   *
+   * Sets the color of the button that was clicked as the selected color,
+   * which is used in the color picker.
+   *
+   * @param {string} clr - The color value chosen by the user.
+   * @param {string} key - The key of the color button chosen by the user.
+   */
+  function paletteButtonClickHandler(clr, key) {
+    console.log("VariablesView ::: paletteButtonClickHandler");
+    console.log(" - clr: ", clr);
+    console.log(" - key: ", key);
+    selectedColor.value = clr.toUpperCase();
+    // selectedItem.value = "";
+  }
 </script>
 
-<style scoped lang="scss">
-  // .code {
-  //   background-color: rgb(var(--v-theme-code));
-  //   color: rgb(var(--v-theme-on-code));
-  // }
+<style lang="scss">
+  // for some reason these styles won't work if the `<style>` is set to `scoped`
+  .btn-hover-text {
+    // font-family: "Courier New", Courier, monospace !important;
+    // font-weight: bold !important;
+    > .v-btn__content {
+      // font-weight: bold !important;
+      opacity: 0 !important;
+    }
+  }
+
+  .btn-hover-text:hover {
+    // font-family: "Courier New", Courier, monospace !important;
+    // font-weight: bold !important;
+    > .v-btn__content {
+      // font-weight: light !important;
+      opacity: 1 !important;
+    }
+  }
 </style>
