@@ -83,7 +83,11 @@
   import { argbFromHex, hexFromArgb, themeFromSourceColor, themeFromImage, applyTheme } from "@material/material-color-utilities";
   import * as colorUtils from "../utils/colorUtils.js";
   import { sourceColorFromImage } from "@material/material-color-utilities";
-  import { neutral } from "@/utils/color/pv-lara-colors.js";
+
+  // https://stackoverflow.com/a/71514878
+  import imgTurquoise from "@/assets/images/stockcake/abstract-turquoise-art-small.jpg";
+  import imgLakeside from "@/assets/images/stockcake/autumn-lakeside-serenity-small.jpg";
+  import imgLavender from "@/assets/images/stockcake/lavender-sunset-hues-small.jpg";
 
   const selectedImageIdx = ref(0);
 
@@ -96,9 +100,9 @@
     "https://picsum.photos/id/56/320/128",
     "https://picsum.photos/id/78/320/128",
     "https://picsum.photos/id/113/320/128",
-    "/src/assets/images/stockcake/abstract-turquoise-art-small.jpg",
-    "/src/assets/images/stockcake/autumn-lakeside-serenity-small.jpg",
-    "/src/assets/images/stockcake/lavender-sunset-hues-small.jpg"
+    imgTurquoise,
+    imgLakeside,
+    imgLavender
     // "/src/assets/images/stockcake/mixing-orange-paint-small.jpg"
     // "/src/assets/images/stockcake/serene-coastal-inlet-small.jpg"
     // "/src/assets/images/stockcake/vibrant-abstract-art-small.jpg",
