@@ -3,9 +3,13 @@
   <v-dialog persistent max-width="200">
     <!-- <v-card prepend-icon="mdi-palette" title="Select Theme"> -->
     <v-card>
-      <v-toolbar color="primary">
-        <v-toolbar-title prepend-icon="mdi-palette" class="text-uppercase">Select Theme</v-toolbar-title>
-      </v-toolbar>
+      <DragModal tag="v-toolbar" modal-id="palette-dialog-header">
+        <template v-slot:default>
+          <v-toolbar color="primary">
+            <v-toolbar-title prepend-icon="mdi-palette" class="text-uppercase">Select Theme</v-toolbar-title>
+          </v-toolbar>
+        </template>
+      </DragModal>
       <!-- <v-divider></v-divider> -->
       <v-card-text class="px-4">
         <!-- Available Theme options -->
@@ -31,6 +35,7 @@
 
 <script setup>
   import { ref, onMounted } from "vue";
+  import DragModal from "./DragModal.vue";
 
   // `defineEmits` and `defineProps` are a compiler macro and no longer need to be imported.
   // prop names are declared using camelCase but can be used in kebab-case on the parent component.

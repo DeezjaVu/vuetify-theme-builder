@@ -1,7 +1,7 @@
 <template>
   <!-- <v-layout row justify-center> -->
   <!--  max-width="348" -->
-  <v-dialog absolute scrim="false" opacity="0.06" max-width="348" @update:model-value="dialogUpdateHandler">
+  <v-dialog class="position-modal-picker" absolute scrim="false" opacity="0.06" max-width="348" @update:model-value="dialogUpdateHandler">
     <!-- <v-card title="Pick a color" :subtitle="props.colorName" flat> -->
     <v-card flat>
       <!-- V-CARD HEADER -->
@@ -207,11 +207,17 @@
   }
 </script>
 
-<style scoped>
-  .v-overlay__scrim:hover {
-    cursor: auto !important;
+<style>
+  .position-modal-picker > .v-overlay__content {
+    left: 20px;
+    top: 80px;
   }
+
+  .v-overlay__scrim:hover {
+    cursor: default !important;
+  }
+
   .v-overlay--active:hover {
-    cursor: auto !important;
+    cursor: default !important;
   }
 </style>

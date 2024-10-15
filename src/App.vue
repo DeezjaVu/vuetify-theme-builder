@@ -20,7 +20,7 @@
 
       <v-spacer></v-spacer>
       <template v-slot:append>
-        <v-btn icon="mdi-dots-vertical"></v-btn>
+        <v-btn icon="mdi-dots-vertical" @click="modalPaletteOpen = true"></v-btn>
       </template>
     </v-app-bar>
     <AppFooter />
@@ -41,9 +41,9 @@
   import { useTheme } from "vuetify";
   import { useAppStore } from "@/stores/app";
 
-  // const appContext = getCurrentInstance();
-
   const modalPaletteOpen = ref(false);
+
+  // const appContext = getCurrentInstance();
 
   /**
    * interface ThemeInstance {
