@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height px-12 mx-auto" grid-list-xs>
+  <v-container class="fill-height px-12 mx-auto">
     <!-- TODO: look into using the v-row component styles from vuetify docs -->
     <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">

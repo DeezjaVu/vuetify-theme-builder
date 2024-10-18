@@ -3,13 +3,13 @@
   <v-dialog persistent max-width="200">
     <!-- <v-card prepend-icon="mdi-palette" title="Select Theme"> -->
     <v-card>
-      <DragModal tag="v-toolbar" modal-id="palette-dialog-header">
+      <drag-modal modal-id="palette-dialog-header">
         <template v-slot:default>
           <v-toolbar color="primary">
             <v-toolbar-title prepend-icon="mdi-palette" class="text-uppercase">Select Theme</v-toolbar-title>
           </v-toolbar>
         </template>
-      </DragModal>
+      </drag-modal>
       <!-- <v-divider></v-divider> -->
       <v-card-text class="px-4">
         <!-- Available Theme options -->

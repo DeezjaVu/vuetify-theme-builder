@@ -1,11 +1,18 @@
 <template>
-  <v-container class="fill-height px-12 mx-auto" grid-list-xs>
+  <v-container class="fill-height px-12 mx-auto">
     <!-- TOP ROW - IMAGE CARDS -->
     <v-row class="align-sm-stretch">
       <v-col cols="3" v-for="(pic, idx) in picsum" :key="idx">
+        <!-- IMAGE CARDS -->
+        <!-- TODO: If/when moving image card to separate component, also move the scoped css styles with it -->
         <v-card :id="`img-card-${idx}`" color="white" :image="pic" density="compact" variant="outlined">
-          <v-card-item style="text-shadow: black 0px 0px 6px; background: rgb(255 255 255 / 12%)">
-            <v-card-title>Color from image</v-card-title>
+          <template #image>
+            <!-- img source is automatically applied from the v-card image prop -->
+            <v-img gradient="to top, rgb(255 255 255 / 10%), rgb(0 0 0 / 33%)"></v-img>
+          </template>
+          <!--  style="text-shadow: black 0px 0px 6px; background: rgb(255 255 255 / 12%)" -->
+          <v-card-item class="card-item-img">
+            <v-card-title class="d-sm-none d-lg-flex">Color from image</v-card-title>
             <v-card-subtitle>Image {{ idx + 1 }}</v-card-subtitle>
           </v-card-item>
           <v-card-actions>
@@ -18,34 +25,12 @@
     </v-row>
     <!-- BOTTOM ROW CARDS -->
     <v-row>
-      <!-- LEFT SIDE COLUMN CARD -->
+      <!-- LEFT SIDE COLUMN -->
       <v-col cols="3">
-        <v-card>
-          <v-card-text>
-            <!-- V-CARD TEXT -->
-            <template v-for="item in paletteColors" :key="item.name">
-              <v-row class="bg-secondary ma-1 rounded-e-pill rounded-s-pill">
-                <v-col class="" cols="auto">
-                  <v-btn width="46" height="46" :color="item.hex" icon>
-                    <v-avatar></v-avatar>
-                  </v-btn>
-                </v-col>
-                <v-col class="d-sm-none d-md-none d-lg-flex flex-column">
-                  <span class="text-body-1">
-                    {{ item.title }}
-                  </span>
-                  <span class="text-subtitle-2 font-mono">
-                    {{ item.hex }}
-                  </span>
-                </v-col>
-              </v-row>
-            </template>
-          </v-card-text>
-        </v-card>
-      </v-col>
-
-      <!-- RIGHT SIDE COLUMN CARDS -->
-      <v-col>
+        <!-- LEFT SIDE COLUMN CARD -->
+        <!-- <v-card>
+          <v-card-text class="py-6"> -->
+        <!-- SOURCE COLOR ROW -->
         <v-row>
           <v-col>
             <!-- SOURCE COLOR CARD -->
@@ -56,6 +41,61 @@
               </v-card-text>
             </v-card>
           </v-col>
+        </v-row>
+        <v-responsive class="px-3 py-4 bg-surface rounded">
+          <v-row>
+            <v-col class="py-1">
+              <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                <v-card-item class="px-3">
+                  <template #prepend>
+                    <v-btn class="mr-4" :color="cardColor" icon></v-btn>
+                  </template>
+                  <v-card-title class="text-body-1 font-weight-light d-sm-none d-md-none d-lg-flex"> Source (from image) </v-card-title>
+                  <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light d-sm-none d-md-none d-lg-flex">
+                    {{ cardColor }}
+                  </v-card-subtitle>
+                </v-card-item>
+              </v-card>
+            </v-col>
+          </v-row>
+          <!-- PALETTE COLORS ROWS -->
+          <template v-for="item in paletteColors" :key="item.name">
+            <v-row>
+              <v-col class="py-1">
+                <!-- PALETTE COLOR CARD -->
+                <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                  <v-card-item class="px-3">
+                    <template #prepend>
+                      <v-btn class="mr-4" :color="item.hex" icon></v-btn>
+                    </template>
+                    <v-card-title class="text-body-1 font-weight-light d-sm-none d-md-none d-lg-flex">
+                      {{ item.title }}
+                    </v-card-title>
+                    <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light d-sm-none d-md-none d-lg-flex">
+                      {{ item.hex }}
+                    </v-card-subtitle>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-responsive>
+        <!-- </v-card-text>
+        </v-card> -->
+      </v-col>
+
+      <!-- RIGHT SIDE COLUMN CARDS -->
+      <v-col>
+        <v-row>
+          <!-- <v-col> -->
+          <!-- SOURCE COLOR CARD -->
+          <!-- <v-card title="Utilities" subtitle="Source" :color="cardColor">
+              <v-card-text>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum pariatur animi obcaecati dolor labore quos nobis, ea
+                voluptatem officiis quibusdam molestias odio aliquam eligendi sapiente porro eveniet blanditiis optio et?
+              </v-card-text>
+            </v-card>
+          </v-col> -->
           <template v-for="item in paletteColors" :key="item.name">
             <v-col cols="12" sm="12" md="6" lg="4">
               <v-card title="Utilities" :subtitle="item.title" :color="item.hex">
@@ -81,15 +121,12 @@
 
   import { ref, onMounted, reactive } from "vue";
   import { argbFromHex, hexFromArgb, themeFromSourceColor, themeFromImage, applyTheme } from "@material/material-color-utilities";
-  import * as colorUtils from "../utils/colorUtils.js";
+  import * as colorUtils from "@/utils/colorUtils.js";
   import { sourceColorFromImage } from "@material/material-color-utilities";
 
-  // https://stackoverflow.com/a/71514878
-  import imgTurquoise from "@/assets/images/stockcake/abstract-turquoise-art-small.jpg";
-  import imgLakeside from "@/assets/images/stockcake/autumn-lakeside-serenity-small.jpg";
-  import imgLavender from "@/assets/images/stockcake/lavender-sunset-hues-small.jpg";
+  import { imgTurquoise, imgLakeside, imgLavender, imgAssets } from "@/utils/images/image-assets.js";
 
-  const selectedImageIdx = ref(0);
+  const selectedImageIdx = ref(-1);
 
   const cardColor = ref("#769CDF");
 
@@ -100,13 +137,7 @@
     "https://picsum.photos/id/56/320/128",
     "https://picsum.photos/id/78/320/128",
     "https://picsum.photos/id/113/320/128",
-    imgTurquoise,
-    imgLakeside,
-    imgLavender
-    // "/src/assets/images/stockcake/mixing-orange-paint-small.jpg"
-    // "/src/assets/images/stockcake/serene-coastal-inlet-small.jpg"
-    // "/src/assets/images/stockcake/vibrant-abstract-art-small.jpg",
-    // "/src/assets/images/stockcake/vibrant-social-gathering-small.jpg"
+    ...imgAssets
   ];
 
   const paletteColors = reactive([
@@ -135,7 +166,7 @@
     console.log(" - card: ", card);
     const imgObj = card.querySelector("img");
     // set crossOrigin to allow CORS (generating color from image won't work without it)
-    imgObj.setAttribute("crossOrigin", "");
+    imgObj.setAttribute("crossOrigin", "anonymous");
     // TODO: may have to add a date to the image url to make crossoring stick.
     // https://stackoverflow.com/a/33135803
     // If there's still a problem on live server, get around it by converting to base64
@@ -169,6 +200,11 @@
     console.log(" - tertiary HEX: ", hexFromArgb(tertiaryRGB));
     paletteColors.find((entry) => entry.name === "tertiary").hex = hexFromArgb(tertiaryRGB);
 
+    const errorRGB = theme.palettes.error.keyColor.argb;
+    console.log(" - errorRGB: ", errorRGB);
+    console.log(" - error HEX: ", hexFromArgb(errorRGB));
+    paletteColors.find((entry) => entry.name === "error").hex = hexFromArgb(errorRGB);
+
     const neutralRGB = theme.palettes.neutral.keyColor.argb;
     console.log(" - neutralRGB: ", neutralRGB);
     console.log(" - neutral HEX: ", hexFromArgb(neutralRGB));
@@ -178,11 +214,6 @@
     console.log(" - neutralVariantRGB: ", neutralVariantRGB);
     console.log(" - neutralVariant HEX: ", hexFromArgb(neutralVariantRGB));
     paletteColors.find((entry) => entry.name === "neutralVariant").hex = hexFromArgb(neutralVariantRGB);
-
-    const errorRGB = theme.palettes.error.keyColor.argb;
-    console.log(" - errorRGB: ", errorRGB);
-    console.log(" - error HEX: ", hexFromArgb(errorRGB));
-    paletteColors.find((entry) => entry.name === "error").hex = hexFromArgb(errorRGB);
 
     console.log(paletteColors);
 
@@ -302,3 +333,14 @@
     console.log("UtilitiesView ::: colorUtils.intToHex: ", intColor2);
   }
 </script>
+
+<style lang="scss" scoped>
+  .card-item-img {
+    // text-shadow: black 0px 0px 6px;
+    // background: rgb(255 255 255 / 12%);
+    .v-card-title {
+      font-size: 1.15rem !important;
+      font-weight: 300 !important;
+    }
+  }
+</style>

@@ -4,28 +4,10 @@
   <slot></slot>
 </template>
 
-<script>
-  import { defineComponent } from "vue";
-
-  export default defineComponent({
-    name: "DragModal",
-    methods: {
-      // Add methods here
-    },
-    created() {
-      console.log("DragModal ::: created");
-    }
-  });
-</script>
-
 <script setup>
-  import { getCurrentInstance, onBeforeUnmount, onMounted, onUnmounted, ref } from "vue";
+  import { onBeforeUnmount, onMounted, ref } from "vue";
 
   const props = defineProps({
-    tag: {
-      type: String,
-      required: true
-    },
     modalId: {
       type: String,
       required: true,
@@ -33,17 +15,17 @@
     }
   });
 
-  const emits = defineEmits(["drag-start", "dragging", "drag-end"]);
+  const emit = defineEmits(["modal:drag-start", "modal:drag-move", "modal:drag-end"]);
 
-  const instance = getCurrentInstance();
-  console.log(" - instance: ", instance);
+  // vue instance
+  // const instance = getCurrentInstance();
+  // console.log(" - instance: ", instance);
+  // const uuid = ref(instance.uid);
 
-  const uuid = ref(instance.uid);
-
-  const tags = [
-    { name: "v-toolbar", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-overlay__content div.v-card header.v-toolbar" },
-    { name: "v-card-item", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-card-item" }
-  ];
+  // const tags = [
+  //   { name: "v-toolbar", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-overlay__content div.v-card header.v-toolbar" },
+  //   { name: "v-card-item", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-card-item" }
+  // ];
 
   // v-overlay-content element
   const dragElement = ref(null);
@@ -54,6 +36,7 @@
   const offsetX = ref(0);
   const offsetY = ref(0);
 
+  // drag element has a default margin of 24px
   const marginX = ref(24);
   const marginY = ref(24);
 
@@ -63,64 +46,78 @@
 
   onMounted(() => {
     console.log("DragModal ::: onMounted");
-    console.log(" - props tag: ", props.tag);
-    console.log(" - props modal-id: ", props.modalId);
+    // console.log(" - props tag: ", props.tag);
+    // console.log(" - props modal-id: ", props.modalId);
 
     // let dragModal = document.querySelector("span.drag-modal");
     let qs = "span[id=" + props.modalId + "]";
-    let dragModal = document.querySelector(qs);
-    console.log(" - dragModal: ", dragModal);
+    let spanElement = document.querySelector(qs);
+    // console.log(" - spanElement: ", spanElement);
 
-    let overlay = (dragElement.value = dragModal.parentElement.parentElement);
-    console.log(" - dragElement: ", overlay);
+    // find the active overlay element in the DOM and set it as the dragElement variable.
+    let overlay = (dragElement.value = spanElement.parentElement.parentElement);
+    // console.log(" - dragElement: ", overlay);
 
-    let overlayRect = overlay.getBoundingClientRect();
-    console.log(" - overlayRect: ", overlayRect);
+    // let overlayRect = overlay.getBoundingClientRect();
+    // console.log(" - overlayRect: ", overlayRect);
 
+    // Get the margin value of the v-dialog-overlay (dragged) element.
     let compStyle = window.getComputedStyle(overlay);
+    // console.log(" - compStyle: ", compStyle);
+
     let mx = (marginX.value = Number(compStyle.marginLeft.split("px")[0]));
     let my = (marginY.value = Number(compStyle.marginTop.split("px")[0]));
-    console.log(" - marginX: ", mx);
-    console.log(" - marginY: ", my);
+    // console.log(" - marginX: ", mx);
+    // console.log(" - marginY: ", my);
 
     // let q = tags.find((t) => t.name === props.tag);
     // console.log(" - q: ", q);
 
-    // find the active overlay element in the DOM and set it as the dragElement variable.
-    // TODO: fix modal drag element margin/padding offset messing up positioning.
-    // dragElement.value.style.margin = "24px 24px 24px 24px";
     try {
-      let ls = JSON.parse(localStorage.getItem("modalLocation"));
+      let ls = localStorage.getItem("modalLocation");
       console.log(" - ls: ", ls);
-      dragElement.value.style.left = ls.left - marginX.value + "px";
-      dragElement.value.style.top = ls.top - marginY.value + "px";
-    } catch (error) {
+      if (ls === null || ls === undefined || ls.length === 0) {
+        console.warn("[DragModal] LocalStorage (modalLocation) is null or undefined or empty");
+        ls = localStorage.setItem("modalLocation", JSON.stringify([]));
+      }
+      let storageObject = JSON.parse(localStorage.getItem("modalLocation"));
+      let modalObject = storageObject.find((entry) => entry.name === props.modalId);
+      // console.log(" - modalObject: ", modalObject);
+      if (modalObject) {
+        // position the modal dialog using the stored values.
+        dragElement.value.style.left = modalObject.left - marginX.value + "px";
+        dragElement.value.style.top = modalObject.top - marginY.value + "px";
+      }
+    } catch (err) {
       // console.warn(error);
-      console.error(error);
+      console.error(err);
     }
 
-    // let toolbar = (clickElement.value = document.querySelector(
-    //   "div.v-overlay-container div.v-overlay.v-overlay--active div.v-overlay__content div.v-card header.v-toolbar"
-    // ));
-    let toolbar = (clickElement.value = dragModal.nextElementSibling);
-    console.log(" - clickElement: ", toolbar);
-    // toolbar.setAttribute("selectstart", false);
+    let toolbar = (clickElement.value = spanElement.nextElementSibling);
+    // console.log(" - clickElement: ", toolbar);
+    // prevent text selection in toolbar title
+    toolbar.classList.add("no-select");
     let toolbarRect = toolbar.getBoundingClientRect();
-    console.log(" - toolbarRect: ", toolbarRect);
-    //
+    // console.log(" - toolbarRect: ", toolbarRect);
+
+    // add mouse event listeners
     addListeners();
   });
 
   onBeforeUnmount(() => {
-    console.log("DragModal ::: onBeforeUnmount");
+    // console.log("DragModal ::: onBeforeUnmount");
     removeListeners();
   });
 
-  onUnmounted(() => {
-    console.log("DragModal ::: onUnmounted");
-    removeListeners();
-  });
-
+  /**
+   * Adds the event listeners to the clickElement to drag the modal.
+   * This includes:
+   * - mousedown: starts dragging the modal
+   * - mousemove: moves the modal to the current mouse position
+   * - mouseup: stops dragging the modal
+   * - mouseout: stops dragging the modal when the mouse leaves the element
+   * - mouseleave: stops dragging the modal when the mouse leaves the element
+   */
   function addListeners() {
     console.log("DragModal ::: addListeners");
     clickElement.value.addEventListener("mousedown", clickElementDownHandler);
@@ -129,6 +126,11 @@
     clickElement.value.addEventListener("mouseout", clickElementOutHandler);
     clickElement.value.addEventListener("mouseleave", clickElementOutHandler);
   }
+
+  /**
+   * Removes all event listeners from the clickElement.
+   * This is a counterpart to `addListeners()` and should be called when the component is unmounted.
+   */
   function removeListeners() {
     console.log("DragModal ::: addListeners");
     clickElement.value.removeEventListener("mousedown", clickElementDownHandler);
@@ -138,58 +140,146 @@
     clickElement.value.removeEventListener("mouseleave", clickElementOutHandler);
   }
 
+  /**
+   * Handles the mousedown event on the `clickElement`.
+   * Calculates the x and y offset of the mouse from the top left of the `dragElement`.
+   * Sets isDragging to true.
+   * @param {MouseEvent} evt
+   */
   function clickElementDownHandler(evt) {
-    console.log("DragModal ::: clickElementDownHandler");
+    // console.log("DragModal ::: clickElementDownHandler");
+    evt.preventDefault();
     let rect = dragElement.value.getBoundingClientRect();
-    console.log(" - evnt: ", evt);
-    console.log(" - rect: ", rect);
-
+    // console.log(" - evnt: ", evt);
+    // console.log(" - dragElement rect: ", rect);
+    // Save new mouse x, y offset, overwrite old mouse offset.
+    // This is used to calculate the new position of the modal when the mouse moves,
+    // as using the offsetX and offsetY properties is unreliable during movement.
     offsetX.value = evt.clientX - rect.left;
     offsetY.value = evt.clientY - rect.top;
-    console.log(" - clientX: ", evt.clientX, " - clientY: ", evt.clientY);
-    console.log(" - offsetX: ", offsetX.value, " - offsetY: ", offsetY.value);
+    // console.log(" - calculated offsetX: ", offsetX.value, " - calculated offsetY: ", offsetY.value);
     isDragging = true;
+    //
+    emit("modal:drag-start");
   }
 
-  function clickElementMoveHandler(event) {
-    console.log("DragModal ::: clickElementMoveHandler");
+  /**
+   * Handles the mousemove event on the `clickElement`.
+   * Updates the position of the `dragElement` based on the current mouse position and previously calculated offsets.
+   * Prevents the modal from going offscreen by setting boundaries for the x and y positions.
+   * @param {MouseEvent} event - The mousemove event.
+   */
+  function clickElementMoveHandler(evt) {
+    // console.log("DragModal ::: clickElementMoveHandler");
     if (isDragging) {
-      let x = event.clientX - offsetX.value - marginX.value;
-      let y = event.clientY - offsetY.value - marginY.value;
-      dragElement.value.style.left = x + "px";
-      dragElement.value.style.top = y + "px";
+      let x = evt.clientX - offsetX.value - marginX.value;
+      let y = evt.clientY - offsetY.value - marginY.value;
+      // prevent the modal from going offscreen
+      // TODO: DragModal ::: implement check for modal going offscreen when window is resized.
+      if (x > -marginX.value + 4) dragElement.value.style.left = x + "px";
+      if (y > -marginY.value + 4) dragElement.value.style.top = y + "px";
+
+      let rect = dragElement.value.getBoundingClientRect();
+      // console.log(" - rect: ", rect);
+      emit("modal:drag-move", { left: rect.left, top: rect.top });
     }
   }
 
+  /**
+   * Handles the mouseup event on the `clickElement`.
+   * Stores the location of the `dragElement` in local storage,
+   * using the modal ID as the key.
+   *
+   * Sets `isDragging` to false to stop dragging the modal.
+   * @param {MouseEvent} event - The mouseup event.
+   */
   function clickElementUpHandler(event) {
-    console.log("DragModal ::: clickElementUpHandler");
-    // store the location in local storage
-    let rect = dragElement.value.getBoundingClientRect();
-    console.log(" - rect: ", rect);
+    // console.log("DragModal ::: clickElementUpHandler");
+    if (isDragging) {
+      // store the location in local storage
+      let rect = dragElement.value.getBoundingClientRect();
+      console.log(" - rect: ", rect);
 
-    let l = rect.left;
-    let t = rect.top;
-    // save location in local storage
-    localStorage.setItem("modalLocation", JSON.stringify({ left: l, top: t }));
+      let l = rect.left;
+      let t = rect.top;
+      // save location in local storage
+      saveLocation(l, t);
+      emit("modal:drag-end", { left: l, top: t });
+    }
     isDragging = false;
-    // removeListeners();
   }
 
+  /**
+   * Handles the mouseout event on the `clickElement`.
+   * Sets `isDragging` to false to stop dragging the modal.
+   * @param {MouseEvent} event - The mouseout event.
+   */
   function clickElementOutHandler(event) {
-    console.log("DragModal ::: clickElementOutHandler");
+    // console.log("DragModal ::: clickElementOutHandler");
+    if (isDragging) {
+      let rect = dragElement.value.getBoundingClientRect();
+      console.log(" - rect: ", rect);
+      emit("modal:drag-end", { left: rect.left, top: rect.top });
+    }
     isDragging = false;
+  }
+
+  /**
+   * Saves the location of the modal dialog in local storage.
+   * The location is stored as an object with the modal ID as the key,
+   * and the left and top positions as properties of the object.
+   * If the object does not already exist in local storage, it is created.
+   * @param {Number} posX - The x position of the modal dialog.
+   * @param {Number} posY - The y position of the modal dialog.
+   */
+  function saveLocation(posX, posY) {
+    // console.log("DragModal ::: saveLocation");
+    let ls = localStorage.getItem("modalLocation");
+    // console.log(" - localStorage modalLocation: ", ls);
+    let storageObject = JSON.parse(ls);
+    // console.log(" - storageObject: ", storageObject);
+    // console.log(" - type of storageObject: ", typeof storageObject);
+
+    if (storageObject === null || storageObject === undefined || !storageObject.length) {
+      console.warn("[DragModal] localStorage (modalLocation) is null or undefined or empty");
+      storageObject = [];
+    }
+    let modalObject = storageObject.find((entry) => entry.name === props.modalId);
+    // console.log(" - modalObject: ", modalObject);
+    if (modalObject) {
+      modalObject.left = posX;
+      modalObject.top = posY;
+    } else {
+      storageObject.push({ name: props.modalId, left: posX, top: posY });
+    }
+    localStorage.setItem("modalLocation", JSON.stringify(storageObject));
   }
 </script>
 
 <style>
-  .v-toolbar-title {
+  .no-select .v-toolbar-title,
+  .no-select .v-card-title,
+  .no-select .v-card-subtitle {
     pointer-events: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  }
+
+  .no-select {
+    cursor: default !important;
+    :hover {
+      cursor: move !important;
+    }
   }
   span.drag-modal {
     /* visibility: hidden; */
     pointer-events: none;
     margin: 0 !important;
     padding: 0 !important;
-    position: absolute;
+    /* position: absolute; */
   }
 </style>

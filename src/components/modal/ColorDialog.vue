@@ -5,19 +5,26 @@
     <!-- <v-card title="Pick a color" :subtitle="props.colorName" flat> -->
     <v-card flat>
       <!-- V-CARD HEADER -->
-      <v-hover v-slot="{ isHovering, props }" @update:model-value="headerHoverHandler">
+      <!-- <v-hover v-slot="{ isHovering, props }" @update:model-value="headerHoverHandler"> -->
+      <drag-modal
+        modal-id="color-dialog-item"
+        @modal:drag-start="headerDragStartHandler"
+        @modal:drag-move="headerDragMoveHandler"
+        @modal:drag-end="headerDragEndHandler"
+      >
         <v-card-item v-bind="props">
           <v-card-title> Select Color </v-card-title>
           <v-card-subtitle> {{ props.colorName }} </v-card-subtitle>
           <template v-slot:append>
             <!-- 
-          Offset button bottom-margin by 24px (mb-6) when density="comfortable" 
-          and 20px (mb-5) when density="compact" to place it in line with the card title. 
-          -->
+              Offset button bottom-margin by 24px (mb-6) when density="comfortable" 
+              and 20px (mb-5) when density="compact" to place it in line with the card title. 
+            -->
             <v-btn icon="mdi-palette" variant="text" density="compact" class="mb-5" />
           </template>
         </v-card-item>
-      </v-hover>
+      </drag-modal>
+      <!-- </v-hover> -->
 
       <!-- V-CARD TEXT -->
       <!-- :swatches="flatColorsHex" -->
@@ -57,12 +64,6 @@
 
   const cpModes = ["hex"];
 
-  let dragItem = document.querySelector("div.v-overlay-container div.v-card-item");
-  let moveItem = document.querySelector("div.v-overlay__content");
-  let startPosX = 0;
-  let startPosY = 0;
-  let isDragging = false;
-
   onMounted(() => {
     console.log("ColorDialog ::: onMounted");
     console.log(" - pickerColor: ", pickerColor);
@@ -77,113 +78,18 @@
     // Since bindings take care of most things, we do not need to do anything here.
   }
 
-  function headerHoverHandler(value) {
-    console.log("ColorDialog ::: headerHoverHandler");
-    console.log(" - headerHover: ", value);
-    const colorModal = document.getElementById("color-dialog");
-    console.log(" - id: color-dialog: ", colorModal);
-    const vOverlay = document.querySelector("div.v-overlay-container");
-    console.log(" - overlay container: ", vOverlay);
-
-    dragItem = document.querySelector("div.v-overlay-container div.v-card-item");
-    console.log(" - v-card item: ", dragItem);
-    dragItem.style.cursor = "grab";
-
-    moveItem = document.querySelector("div.v-overlay__content");
-    console.log(" - v-card move item: ", moveItem);
-    console.log(" - v-card move item left: ", moveItem.style.left);
-    console.log(" - v-card move item top: ", moveItem.style.top);
-    console.log(" - v-card move item offsetLeft: ", moveItem.offsetLeft);
-    console.log(" - v-card move item offsetTop: ", moveItem.offsetTop);
-
-    // make it draggable
-    if (value) {
-      // listen for drag events
-      dragItem.setAttribute("draggable", true);
-      dragItem.addEventListener("dragstart", cardItemDragStartHandler);
-      // dragItem.addEventListener("dragenter", cardItemDragEnterHandler);
-      dragItem.addEventListener("drag", cardItemDragHandler);
-      dragItem.addEventListener("dragend", cardItemDragEndHandler);
-      // moveItem.addEventListener("dragleave", cardItemDragLeaveHandler);
-    } else if (!value && !isDragging) {
-      // stop listening for drag events
-      dragItem.removeEventListener("dragstart", cardItemDragStartHandler);
-      // dragItem.removeEventListener("dragenter", cardItemDragEnterHandler);
-      dragItem.removeEventListener("drag", cardItemDragHandler);
-      dragItem.removeEventListener("dragleave", cardItemDragLeaveHandler);
-      // dragItem.removeEventListener("dragend", cardItemDragEndHandler);
-    }
+  function headerDragStartHandler() {
+    console.log("ColorDialog ::: headerDragStartHandler");
   }
 
-  function cardItemDragStartHandler(evt) {
-    console.log("ColorDialog ::: cardItemDragStartHandler");
-    console.log(" - drag event: ", evt);
-    console.log(" - target: ", evt.target);
-    console.log(" - start position: ", startPosX, startPosY);
-    console.log(" - current position: ", evt.clientX, evt.clientY);
-    evt.stopPropagation();
-    evt.dataTransfer.dropEffect = "grabbing";
-    dragItem.style.cursor = "grabbing";
-    isDragging = true;
-    startPosX = evt.clientX;
-    startPosY = evt.clientY;
+  function headerDragMoveHandler(pos) {
+    console.log("ColorDialog ::: headerDragMoveHandler");
+    console.log(" - pos: ", pos);
   }
 
-  function cardItemDragEnterHandler(evt) {
-    console.log("ColorDialog ::: cardItemDragEnterHandler");
-    console.log(" - drag event: ", evt);
-    evt.dataTransfer.dropEffect = "grabbing";
-    evt.preventDefault();
-  }
-
-  function cardItemDragLeaveHandler(evt) {
-    console.log("ColorDialog ::: cardItemDragLeaveHandler");
-    console.log(" - drag event: ", evt);
-    evt.dataTransfer.dropEffect = "grabbing";
-    evt.preventDefault();
-  }
-
-  function cardItemDragHandler(evt) {
-    console.log("ColorDialog ::: cardItemDragHandler");
-    // evt.preventDefault();
-    evt.dataTransfer.dropEffect = "grabbing";
-    moveItem.style.cursor = "grabbing";
-    dragItem.style.cursor = "grabbing";
-    // console.log(" - drag event: ", evt);
-    let newPosX = startPosX - evt.clientX + 24;
-    let newPosY = startPosY - evt.clientY + 24;
-
-    // let l = Math.max(-24, moveItem.offsetLeft - newPosX);
-    // let t = Math.max(-24, moveItem.offsetTop - newPosY);
-    let l = moveItem.offsetLeft - newPosX;
-    let t = moveItem.offsetTop - newPosY;
-
-    // with each move we also want to update the start X and Y
-    startPosX = evt.clientX;
-    startPosY = evt.clientY;
-
-    // set the element's new position:
-    moveItem.style.left = l + "px";
-    moveItem.style.top = t + "px";
-  }
-
-  function cardItemDragEndHandler(evt) {
-    console.log("ColorDialog ::: cardItemDragEndHandler");
-    console.log(" - drag event: ", evt);
-    // evt.dataTransfer.dropEffect = "none";
-    // evt.preventDefault();
-    isDragging = false;
-
-    let newPosX = startPosX - evt.clientX + 24;
-    let newPosY = startPosY - evt.clientY + 24;
-
-    // with each move we also want to update the start X and Y
-    startPosX = evt.clientX;
-    startPosY = evt.clientY;
-
-    // set the element's new position:
-    moveItem.style.left = moveItem.offsetLeft - newPosX + "px";
-    moveItem.style.top = moveItem.offsetTop - newPosY + "px";
+  function headerDragEndHandler(pos) {
+    console.log("ColorDialog ::: headerDragEndHandler");
+    console.log(" - pos: ", pos);
   }
 
   function pickerUpdateHandler(color) {
@@ -211,13 +117,5 @@
   .position-modal-picker > .v-overlay__content {
     left: 20px;
     top: 80px;
-  }
-
-  .v-overlay__scrim:hover {
-    cursor: default !important;
-  }
-
-  .v-overlay--active:hover {
-    cursor: default !important;
   }
 </style>
