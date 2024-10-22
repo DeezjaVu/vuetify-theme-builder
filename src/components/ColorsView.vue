@@ -4,7 +4,7 @@
     <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">
       <!-- LEFT SIDE COLUMN - COLOR MENU -->
-      <v-col class="d-flex flex-column col-menu">
+      <v-col cols="3" class="d-flex flex-column">
         <!-- COLOR DIALOG -->
         <!-- :modal-color-open="modalColorOpen" -->
         <ColorDialog
@@ -18,7 +18,7 @@
         />
         <!-- THEME COLORS LIST MENU -->
         <!-- <v-card title="Theme Colors" subtitle="Material Design" variant="outlined"> -->
-        <v-card variant="outlined">
+        <v-card class="bg-surface">
           <!-- V-CARD HEADER -->
           <v-card-item>
             <v-card-title> Theme Colors </v-card-title>
@@ -45,8 +45,8 @@
           </v-card-item>
 
           <!-- V-CARD TEXT -->
-          <v-card-text>
-            <v-list class="d-flex flex-column" density="compact" lines="two" active-class="active-disabled">
+          <v-card-text class="my-2">
+            <!-- <v-list class="d-flex flex-column" density="compact" lines="two" active-class="active-disabled">
               <v-list-item
                 v-for="item in menuItems"
                 :title="item.title"
@@ -58,7 +58,32 @@
                   color: {{ themeColors[item.value] }}
                 </v-sheet>
               </v-list-item>
-            </v-list>
+            </v-list> -->
+            <!-- PALETTE COLORS NAV BUTTONS -->
+            <!-- <v-responsive class="px-3 py-4 bg-surface rounded"> -->
+            <!-- PALETTE COLORS ROWS -->
+            <!-- <v-spacer class="pt-2" vertical></v-spacer> -->
+            <template v-for="item in paletteColors" :key="item.name">
+              <v-row>
+                <v-col class="py-1">
+                  <!-- PALETTE COLOR CARD -->
+                  <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                    <v-card-item class="px-3">
+                      <template #prepend>
+                        <v-btn class="mr-4" :color="themeColors[item.name]" icon @click="editColorClickHandler(item.name)"></v-btn>
+                      </template>
+                      <v-card-title class="text-body-1 font-weight-light d-sm-none d-md-none d-lg-flex">
+                        {{ item.title }}
+                      </v-card-title>
+                      <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light d-sm-none d-md-none d-lg-flex">
+                        {{ themeColors[item.name] }}
+                      </v-card-subtitle>
+                    </v-card-item>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </template>
+            <!-- </v-responsive> -->
           </v-card-text>
         </v-card>
       </v-col>
@@ -143,6 +168,17 @@
     { title: "Warning Color", value: "warning" },
     { title: "Error Color", value: "error" }
   ];
+
+  const paletteColors = reactive([
+    { title: "Primary", name: "primary", hex: "#2196F3" },
+    { title: "Secondary", name: "secondary", hex: "#54B6B2" },
+    { title: "Surface", name: "surface", hex: "#212121" },
+    { title: "Background", name: "background", hex: "#121212" },
+    { title: "Success", name: "success", hex: "#4CAF50" },
+    { title: "Info", name: "info", hex: "#2196F3" },
+    { title: "Warning", name: "warning", hex: "#FB8C00" },
+    { title: "Error", name: "error", hex: "#CF6679" }
+  ]);
 
   const variantCards = [
     { title: "Elevated Variant", variant: "elevated" },

@@ -17,16 +17,6 @@
 
   const emit = defineEmits(["modal:drag-start", "modal:drag-move", "modal:drag-end"]);
 
-  // vue instance
-  // const instance = getCurrentInstance();
-  // console.log(" - instance: ", instance);
-  // const uuid = ref(instance.uid);
-
-  // const tags = [
-  //   { name: "v-toolbar", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-overlay__content div.v-card header.v-toolbar" },
-  //   { name: "v-card-item", el: "div.v-overlay-container div.v-overlay.v-overlay--active div.v-card-item" }
-  // ];
-
   // v-overlay-content element
   const dragElement = ref(null);
   // v-toolbar or v-card-item element
@@ -36,9 +26,13 @@
   const offsetX = ref(0);
   const offsetY = ref(0);
 
-  // drag element has a default margin of 24px
+  // drag element margin (default is 24px)
   const marginX = ref(24);
   const marginY = ref(24);
+
+  // window scroll position
+  const scrollX = ref(0);
+  const scrollY = ref(0);
 
   let isDragging = false;
 
@@ -48,6 +42,8 @@
     console.log("DragModal ::: onMounted");
     // console.log(" - props tag: ", props.tag);
     // console.log(" - props modal-id: ", props.modalId);
+    scrollX.value = window.scrollX;
+    scrollY.value = window.scrollY;
 
     // let dragModal = document.querySelector("span.drag-modal");
     let qs = "span[id=" + props.modalId + "]";
@@ -70,12 +66,9 @@
     // console.log(" - marginX: ", mx);
     // console.log(" - marginY: ", my);
 
-    // let q = tags.find((t) => t.name === props.tag);
-    // console.log(" - q: ", q);
-
     try {
       let ls = localStorage.getItem("modalLocation");
-      console.log(" - ls: ", ls);
+      // console.log(" - ls: ", ls);
       if (ls === null || ls === undefined || ls.length === 0) {
         console.warn("[DragModal] LocalStorage (modalLocation) is null or undefined or empty");
         ls = localStorage.setItem("modalLocation", JSON.stringify([]));
@@ -84,9 +77,13 @@
       let modalObject = storageObject.find((entry) => entry.name === props.modalId);
       // console.log(" - modalObject: ", modalObject);
       if (modalObject) {
+        let modalX = modalObject.left - marginX.value + "px";
+        let modalY = modalObject.top - marginY.value + scrollY.value + "px";
+        // console.log(" - modalX: ", modalX);
+        // console.log(" - modalY: ", modalY);
         // position the modal dialog using the stored values.
-        dragElement.value.style.left = modalObject.left - marginX.value + "px";
-        dragElement.value.style.top = modalObject.top - marginY.value + "px";
+        dragElement.value.style.left = modalX;
+        dragElement.value.style.top = modalY;
       }
     } catch (err) {
       // console.warn(error);
@@ -97,8 +94,6 @@
     // console.log(" - clickElement: ", toolbar);
     // prevent text selection in toolbar title
     toolbar.classList.add("no-select");
-    let toolbarRect = toolbar.getBoundingClientRect();
-    // console.log(" - toolbarRect: ", toolbarRect);
 
     // add mouse event listeners
     addListeners();
@@ -119,7 +114,7 @@
    * - mouseleave: stops dragging the modal when the mouse leaves the element
    */
   function addListeners() {
-    console.log("DragModal ::: addListeners");
+    // console.log("DragModal ::: addListeners");
     clickElement.value.addEventListener("mousedown", clickElementDownHandler);
     clickElement.value.addEventListener("mousemove", clickElementMoveHandler);
     clickElement.value.addEventListener("mouseup", clickElementUpHandler);
@@ -132,7 +127,7 @@
    * This is a counterpart to `addListeners()` and should be called when the component is unmounted.
    */
   function removeListeners() {
-    console.log("DragModal ::: addListeners");
+    // console.log("DragModal ::: removeListeners");
     clickElement.value.removeEventListener("mousedown", clickElementDownHandler);
     clickElement.value.removeEventListener("mousemove", clickElementMoveHandler);
     clickElement.value.removeEventListener("mouseup", clickElementUpHandler);
@@ -174,10 +169,12 @@
     if (isDragging) {
       let x = evt.clientX - offsetX.value - marginX.value;
       let y = evt.clientY - offsetY.value - marginY.value;
+      // console.log(" - x: ", x, " - y: ", y);
+
       // prevent the modal from going offscreen
       // TODO: DragModal ::: implement check for modal going offscreen when window is resized.
       if (x > -marginX.value + 4) dragElement.value.style.left = x + "px";
-      if (y > -marginY.value + 4) dragElement.value.style.top = y + "px";
+      if (y > -marginY.value + 4) dragElement.value.style.top = y + scrollY.value + "px";
 
       let rect = dragElement.value.getBoundingClientRect();
       // console.log(" - rect: ", rect);
@@ -198,7 +195,7 @@
     if (isDragging) {
       // store the location in local storage
       let rect = dragElement.value.getBoundingClientRect();
-      console.log(" - rect: ", rect);
+      // console.log(" - rect: ", rect);
 
       let l = rect.left;
       let t = rect.top;
@@ -218,7 +215,7 @@
     // console.log("DragModal ::: clickElementOutHandler");
     if (isDragging) {
       let rect = dragElement.value.getBoundingClientRect();
-      console.log(" - rect: ", rect);
+      // console.log(" - rect: ", rect);
       emit("modal:drag-end", { left: rect.left, top: rect.top });
     }
     isDragging = false;
@@ -257,24 +254,30 @@
 </script>
 
 <style>
-  .no-select .v-toolbar-title,
+  /* .no-select .v-toolbar-title,
   .no-select .v-card-title,
   .no-select .v-card-subtitle {
-    pointer-events: none;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-  }
+  } */
 
   .no-select {
     cursor: default !important;
     :hover {
       cursor: move !important;
     }
+    .v-toolbar-title,
+    .v-card-title,
+    .v-card-subtitle {
+      cursor: default !important;
+      pointer-events: none;
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    }
   }
+
   span.drag-modal {
     /* visibility: hidden; */
     pointer-events: none;

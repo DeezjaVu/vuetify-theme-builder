@@ -55,8 +55,14 @@
 <script setup>
   import { ref, onMounted } from "vue";
 
-  // const props = defineProps(["modalColorOpen", "colorName"]);
-  const props = defineProps(["colorName"]);
+  const props = defineProps({
+    colorName: {
+      type: String,
+      required: true,
+      default: "color"
+    }
+  });
+
   const emit = defineEmits(["change", "update", "cancel"]);
   // defineModel() will automatically update the model when the value changes.
   // It also creates an @update event that is emitted when the value changes: `@update:picker-color`
@@ -79,26 +85,24 @@
   }
 
   function headerDragStartHandler() {
-    console.log("ColorDialog ::: headerDragStartHandler");
+    // console.log("ColorDialog ::: headerDragStartHandler");
   }
 
   function headerDragMoveHandler(pos) {
-    console.log("ColorDialog ::: headerDragMoveHandler");
-    console.log(" - pos: ", pos);
+    // console.log("ColorDialog ::: headerDragMoveHandler");
+    // console.log(" - pos: ", pos);
   }
 
   function headerDragEndHandler(pos) {
-    console.log("ColorDialog ::: headerDragEndHandler");
-    console.log(" - pos: ", pos);
+    // console.log("ColorDialog ::: headerDragEndHandler");
+    // console.log(" - pos: ", pos);
   }
 
   function pickerUpdateHandler(color) {
     console.log("ColorDialog ::: pickerUpdateHandler");
     console.log(" - color picker:", color);
-    console.log(" - old pickerColor value: ", pickerColor.value);
     // Setting the pickerColor value will trigger the `@update:picker-color` event on the component.
     pickerColor.value = color;
-    console.log(" - new pickerColor value: ", pickerColor.value);
   }
 
   function cancelClickHandler() {
@@ -113,7 +117,7 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .position-modal-picker > .v-overlay__content {
     left: 20px;
     top: 80px;
