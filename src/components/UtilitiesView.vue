@@ -30,6 +30,9 @@
               <v-card-item class="card-item-img">
                 <v-card-title class="d-sm-none d-lg-flex">Color from image</v-card-title>
                 <v-card-subtitle>Image {{ idx1 * rowNumItems + k }}</v-card-subtitle>
+                <template #append>
+                  <v-btn icon="mdi-select-color" size="small" variant="text" @click="imageButtonClickHandler(idx1, idx2)"> </v-btn>
+                </template>
               </v-card-item>
               <!-- <v-card-text class="fill-height"> extract color </v-card-text> -->
               <template #image>
@@ -41,7 +44,7 @@
               <v-card-actions>
                 <v-icon icon="mdi-check" v-if="idx1 * rowNumItems + idx2 === selectedImageIdx"></v-icon>
                 <v-spacer></v-spacer>
-                <v-btn @click="imageButtonClickHandler(idx1, idx2)">Get Color</v-btn>
+                <!-- <v-btn @click="imageButtonClickHandler(idx1, idx2)">Get Color</v-btn> -->
               </v-card-actions>
             </v-card>
           </v-col>
@@ -57,7 +60,14 @@
         <v-row>
           <v-col>
             <!-- SOURCE COLOR CARD -->
-            <v-card title="Color Palette" subtitle="Source" :color="cardColor">
+            <v-card :color="cardColor">
+              <v-card-item>
+                <v-card-title>Color Palette</v-card-title>
+                <v-card-subtitle>Source</v-card-subtitle>
+                <template #append>
+                  <v-btn variant="text" size="small" icon="mdi-export"> </v-btn>
+                </template>
+              </v-card-item>
               <v-card-text>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum pariatur animi obcaecati dolor labore quos nobis, ea
                 voluptatem officiis quibusdam molestias odio aliquam eligendi sapiente porro eveniet blanditiis optio et?
@@ -130,113 +140,148 @@
           <v-col>
             <v-card>
               <v-card-item>
-                <v-card-title>Card Title</v-card-title>
+                <v-card-title>HCT Color Picker</v-card-title>
               </v-card-item>
               <v-card-text>
                 <v-row>
-                  <v-col>
-                    <v-list>
+                  <v-col cols="4">
+                    <v-list class="font-mono">
                       <v-list-item>
-                        <pre>HCT: {{ JSON.stringify(primaryHct, null, 2) }}</pre>
+                        <pre>HCT: {{ JSON.stringify(selectedHct, null, 2) }}</pre>
                       </v-list-item>
-                      <v-list-item>HCT ARGB: {{ primaryHct.argb }} - HCT HEX: {{ hexFromArgb(primaryHct.argb) }}</v-list-item>
-                      <v-list-item>Hue: {{ primaryHue }} - HCT Hue: {{ primaryHct.hue }}</v-list-item>
-                      <v-list-item>Chroma: {{ primaryChroma }} - HCT Chroma: {{ primaryHct.chroma }}</v-list-item>
-                      <v-list-item>Tone: {{ primaryTone }} - HCT Tone: {{ primaryHct.tone }}</v-list-item>
+                      <v-list-item>HCT ARGB: {{ selectedHct.argb }} - HCT HEX: {{ argbToHex(selectedHct.argb) }}</v-list-item>
+                      <v-list-item>Hue: {{ selectedHue }} - HCT Hue: {{ selectedHct.hue }}</v-list-item>
+                      <v-list-item>Chroma: {{ selectedChroma }} - HCT Chroma: {{ selectedHct.chroma }}</v-list-item>
+                      <v-list-item>Tone: {{ selectedTone }} - HCT Tone: {{ selectedHct.tone }}</v-list-item>
                     </v-list>
                   </v-col>
+
                   <v-col cols="4">
-                    <!-- <v-sheet width="150" height="150" :color="hexFromArgb(primaryHct.argb)" elevation="10" rounded></v-sheet> -->
-                    <v-card title="Color" :subtitle="`Source: ${hexFromArgb(primaryHct.argb)}`" :color="hexFromArgb(primaryHct.argb)">
+                    <!-- HEX COLOR CARD -->
+                    <v-row>
+                      <v-col>
+                        <v-card :color="argbToHex(selectedHct.argb)" density="compact">
+                          <v-card-item>
+                            <v-card-subtitle class="font-mono text-subtitle-2">{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
+                            <template #append>
+                              <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copySelectedColorClickHandler" />
+                              <v-btn icon="mdi-select-color" size="small" variant="text" @click="useSelectedColorClickHandler" />
+                            </template>
+                          </v-card-item>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-card-subtitle> Hue: </v-card-subtitle>
+                        <v-slider
+                          class="hue-slider-track"
+                          v-model="selectedHue"
+                          min="0"
+                          max="360"
+                          step="1"
+                          @update:model-value="hueSliderUpdateHandler"
+                        >
+                          <template v-slot:append>
+                            <v-text-field
+                              class="font-mono--input mono-sm--input"
+                              v-model="selectedHue"
+                              width="80"
+                              type="number"
+                              min="0"
+                              max="360"
+                              step="1"
+                              density="compact"
+                              single-line
+                              hide-details
+                              @update:model-value="hueSliderUpdateHandler"
+                            >
+                            </v-text-field>
+                          </template>
+                        </v-slider>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-card-subtitle> Chroma: </v-card-subtitle>
+                        <!-- gradient track background - gray to color -->
+                        <!-- background: linear-gradient(90deg, rgba(119,119,119,1) 0%, rgba(228,0,123,1) 100%); -->
+                        <v-slider
+                          class="chroma-slider-track"
+                          v-model="selectedChroma"
+                          min="0"
+                          max="100"
+                          step="1"
+                          @update:model-value="chromaSliderUpdateHandler"
+                        >
+                          <template v-slot:append>
+                            <v-text-field
+                              class="font-mono--input mono-sm--input"
+                              v-model="selectedChroma"
+                              width="80"
+                              type="number"
+                              min="0"
+                              max="100"
+                              step="1"
+                              density="compact"
+                              single-line
+                              hide-details
+                              @update:model-value="chromaSliderUpdateHandler"
+                            >
+                            </v-text-field>
+                          </template>
+                        </v-slider>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-card-subtitle>Tone:</v-card-subtitle>
+                        <!-- gradient track background - black to color to white -->
+                        <!-- background: 'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(228,0,123,1) 50%, rgba(255,255,255,1) 100%)' -->
+                        <v-slider
+                          class="tone-slider-track"
+                          v-model="selectedTone"
+                          min="0"
+                          max="100"
+                          step="1"
+                          @update:model-value="toneSliderUpdateHandler"
+                        >
+                          <template v-slot:append>
+                            <v-text-field
+                              class="font-mono--input mono-sm--input"
+                              v-model="selectedTone"
+                              width="80"
+                              type="number"
+                              density="compact"
+                              single-line
+                              hide-details
+                              max="100"
+                              min="0"
+                              step="1"
+                              @update:model-value="toneSliderUpdateHandler"
+                            >
+                            </v-text-field>
+                          </template>
+                        </v-slider>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+
+                  <v-col cols="4">
+                    <!-- <v-sheet width="150" height="150" :color="hexFromArgb(selectedHct.argb)" elevation="10" rounded></v-sheet> -->
+                    <v-card :color="argbToHex(selectedHct.argb)">
+                      <v-card-item>
+                        <v-card-title>Hex Color</v-card-title>
+                        <v-card-subtitle>{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
+                        <template #append>
+                          <v-btn icon="mdi-select-color" size="small" variant="text" @click="useSelectedColorClickHandler"> </v-btn>
+                        </template>
+                      </v-card-item>
                       <v-card-text>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum pariatur animi obcaecati dolor labore quos nobis,
                         ea voluptatem officiis quibusdam molestias odio aliquam eligendi sapiente porro eveniet blanditiis optio et?
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col cols="2"> Hue: </v-col>
-                  <v-col>
-                    <v-slider
-                      class="hue-slider-track"
-                      v-model="primaryHue"
-                      min="0"
-                      max="360"
-                      step="1"
-                      thumb-label
-                      @update:model-value="primaryHueUpdateHandler"
-                    >
-                      <template v-slot:append>
-                        <v-text-field
-                          v-model="primaryHue"
-                          width="100"
-                          type="number"
-                          density="compact"
-                          single-line
-                          hide-details
-                          @update:model-value="primaryHueUpdateHandler"
-                        >
-                        </v-text-field>
-                      </template>
-                    </v-slider>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="2"> Chroma: </v-col>
-                  <v-col>
-                    <!-- gradient track background - gray to color -->
-                    <!-- background: linear-gradient(90deg, rgba(119,119,119,1) 0%, rgba(228,0,123,1) 100%); -->
-                    <v-slider
-                      class="chroma-slider-track"
-                      v-model="primaryChroma"
-                      min="0"
-                      max="100"
-                      step="1"
-                      @update:model-value="primaryChromaUpdateHandler"
-                    >
-                      <template v-slot:append>
-                        <v-text-field
-                          v-model="primaryChroma"
-                          width="100"
-                          type="number"
-                          density="compact"
-                          single-line
-                          hide-details
-                          @update:model-value="primaryChromaUpdateHandler"
-                        >
-                        </v-text-field>
-                      </template>
-                    </v-slider>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="2"> Tone: </v-col>
-                  <v-col>
-                    <!-- gradient track background - black to color to white -->
-                    <!-- background: 'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(228,0,123,1) 50%, rgba(255,255,255,1) 100%)' -->
-                    <v-slider
-                      class="tone-slider-track"
-                      v-model="primaryTone"
-                      min="0"
-                      max="100"
-                      step="1"
-                      @update:model-value="primaryToneUpdateHandler"
-                    >
-                      <template v-slot:append>
-                        <v-text-field
-                          v-model="primaryTone"
-                          width="80"
-                          type="number"
-                          density="compact"
-                          single-line
-                          hide-details
-                          @update:model-value="primaryToneUpdateHandler"
-                        >
-                        </v-text-field>
-                      </template>
-                    </v-slider>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -260,7 +305,7 @@
   // https://m3.material.io/styles/color/roles
   // https://m3.material.io/styles/color/system/how-the-system-works
 
-  import { ref, onMounted, reactive } from "vue";
+  import { ref, onMounted, reactive, warn } from "vue";
   import { argbFromHex, hexFromArgb, themeFromSourceColor, themeFromImage, applyTheme, Hct } from "@material/material-color-utilities";
   import * as colorUtils from "@/utils/colorUtils.js";
   import { sourceColorFromImage } from "@material/material-color-utilities";
@@ -270,6 +315,7 @@
   const randomTooltipOpen = ref(false);
 
   const modalColorOpen = ref(false);
+
   const tempColor = ref("");
   const selectedColorName = ref("");
   const selectedColor = ref("");
@@ -304,27 +350,48 @@
     { title: "Neutral Variant", name: "neutralVariant", hex: "#8E9098" }
   ]);
 
-  const primaryHct = ref(Hct.fromInt(argbFromHex(cardColor.value)));
-  console.log("UtilitiesView ::: primaryHct: ", primaryHct.value);
-  console.log("UtilitiesView ::: primaryHct HEX: ", hexFromArgb(primaryHct.value.argb));
-  console.log("UtilitiesView ::: cardColor HEX: ", cardColor.value);
-  let testHct = Hct.fromInt(primaryHct.value.argb);
-  console.log("UtilitiesView ::: HCT from ARGB: ", testHct);
-  testHct.chroma = 100;
-  console.log("UtilitiesView ::: HCT chroma 100: ", testHct.chroma);
-  testHct.tone = 50;
-  console.log("UtilitiesView ::: HCT tone 50: ", testHct.tone);
-  console.log("UtilitiesView ::: HCT from ARGB: ", testHct);
+  const selectedHct = ref(Hct.fromInt(argbFromHex(cardColor.value)));
+  console.log("UtilitiesView ::: selectedHct: ", selectedHct.value);
+  // console.log("UtilitiesView ::: selectedHct HEX: ", hexFromArgb(selectedHct.value.argb));
+  // console.log("UtilitiesView ::: cardColor HEX: ", cardColor.value);
 
-  const primaryHue = ref(Math.round(primaryHct.value.hue)); // primaryHct.value.hue);
-  const primaryChroma = ref(Math.round(primaryHct.value.chroma)); //primaryHct.value.chroma);
-  const primaryTone = ref(Math.round(primaryHct.value.tone)); // primaryHct.value.tone);
+  const selectedHue = ref(Math.round(selectedHct.value.hue)); // selectedHct.value.hue);
+  const selectedChroma = ref(Math.round(selectedHct.value.chroma)); //selectedHct.value.chroma);
+  const selectedTone = ref(Math.round(selectedHct.value.tone)); // selectedHct.value.tone);
+
+  const chromaSliderTrack = ref(null);
+  const toneSliderTrack = ref(null);
 
   // If you want to get a color from the Tonal Palette, use the following:
   // const primary98 = TonalPalette.fromInt(primary).tone(98);
 
   onMounted(() => {
     console.log("UtilitiesView ::: onMounted");
+    // get references to slider elements
+    chromaSliderTrack.value = document.querySelector(".chroma-slider-track .v-slider-track .v-slider-track__background");
+    toneSliderTrack.value = document.querySelector(".tone-slider-track .v-slider-track .v-slider-track__background");
+
+    console.log(" - chromaSliderTrack: ", chromaSliderTrack);
+    console.log(" - toneSliderTrack: ", toneSliderTrack);
+
+    updateSliderBackgrounds();
+
+    const colors = [
+      Hct.from(0, 100, 50),
+      Hct.from(60, 100, 50),
+      Hct.from(120, 100, 50),
+      Hct.from(180, 100, 50),
+      Hct.from(240, 100, 50),
+      Hct.from(300, 100, 50),
+      Hct.from(360, 100, 50)
+    ];
+
+    const hexColors = colors.map((color) => argbToHex(color.argb));
+
+    const gradientCss = `linear-gradient(to right, ${hexColors.join(", ")})`;
+    // linear-gradient(to right, #E7007D, #B26300, #6D7F00, #008673, #007FB4, #8851FF, #E7007D)
+
+    console.log(gradientCss);
   });
 
   function imageButtonClickHandler(idx1, idx2) {
@@ -370,47 +437,49 @@
     const theme = await themeFromImage(imgObj);
     console.log(" - theme from image: ", theme);
 
-    const hexColor = hexFromArgb(theme.source).toUpperCase();
+    const hexColor = argbToHex(theme.source).toUpperCase();
     console.log(" - theme source: ", hexColor);
 
     cardColor.value = hexColor;
     paletteColors.find((entry) => entry.name === "source").hex = hexColor;
+    // update the hct colors with new source color
+    setSelectedHctColors();
 
     console.log("=============== PALETTES ==============");
 
     const primaryRGB = theme.palettes.primary.keyColor.argb;
     console.log(" - primaryRGB: ", primaryRGB);
-    const primaryHex = hexFromArgb(primaryRGB).toUpperCase();
+    const primaryHex = argbToHex(primaryRGB);
     console.log(" - primary HEX: ", primaryHex);
     paletteColors.find((entry) => entry.name === "primary").hex = primaryHex;
 
     const secondaryRGB = theme.palettes.secondary.keyColor.argb;
     console.log(" - secondaryRGB: ", secondaryRGB);
-    const secondaryHex = hexFromArgb(secondaryRGB).toUpperCase();
+    const secondaryHex = argbToHex(secondaryRGB);
     console.log(" - secondary HEX: ", secondaryHex);
     paletteColors.find((entry) => entry.name === "secondary").hex = secondaryHex;
 
     const tertiaryRGB = theme.palettes.tertiary.keyColor.argb;
     console.log(" - tertiaryRGB: ", tertiaryRGB);
-    const tertiaryHex = hexFromArgb(tertiaryRGB).toUpperCase();
+    const tertiaryHex = argbToHex(tertiaryRGB);
     console.log(" - tertiary HEX: ", tertiaryHex);
     paletteColors.find((entry) => entry.name === "tertiary").hex = tertiaryHex;
 
     const errorRGB = theme.palettes.error.keyColor.argb;
     console.log(" - errorRGB: ", errorRGB);
-    const errorHex = hexFromArgb(errorRGB).toUpperCase();
+    const errorHex = argbToHex(errorRGB);
     console.log(" - error HEX: ", errorHex);
     paletteColors.find((entry) => entry.name === "error").hex = errorHex;
 
     const neutralRGB = theme.palettes.neutral.keyColor.argb;
     console.log(" - neutralRGB: ", neutralRGB);
-    const neutralHex = hexFromArgb(neutralRGB).toUpperCase();
+    const neutralHex = argbToHex(neutralRGB);
     console.log(" - neutral HEX: ", neutralHex);
     paletteColors.find((entry) => entry.name === "neutral").hex = neutralHex;
 
     const neutralVariantRGB = theme.palettes.neutralVariant.keyColor.argb;
     console.log(" - neutralVariantRGB: ", neutralVariantRGB);
-    const neutralVariantHex = hexFromArgb(neutralVariantRGB).toUpperCase();
+    const neutralVariantHex = argbToHex(neutralVariantRGB);
     console.log(" - neutralVariant HEX: ", neutralVariantHex);
     paletteColors.find((entry) => entry.name === "neutralVariant").hex = neutralVariantHex;
 
@@ -419,44 +488,44 @@
     console.log("=========== SCHEMES LIGHT ===========");
     const lightPrimary = theme.schemes.light.primary;
     console.log(" - lightPrimary: ", lightPrimary); //
-    console.log(" - lightPrimary HEX: ", hexFromArgb(lightPrimary)); //#6e3d00 - #8c5000
+    console.log(" - lightPrimary HEX: ", argbToHex(lightPrimary)); //#6e3d00 - #8c5000
 
     const lightSecondary = theme.schemes.light.secondary;
     console.log(" - lightSecondary: ", lightSecondary);
-    console.log(" - lightSecondary HEX: ", hexFromArgb(lightSecondary));
+    console.log(" - lightSecondary HEX: ", argbToHex(lightSecondary));
 
     const lightTertiary = theme.schemes.light.tertiary;
     console.log(" - lightTertiary: ", lightTertiary);
-    console.log(" - lightTertiary HEX: ", hexFromArgb(lightTertiary));
+    console.log(" - lightTertiary HEX: ", argbToHex(lightTertiary));
 
     const lightBackground = theme.schemes.light.background;
     console.log(" - lightBackground: ", lightBackground);
-    console.log(" - lightBackground HEX: ", hexFromArgb(lightBackground));
+    console.log(" - lightBackground HEX: ", argbToHex(lightBackground));
 
     const lightSurface = theme.schemes.light.surface;
     console.log(" - lightSurface: ", lightSurface);
-    console.log(" - lightSurface HEX: ", hexFromArgb(lightSurface));
+    console.log(" - lightSurface HEX: ", argbToHex(lightSurface));
 
     console.log("=========== SCHEMES DARK ============");
     const darkPrimary = theme.schemes.dark.primary;
     console.log(" - darkPrimary: ", darkPrimary);
-    console.log(" - darkPrimary HEX: ", hexFromArgb(darkPrimary));
+    console.log(" - darkPrimary HEX: ", argbToHex(darkPrimary));
 
     const darkSecondary = theme.schemes.dark.secondary;
     console.log(" - darkSecondary: ", darkSecondary);
-    console.log(" - darkSecondary HEX: ", hexFromArgb(darkSecondary));
+    console.log(" - darkSecondary HEX: ", argbToHex(darkSecondary));
 
     const darkTertiary = theme.schemes.dark.tertiary;
     console.log(" - darkTertiary: ", darkTertiary);
-    console.log(" - darkTertiary HEX: ", hexFromArgb(darkTertiary));
+    console.log(" - darkTertiary HEX: ", argbToHex(darkTertiary));
 
     const darkBackground = theme.schemes.dark.background;
     console.log(" - darkBackground: ", darkBackground);
-    console.log(" - darkBackground HEX: ", hexFromArgb(darkBackground));
+    console.log(" - darkBackground HEX: ", argbToHex(darkBackground));
 
     const darkSurface = theme.schemes.dark.surface;
     console.log(" - darkSurface: ", darkSurface);
-    console.log(" - darkSurface HEX: ", hexFromArgb(darkSurface));
+    console.log(" - darkSurface HEX: ", argbToHex(darkSurface));
   }
 
   async function getImageColor(img) {
@@ -466,7 +535,7 @@
       console.log(" - color from source:", imgColor);
       const hexColor = colorUtils.intToHex(imgColor);
       console.log(" - hexColor intToHex: ", hexColor);
-      const hexColor2 = hexFromArgb(imgColor);
+      const hexColor2 = argbToHex(imgColor);
       console.log(" - hexColor 2 hexFromArgb: ", hexColor2);
       cardColor.value = hexColor;
     } catch (error) {
@@ -476,7 +545,19 @@
 
   function generateTheme(seedColor) {
     console.log("UtilitiesView ::: generateTheme");
+    // seedColor is a hex color
     console.log(" - seedColor: ", seedColor);
+    console.log(" - is valid color: ", tinycolor(seedColor).isValid());
+    console.log(" - seedColor format: ", tinycolor(seedColor).getFormat());
+    let tinySeedColor = tinycolor(seedColor);
+    console.log(" - tinySeedColor: ", tinySeedColor);
+
+    if (seedColor && tinySeedColor.isValid() && tinySeedColor.getFormat() === "hex") {
+      seedColor = seedColor.toUpperCase();
+    } else {
+      warn("[UtilitiesView] - Seed color is not a valid hex color: ", seedColor);
+      return;
+    }
 
     // const seedColor = "#F44336";
     // const custom1 = {
@@ -498,54 +579,56 @@
     console.log(" - colorScheme: ", colorScheme);
 
     const sourceColorRGB = theme.source;
-    const sourceColorHex = hexFromArgb(sourceColorRGB).toUpperCase();
+    const sourceColorHex = argbToHex(sourceColorRGB);
     console.log(" - sourceColorRGB: ", sourceColorRGB);
     console.log(" - sourceColorHex: ", sourceColorHex);
 
     // set new source color
     let sourceObject = paletteColors.find((entry) => entry.name === "source");
-    sourceObject.hex = seedColor;
+    sourceObject.hex = seedColor.toUpperCase();
     sourceObject.title = "Source (random color)";
+
     cardColor.value = seedColor;
+    setSelectedHctColors();
 
     const primaryRGB = palette.primary.keyColor.argb;
     console.log(" - primaryRGB: ", primaryRGB);
-    const primaryHEX = hexFromArgb(primaryRGB).toUpperCase();
+    const primaryHEX = argbToHex(primaryRGB);
     console.log(" - primaryHEX: ", primaryHEX);
     // set new primary color
     paletteColors.find((entry) => entry.name === "primary").hex = primaryHEX;
 
     const secondaryRGB = palette.secondary.keyColor.argb;
     console.log(" - secondaryRGB: ", secondaryRGB);
-    const secondaryHEX = hexFromArgb(secondaryRGB).toUpperCase();
+    const secondaryHEX = argbToHex(secondaryRGB);
     console.log(" - secondaryHEX: ", secondaryHEX);
     // set new secondary color
     paletteColors.find((entry) => entry.name === "secondary").hex = secondaryHEX;
 
     const tertiaryRGB = palette.tertiary.keyColor.argb;
     console.log(" - tertiaryRGB: ", tertiaryRGB);
-    const tertiaryHEX = hexFromArgb(tertiaryRGB).toUpperCase();
+    const tertiaryHEX = argbToHex(tertiaryRGB);
     console.log(" - tertiaryHEX: ", tertiaryHEX);
     // set new tertiary color
     paletteColors.find((entry) => entry.name === "tertiary").hex = tertiaryHEX;
 
     const errorRGB = palette.error.keyColor.argb;
     console.log(" - errorRGB: ", errorRGB);
-    const errorHEX = hexFromArgb(errorRGB).toUpperCase();
+    const errorHEX = argbToHex(errorRGB);
     console.log(" - errorHEX: ", errorHEX);
     // set new error color
     paletteColors.find((entry) => entry.name === "error").hex = errorHEX;
 
     const neutralRGB = palette.neutral.keyColor.argb;
     console.log(" - neutralRGB: ", neutralRGB);
-    const neutralHEX = hexFromArgb(neutralRGB).toUpperCase();
+    const neutralHEX = argbToHex(neutralRGB);
     console.log(" - neutralHEX: ", neutralHEX);
     // set new neutral color
     paletteColors.find((entry) => entry.name === "neutral").hex = neutralHEX;
 
     const neutralVariantRGB = palette.neutralVariant.keyColor.argb;
     console.log(" - neutralVariantRGB: ", neutralVariantRGB);
-    const neutralVariantHEX = hexFromArgb(neutralVariantRGB).toUpperCase();
+    const neutralVariantHEX = argbToHex(neutralVariantRGB);
     console.log(" - neutralVariantHEX: ", neutralVariantHEX);
     // set new neutralVariant color
     paletteColors.find((entry) => entry.name === "neutralVariant").hex = neutralVariantHEX;
@@ -565,9 +648,27 @@
     generateTheme(hex);
   }
 
+  function copySelectedColorClickHandler() {
+    console.log("UtilitiesView ::: copySelectedColorClickHandler");
+    let hex = argbToHex(selectedHct.value.argb);
+    console.log(" - hex: ", hex);
+    // Clipboard.writeText(hex);
+    navigator.clipboard.writeText(hex);
+    // TODO: inform user that color was copied to clipboard.
+  }
+
+  function useSelectedColorClickHandler() {
+    console.log("UtilitiesView ::: useSelectedColorClickHandler");
+    let hex = argbToHex(selectedHct.value.argb);
+    console.log(" - hex: ", hex);
+    cardColor.value = hex;
+    selectedImageIdx.value = -1;
+    generateTheme(hex);
+  }
+
   function getTinyInfo(palette) {
     console.log("UtilitiesView ::: getTinyInfo");
-    let primary = tinycolor(hexFromArgb(palette.primary.keyColor.argb));
+    let primary = tinycolor(argbToHex(palette.primary.keyColor.argb));
     // let secondary = tinycolor(palette.secondary.keyColor.argb);
     // let tertiary = tinycolor(palette.tertiary.keyColor.argb);
     // let error = tinycolor(palette.error.keyColor.argb);
@@ -621,6 +722,8 @@
     let colorName = selectedColorName.value;
     if (colorName === "source") {
       cardColor.value = color;
+      // also update the selectedHct
+      setSelectedHctColors();
     }
   }
 
@@ -633,46 +736,76 @@
     console.log("UtilitiesView ::: editColorCancelHandler");
   }
 
-  function primaryHueUpdateHandler(hue) {
-    console.log("UtilitiesView ::: primaryHueUpdateHandler");
-    console.log(" - hue: ", hue);
-    console.log(" - primaryHue: ", primaryHue.value);
-    console.log(" - primaryHct: ", primaryHct.value);
-    let hct = primaryHct.value;
-    hct.hue = hue;
-    hct.chroma = primaryChroma.value;
-    hct.tone = primaryTone.value;
-    // update the slider backgrouds with new hct color
+  function setSelectedHctColors() {
+    console.log("UtilitiesView ::: setSelectedHctColors");
+    if (cardColor && cardColor.value !== "") {
+      let colorRgb = argbFromHex(cardColor.value);
+      console.log(" - card color rgb: ", colorRgb);
+      selectedHct.value = Hct.fromInt(colorRgb);
+      console.log(" - selectedHct: ", selectedHct.value);
+      selectedHue.value = Math.round(selectedHct.value.hue);
+      selectedChroma.value = Math.round(selectedHct.value.chroma);
+      selectedTone.value = Math.round(selectedHct.value.tone);
+    } else {
+      warn("[UtilitiesView] - `cardColor` is null or undefined.");
+    }
+    // set the slider backgrounds to match the new HCT color.
     updateSliderBackgrounds();
   }
 
-  function primaryChromaUpdateHandler(chroma) {
-    console.log("UtilitiesView ::: primaryChromaUpdateHandler");
+  function hueSliderUpdateHandler(hue) {
+    console.log("UtilitiesView ::: hueSliderUpdateHandler");
+    console.log(" - hue: ", hue);
+    console.log(" - selectedHue: ", selectedHue.value);
+    console.log(" - selectedHct: ", selectedHct.value);
+
+    let hct = selectedHct.value;
+    hct.hue = Math.round(Number(hue));
+    hct.chroma = Math.round(Number(selectedChroma.value));
+    hct.tone = Math.round(Number(selectedTone.value));
+
+    let hctColor = Hct.from(hue, Math.round(Number(selectedChroma.value)), Math.round(Number(selectedTone.value)));
+    console.log(" - selected hctColor: ", hct);
+    console.log(" - new hctColor: ", hctColor);
+
+    // update the slider backgrounds with new hct color
+    updateSliderBackgrounds();
+  }
+
+  function chromaSliderUpdateHandler(chroma) {
+    console.log("UtilitiesView ::: chromaSliderUpdateHandler");
     console.log(" - chroma: ", chroma);
     console.log(" - typeof chroma: ", typeof chroma);
 
-    console.log(" - primaryChroma: ", primaryChroma.value);
-    console.log(" - primaryHct: ", primaryHct.value);
-    let hct = primaryHct.value;
-    hct.chroma = Number(chroma) || primaryChroma.value;
-    hct.tone = Number(primaryTone.value);
-    hct.hue = Number(primaryHue.value);
+    console.log(" - selectedChroma: ", selectedChroma.value);
+    console.log(" - selectedHct: ", selectedHct.value);
+    let hct = selectedHct.value;
+    hct.chroma = Number(chroma) || Number(selectedChroma.value);
+    hct.tone = Number(selectedTone.value);
+    hct.hue = Number(selectedHue.value);
   }
 
-  function primaryToneUpdateHandler(tone) {
-    console.log("UtilitiesView ::: primaryToneUpdateHandler");
+  function toneSliderUpdateHandler(tone) {
+    console.log("UtilitiesView ::: toneSliderUpdateHandler");
     console.log(" - tone: ", tone, " - isNaN: ", isNaN(tone));
     console.log(" - typeof tone: ", typeof tone);
 
-    console.log(" - primaryTone: ", primaryTone.value);
-    console.log(" - primaryHct: ", primaryHct.value);
+    tone = Math.max(1, Number(tone));
+
+    console.log(" - Math.mex tone: ", tone);
+    if (selectedTone.value < tone) {
+      // selectedTone.value = tone;
+    }
+
+    console.log(" - selectedTone: ", selectedTone.value);
+    console.log(" - selectedHct: ", selectedHct.value);
     // if tone is NaN (e.g. when the user clears the text field), set the hct tone to its current value
-    primaryHct.value.tone = Number(tone) || primaryHct.value.tone;
+    selectedHct.value.tone = Number(tone);
 
     // set the hct chroma so that the HCT color is properly updated when accessing its argb value
-    console.log(" - primaryChroma: ", primaryChroma.value);
-    primaryHct.value.chroma = primaryChroma.value;
-    primaryHct.value.hue = primaryHue.value;
+    console.log(" - selectedChroma: ", selectedChroma.value);
+    selectedHct.value.chroma = Number(selectedChroma.value);
+    selectedHct.value.hue = Number(selectedHue.value);
 
     // TODO: update all properties in the hct object
     // TODO: or even just create a new one from the hue, chroma, and tone values.
@@ -683,44 +816,59 @@
 
   function updateSliderBackgrounds() {
     console.log("UtilitiesView ::: updateSliderBackgrounds");
-    console.log(" - hue: ", primaryHue.value);
-    console.log(" - chroma: ", primaryChroma.value);
-    console.log(" - tone: ", primaryTone.value);
 
-    // let hueSliderTrack = document.querySelector(".hue-slider-track");
-    // console.log(" - hueSliderTrack: ", hueSliderTrack);
-
-    let chromaSliderTrack = document.querySelector(".chroma-slider-track .v-slider-track .v-slider-track__background");
-    console.log(" - chromaSliderTrack: ", chromaSliderTrack);
-    let chromaStyle = chromaSliderTrack.style;
-    console.log(" - chromaStyle: ", chromaStyle);
-
-    let toneSliderTrack = document.querySelector(".tone-slider-track .v-slider-track .v-slider-track__background");
-    console.log(" - toneSliderTrack: ", toneSliderTrack);
-    let toneStyle = toneSliderTrack.style;
-    console.log(" - toneStyle: ", toneStyle);
-
-    // new HCT color with the same hue, full chroma (100), and full tone (53)
-    let bgHct = Hct.fromInt(primaryHct.value.argb);
+    // new HCT color with the same hue, full chroma (100), and full tone (50)
+    let bgHct = Hct.from(Math.round(Number(selectedHct.value.hue)), 100, 50);
     console.log(" - HCT from ARGB: ", bgHct);
+    let bgHex = argbToHex(bgHct.argb);
 
-    bgHct.tone = 53;
-    console.log(" - HCT tone 53: ", bgHct.tone);
-    // chroma needs to be set last, as changing tone affects chroma
-    bgHct.chroma = 100;
-    console.log(" - HCT chroma 100: ", bgHct.chroma);
+    // console.log(" - chromaSliderTrack: ", chromaSliderTrack.value);
+    if (chromaSliderTrack && chromaSliderTrack.value !== null) {
+      let chromaStyle = chromaSliderTrack.value.style;
+      // console.log(" - chromaStyle: ", chromaStyle);
+      let chromaBgStyle = "linear-gradient(to right, #777777 0%, #555555 100%)".replace("#555555", bgHex);
+      console.log(" - chromaBgStyle: ", chromaBgStyle);
+      chromaStyle.setProperty("background", chromaBgStyle, "important");
+    } else {
+      console.warn("[UtilitiesView] chromaSliderTrack.value is null");
+    }
 
-    console.log(" - HCT from ARGB: ", bgHct);
-
-    let bgHex = hexFromArgb(bgHct.argb);
-    let chromaBgStyle = "linear-gradient(to right, #777777 0%, #555555 100%)".replace("#555555", bgHex);
-    console.log(" - chromaBgStyle: ", chromaBgStyle);
-    chromaStyle.setProperty("background", chromaBgStyle, "important");
-
-    let toneBgStyle = "linear-gradient(to right, #000000 0%, #555555 50%, #FFFFFF 100%)".replace("#555555", bgHex);
-    console.log(" - toneBgStyle: ", toneBgStyle);
-    toneStyle.setProperty("background", toneBgStyle, "important");
+    // console.log(" - toneSliderTrack: ", toneSliderTrack.value);
+    if (toneSliderTrack && toneSliderTrack.value !== null) {
+      let toneStyle = toneSliderTrack.value.style;
+      // console.log(" - toneStyle: ", toneStyle);
+      let toneBgStyle = "linear-gradient(to right, #000000 0%, #555555 50%, #FFFFFF 100%)".replace("#555555", bgHex);
+      console.log(" - toneBgStyle: ", toneBgStyle);
+      toneStyle.setProperty("background", toneBgStyle, "important");
+    } else {
+      console.warn("[UtilitiesView] toneSliderTrack.value is null");
+    }
   }
+
+  // TODO: UtilitisView - move argbToHex function to a util file.
+  /**
+   * Converts an ARGB color value to a hex color string and makes it uppercase (e.g. "#RRGGBB")
+   *
+   * @param {number} argb - the ARGB color value
+   * @returns {string} the hex color string
+   */
+  function argbToHex(argb) {
+    return hexFromArgb(argb).toUpperCase();
+  }
+
+  /**
+   * Random / Favorite Hex Colors
+   * #F9C3D3
+   * #F4AB82
+   * #BEC4b2
+   * #6A6B63
+   * #6584A6
+   * #3C444D
+   * #494F60
+   * #434943
+   * #4d491d
+   * #3B503C
+   */
 </script>
 
 <style lang="scss">
@@ -733,36 +881,47 @@
     }
   }
 
-  .hue-slider-track {
+  .hue-slider-track,
+  .chroma-slider-track,
+  .tone-slider-track {
     .v-slider-track__background {
-      background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00) !important;
-      height: 12px !important;
+      height: 24px !important;
+      // border-radius: 24px !important;
+      border-radius: 0 !important;
       opacity: 1 !important;
     }
     .v-slider-track__fill {
+      display: none !important;
       visibility: hidden !important;
+    }
+    .v-input__details {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    input {
+      height: 32px !important;
+      min-height: 32px !important;
+    }
+  }
+
+  .hue-slider-track {
+    .v-slider-track__background {
+      // material theme builder hue values: 0, 60, 120, 180, 240, 300, 360 (chroma: 100, tone: 50)
+      // material theme builder gradient: #E7007D, #B66500 , #6D7F00 , #008673 , #007FB4 , #8851FF , #E7007D
+      background: linear-gradient(to right, #e7007d, #b26300, #6d7f00, #008673, #007fb4, #8851ff, #e7007d) !important;
+      // background: linear-gradient(to right, #E7007D, #B26300, #6D7F00, #008673, #007FB4, #8851FF, #E7007D) !important;
     }
   }
 
   .chroma-slider-track {
     .v-slider-track__background {
       background: linear-gradient(to right, #777777 0%, #e4007b 100%) !important;
-      height: 12px !important;
-      opacity: 1 !important;
-    }
-    .v-slider-track__fill {
-      visibility: hidden !important;
     }
   }
 
   .tone-slider-track {
     .v-slider-track__background {
       background: linear-gradient(to right, #000000 0%, #e4007b 50%, #ffffff 100%) !important;
-      height: 12px !important;
-      opacity: 1 !important;
-    }
-    .v-slider-track__fill {
-      visibility: hidden !important;
     }
   }
 </style>

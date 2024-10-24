@@ -21,3 +21,9 @@ pre {
     font-family: $mono-font-family !important;
   }
 }
+
+.mono-sm--input {
+  input {
+    font-size: small !important;
+  }
+}
