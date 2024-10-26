@@ -230,8 +230,8 @@
 <style lang="scss">
   // for some reason these styles won't work if the `<style>` is set to `scoped`
   .btn-hover-text {
-    // font-family: "Courier New", Courier, monospace !important;
-    // font-weight: bold !important;
+    font-size: small !important;
+    font-weight: normal !important;
     > .v-btn__content {
       // font-weight: bold !important;
       opacity: 0 !important;
@@ -239,10 +239,9 @@
   }
 
   .btn-hover-text:hover {
-    // font-family: "Courier New", Courier, monospace !important;
-    // font-weight: bold !important;
+    font-size: small !important;
+    font-weight: normal !important;
     > .v-btn__content {
-      // font-weight: light !important;
       opacity: 1 !important;
     }
   }

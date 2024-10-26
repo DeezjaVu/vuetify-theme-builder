@@ -86,6 +86,150 @@
           </template>
         </v-expansion-panels>
       </v-col>
+      <!-- RIGHT SIDE COLOMN -->
+      <v-col>
+        <!-- RIGHT SIDE CARD -->
+        <v-card>
+          <v-card-item>
+            <v-card-title>HCT Colors</v-card-title>
+            <v-card-subtitle></v-card-subtitle>
+          </v-card-item>
+          <!-- RIGHT SIDE CARD CONTENT -->
+          <v-card-text>
+            <v-row>
+              <v-col cols="4">
+                <!-- LOG INFO -->
+                <v-list class="font-mono">
+                  <v-list-item>
+                    <pre>HCT: {{ JSON.stringify(selectedHct, null, 2) }}</pre>
+                  </v-list-item>
+                  <!-- <v-list-item>HCT ARGB: {{ selectedHct.argb }} - HCT HEX: {{ argbToHex(selectedHct.argb) }}</v-list-item> -->
+                  <v-list-item>Hue: {{ selectedHue }} - HCT Hue: {{ selectedHct.hue }}</v-list-item>
+                  <v-list-item>Chroma: {{ selectedChroma }} - HCT Chroma: {{ selectedHct.chroma }}</v-list-item>
+                  <v-list-item>Tone: {{ selectedTone }} - HCT Tone: {{ selectedHct.tone }}</v-list-item>
+                </v-list>
+              </v-col>
+
+              <v-col cols="4">
+                <!-- HEX COLOR CARD -->
+                <v-row>
+                  <v-col>
+                    <v-card :color="argbToHex(selectedHct.argb)" density="compact">
+                      <v-card-item>
+                        <v-card-subtitle class="font-mono text-subtitle-2">{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
+                        <template #append>
+                          <!-- <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copySelectedColorClickHandler" /> -->
+                          <!-- <v-btn icon="mdi-select-color" size="small" variant="text" @click="useSelectedColorClickHandler" /> -->
+                        </template>
+                      </v-card-item>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card-subtitle> Hue: </v-card-subtitle>
+                    <v-slider
+                      class="hue-slider-track"
+                      v-model="selectedHue"
+                      min="0"
+                      max="360"
+                      step="1"
+                      @update:model-value="hueSliderUpdateHandler"
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          class="font-mono--input mono-sm--input"
+                          v-model="selectedHue"
+                          width="80"
+                          type="number"
+                          min="0"
+                          max="360"
+                          step="1"
+                          density="compact"
+                          single-line
+                          hide-details
+                          @update:model-value="hueSliderUpdateHandler"
+                        >
+                        </v-text-field>
+                      </template>
+                    </v-slider>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card-subtitle> Chroma: </v-card-subtitle>
+                    <!-- gradient track background - gray to color -->
+                    <!-- background: linear-gradient(90deg, rgba(119,119,119,1) 0%, rgba(228,0,123,1) 100%); -->
+                    <v-slider
+                      class="chroma-slider-track"
+                      v-model="selectedChroma"
+                      min="0"
+                      max="100"
+                      step="1"
+                      @update:model-value="chromaSliderUpdateHandler"
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          class="font-mono--input mono-sm--input"
+                          v-model="selectedChroma"
+                          width="80"
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="1"
+                          density="compact"
+                          single-line
+                          hide-details
+                          @update:model-value="chromaSliderUpdateHandler"
+                        >
+                        </v-text-field>
+                      </template>
+                    </v-slider>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card-subtitle>Tone:</v-card-subtitle>
+                    <!-- gradient track background - black to color to white -->
+                    <!-- background: 'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(228,0,123,1) 50%, rgba(255,255,255,1) 100%)' -->
+                    <v-slider
+                      class="tone-slider-track"
+                      v-model="selectedTone"
+                      min="0"
+                      max="100"
+                      step="1"
+                      @update:model-value="toneSliderUpdateHandler"
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          class="font-mono--input mono-sm--input"
+                          v-model="selectedTone"
+                          width="80"
+                          type="number"
+                          density="compact"
+                          single-line
+                          hide-details
+                          max="100"
+                          min="0"
+                          step="1"
+                          @update:model-value="toneSliderUpdateHandler"
+                        >
+                        </v-text-field>
+                      </template>
+                    </v-slider>
+                  </v-col>
+                </v-row>
+              </v-col>
+
+              <v-col cols="2">
+                <template v-for="(item, idx) in customThemeColors" :key="`card-${item.name}-${idx}`">
+                  <v-btn :color="item.hex" variant="flat" density="comfortable"> {{ item.title }}: {{ item.hex }} </v-btn>
+                </template>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -93,6 +237,9 @@
 <script setup>
   import { onMounted, ref, reactive } from "vue";
   import { imgAssets } from "@/utils/images/image-assets-base64.js";
+  import { argbFromHex, hexFromArgb, Hct, themeFromSourceColor, TonalPalette } from "@material/material-color-utilities";
+  import tinycolor from "tinycolor2";
+  import { info } from "sass";
 
   // https://picsum.photos/
   const picsum = [
@@ -124,19 +271,35 @@
     { title: "Neutral Variant", name: "neutralVariant", hex: "#75786c" }
   ]);
 
+  const customThemeColors = reactive([
+    { title: "Success", name: "success", hex: "#00FF00" },
+    { title: "Info", name: "info", hex: "#0000FF" },
+    { title: "Warning", name: "warning", hex: "#FF5500" },
+    { title: "Error", name: "error", hex: "#FF0000" }
+  ]);
+
+  const hctTheme = ref(null);
+
+  const selectedHct = ref(Hct.from(argbFromHex(paletteColors[0].hex)));
+
+  const selectedHue = ref(180);
+  const selectedChroma = ref(100);
+  const selectedTone = ref(50);
+
   onMounted(() => {
-    console.log("TabWindowColorsItem ::: onMounted");
+    console.log("CarouselImagesView ::: onMounted");
+    createHctTheme(paletteColors[0].hex);
   });
 
   function getItemIndex(idx1, idx2) {
-    console.log("TabWindowColorsItem ::: getItemIndex");
+    console.log("CarouselImagesView ::: getItemIndex");
     console.log(" - idx1: ", idx1);
     console.log(" - idx2: ", idx2);
     return idx1 * 4 + idx2;
   }
 
   function imageButtonClickHandler(idx1, idx2) {
-    console.log("TabWindowColorsItem ::: imageButtonClickHandler");
+    console.log("CarouselImagesView ::: imageButtonClickHandler");
     console.log(" - index 1: ", idx1);
     console.log(" - index 2: ", idx2);
     let idx = idx1 * rowNumItems.value + idx2;
@@ -148,6 +311,164 @@
     // console.log(" - img: ", img);
     selectedImageIdx.value = idx;
     console.log(" - selectedImageIdx: ", selectedImageIdx.value);
+  }
+
+  function paletteButtonClickHandler(item) {
+    console.log("CarouselImagesView ::: paletteButtonClickHandler");
+    console.log(" - itemName:", item);
+    let name = item.name;
+    if (item && item.name !== "source") {
+      let paletteHct = hctTheme.value.palettes[item.name];
+      console.log(" - paletteHct:", item.name, paletteHct);
+
+      // returns ARGB representation of the given tone:
+      // paletteHct.tone(tone);
+
+      // returns HCT representation of the given tone
+      // paletteHct.getHct(tone)
+
+      // returns a TonalPalette (Tones) matching the ARGB color's hue and chroma
+      // TonalPalette.fromInt();
+      // returns a TonalPalette (Tone) matching the HCT color's hue and chroma
+      // TonalPalette.fromHct();
+    }
+  }
+
+  function createHctTheme(seedColor) {
+    console.log("CarouselImagesView ::: createHctTheme");
+
+    // seedColor is a hex color
+    console.log(" - seedColor: ", seedColor);
+    console.log(" - is valid color: ", tinycolor(seedColor).isValid());
+    console.log(" - seedColor format: ", tinycolor(seedColor).getFormat());
+    let tinySeedColor = tinycolor(seedColor);
+    console.log(" - tinySeedColor: ", tinySeedColor);
+
+    if (seedColor && tinySeedColor.isValid() && tinySeedColor.getFormat() === "hex") {
+      seedColor = seedColor.toUpperCase();
+    } else {
+      warn("[CarouselImagesView] - Seed color is not a valid hex color: ", seedColor);
+      return;
+    }
+
+    // const seedColor = "#F44336";
+    const successCustom = {
+      name: "success",
+      value: argbFromHex("#4CAF50"),
+      blend: true
+    };
+    const infoCustom = {
+      name: "info",
+      value: argbFromHex("#2196F3"),
+      blend: true
+    };
+    const warningCustom = {
+      name: "warning",
+      value: argbFromHex("#FB8C00"),
+      blend: true
+    };
+    const errorCustom = {
+      name: "error",
+      value: argbFromHex("#CF6679"),
+      blend: true
+    };
+
+    // Get the theme from a hex color (#F44336 --> material red.base)
+    // const theme = themeFromSourceColor(argbFromHex(seedColor), [custom1]);
+
+    const theme = themeFromSourceColor(argbFromHex(seedColor), [infoCustom, successCustom, warningCustom, errorCustom]);
+    console.log(" - theme:", theme);
+    // Print out the theme as JSON
+    // console.log(JSON.stringify(theme, null, 2));
+
+    hctTheme.value = reactive(theme);
+
+    const palette = theme.palettes;
+    console.log(" - palette: ", palette);
+    const colorScheme = theme.schemes;
+    console.log(" - colorScheme: ", colorScheme);
+    const customColors = theme.customColors;
+
+    customColors.forEach((entry) => {
+      console.log(" - custom color: ", entry.color.name);
+      console.log(" - custom color ARGB: ", entry.value);
+      console.log(" - custom color HEX: ", argbToHex(entry.value));
+      customThemeColors.find((item) => item.name === entry.color.name).hex = argbToHex(entry.value);
+    });
+
+    const sourceColorRGB = theme.source;
+    const sourceColorHex = argbToHex(sourceColorRGB);
+    console.log(" - sourceColorRGB: ", sourceColorRGB);
+    console.log(" - sourceColorHex: ", sourceColorHex);
+
+    // set new source color
+    let sourceObject = paletteColors.find((entry) => entry.name === "source");
+    sourceObject.hex = seedColor.toUpperCase();
+    sourceObject.title = "Source (random color)";
+
+    cardColor.value = seedColor;
+    setSelectedHctColors();
+
+    const primaryRGB = palette.primary.keyColor.argb;
+    console.log(" - primaryRGB: ", primaryRGB);
+    const primaryHEX = argbToHex(primaryRGB);
+    console.log(" - primaryHEX: ", primaryHEX);
+    // set new primary color
+    paletteColors.find((entry) => entry.name === "primary").hex = primaryHEX;
+
+    const secondaryRGB = palette.secondary.keyColor.argb;
+    console.log(" - secondaryRGB: ", secondaryRGB);
+    const secondaryHEX = argbToHex(secondaryRGB);
+    console.log(" - secondaryHEX: ", secondaryHEX);
+    // set new secondary color
+    paletteColors.find((entry) => entry.name === "secondary").hex = secondaryHEX;
+
+    const tertiaryRGB = palette.tertiary.keyColor.argb;
+    console.log(" - tertiaryRGB: ", tertiaryRGB);
+    const tertiaryHEX = argbToHex(tertiaryRGB);
+    console.log(" - tertiaryHEX: ", tertiaryHEX);
+    // set new tertiary color
+    paletteColors.find((entry) => entry.name === "tertiary").hex = tertiaryHEX;
+
+    const errorRGB = palette.error.keyColor.argb;
+    console.log(" - errorRGB: ", errorRGB);
+    const errorHEX = argbToHex(errorRGB);
+    console.log(" - errorHEX: ", errorHEX);
+    // set new error color
+    paletteColors.find((entry) => entry.name === "error").hex = errorHEX;
+
+    const neutralRGB = palette.neutral.keyColor.argb;
+    console.log(" - neutralRGB: ", neutralRGB);
+    const neutralHEX = argbToHex(neutralRGB);
+    console.log(" - neutralHEX: ", neutralHEX);
+    // set new neutral color
+    paletteColors.find((entry) => entry.name === "neutral").hex = neutralHEX;
+
+    const neutralVariantRGB = palette.neutralVariant.keyColor.argb;
+    console.log(" - neutralVariantRGB: ", neutralVariantRGB);
+    const neutralVariantHEX = argbToHex(neutralVariantRGB);
+    console.log(" - neutralVariantHEX: ", neutralVariantHEX);
+    // set new neutralVariant color
+    paletteColors.find((entry) => entry.name === "neutralVariant").hex = neutralVariantHEX;
+  }
+
+  function setSelectedHctColors() {
+    console.log("CarouselImagesView ::: setSelectedHctColors");
+  }
+
+  function chromaSliderUpdateHandler(chroma) {}
+  function hueSliderUpdateHandler(hue) {}
+  function toneSliderUpdateHandler() {}
+
+  // TODO: UtilitisView - move argbToHex function to a util file.
+  /**
+   * Converts an ARGB color value to a hex color string and makes it uppercase (e.g. "#RRGGBB")
+   *
+   * @param {number} argb - the ARGB color value
+   * @returns {string} the hex color string
+   */
+  function argbToHex(argb) {
+    return hexFromArgb(argb).toUpperCase();
   }
 </script>
 

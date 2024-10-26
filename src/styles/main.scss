@@ -13,7 +13,10 @@ pre {
 
 .font-mono {
   font-family: $mono-font-family !important;
-  font-size: 0.85rem !important;
+}
+
+.mono-sm--text {
+  font-size: small !important;
 }
 
 .font-mono--input {

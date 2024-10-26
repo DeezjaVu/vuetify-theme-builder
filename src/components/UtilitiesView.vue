@@ -55,9 +55,9 @@
     <!-- BOTTOM ROW CARDS -->
     <v-row>
       <!-- LEFT SIDE COLUMN -->
-      <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="700">
+      <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="700" class="d-flex flex-column">
         <!-- SOURCE COLOR ROW -->
-        <v-row>
+        <v-row class="flex-grow-0">
           <v-col>
             <!-- SOURCE COLOR CARD -->
             <v-card :color="cardColor">
@@ -76,60 +76,84 @@
           </v-col>
         </v-row>
         <!-- PALETTE COLORS NAV BUTTONS -->
-        <v-responsive class="px-3 py-4 bg-surface rounded">
-          <!-- PALETTE COLORS ROWS -->
-          <template v-for="item in paletteColors" :key="item.name">
-            <v-row>
-              <v-col class="py-1">
-                <!-- PALETTE COLOR CARD -->
-                <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
-                  <v-card-item class="px-3">
-                    <template #prepend>
-                      <v-btn class="mr-4" :color="item.hex" icon @click="paletteButtonClickHandler(item)"></v-btn>
-                    </template>
-                    <v-card-title class="text-body-1 font-weight-light">
-                      {{ item.title }}
-                    </v-card-title>
-                    <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
-                      {{ item.hex }}
-                    </v-card-subtitle>
-                    <template #append v-if="item.name === `source`">
-                      <v-tooltip
-                        text="Random color."
-                        close-on-content-click
-                        v-model="randomTooltipOpen"
-                        @update:model-value="randomTooltipUpdateHandler"
-                      >
-                        <template v-slot:activator="{ props }">
-                          <v-btn
-                            icon="mdi-tools"
-                            v-bind="props"
-                            size="small"
-                            variant="text"
-                            aria-label="Random color"
-                            @click="randomButtonClickHandler(item)"
-                          ></v-btn>
-                        </template>
-                      </v-tooltip>
-                    </template>
-                  </v-card-item>
-                </v-card>
-              </v-col>
-            </v-row>
-          </template>
-        </v-responsive>
+        <v-card class="d-flex flex-column flex-grow-1" density="compact">
+          <v-card-text>
+            <!-- PALETTE COLORS ROWS -->
+            <template v-for="item in paletteColors" :key="item.name">
+              <v-row>
+                <v-col class="py-1">
+                  <!-- PALETTE COLOR CARD -->
+                  <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                    <v-card-item class="px-3">
+                      <template #prepend>
+                        <v-btn class="mr-4" :color="item.hex" icon @click="paletteButtonClickHandler(item)"></v-btn>
+                      </template>
+                      <v-card-title class="text-body-1 font-weight-light">
+                        {{ item.title }}
+                      </v-card-title>
+                      <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
+                        {{ item.hex }}
+                      </v-card-subtitle>
+                      <template #append v-if="item.name === `source`">
+                        <v-tooltip
+                          text="Random color."
+                          close-on-content-click
+                          v-model="randomTooltipOpen"
+                          @update:model-value="randomTooltipUpdateHandler"
+                        >
+                          <template v-slot:activator="{ props }">
+                            <v-btn
+                              icon="mdi-tools"
+                              v-bind="props"
+                              size="small"
+                              variant="text"
+                              aria-label="Random color"
+                              @click="randomButtonClickHandler(item)"
+                            ></v-btn>
+                          </template>
+                        </v-tooltip>
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </template>
+          </v-card-text>
+        </v-card>
       </v-col>
 
       <!-- RIGHT SIDE COLUMN CARDS -->
       <v-col>
         <v-row>
           <template v-for="item in paletteColors" :key="item.name">
-            <v-col v-if="item.name !== `source`" cols="12" sm="12" md="12" lg="4">
-              <v-card title="Color" :subtitle="item.title" :color="item.hex">
+            <v-col v-if="item.name !== `source`" cols="12" sm="12" md="12" lg="6" xl="4">
+              <!-- <v-card title="Color" :subtitle="item.title" :color="item.hex"> -->
+              <v-card :color="item.hex">
+                <v-card-item>
+                  <v-card-subtitle>{{ item.title }}</v-card-subtitle>
+                  <template #append>
+                    <!-- <v-chip size="small" label="P-40">P-40</v-chip> -->
+                    <v-btn variant="text" size="small" icon="mdi-content-copy"> </v-btn>
+                  </template>
+                </v-card-item>
+                <!-- 
                 <v-card-text>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum pariatur animi obcaecati dolor labore quos nobis, ea
                   voluptatem officiis quibusdam molestias odio aliquam eligendi sapiente porro eveniet blanditiis optio et?
-                </v-card-text>
+                </v-card-text> 
+                -->
+                <v-card-actions class="ga-0">
+                  <!--  font-mono mono-sm--text font-weight-light -->
+                  <template v-for="tone in getTonePaletteFromHex(item.hex).reverse()" :key="`tone-${item.name}-${tone.tone}`">
+                    <!-- TODO: UtitlitiesView ::: implement hover dialog with tone details -->
+                    <!-- border="md" elevation="2" -->
+                    <v-sheet class="d-flex align-center justify-center" width="100%" height="50" :color="tone.hex" elevation="3">
+                      <code class="mono-sm--text font-weight-light">
+                        {{ tone.tone }}
+                      </code>
+                    </v-sheet>
+                  </template>
+                </v-card-actions>
               </v-card>
             </v-col>
           </template>
@@ -153,6 +177,8 @@
                       <v-list-item>Hue: {{ selectedHue }} - HCT Hue: {{ selectedHct.hue }}</v-list-item>
                       <v-list-item>Chroma: {{ selectedChroma }} - HCT Chroma: {{ selectedHct.chroma }}</v-list-item>
                       <v-list-item>Tone: {{ selectedTone }} - HCT Tone: {{ selectedHct.tone }}</v-list-item>
+                      <v-list-item> Palette Primary: {{ JSON.stringify(getPalettePrimary(), null, 2) }} </v-list-item>
+                      <v-list-item>Scheme Primary: {{ getDarkPrimary() }}</v-list-item>
                     </v-list>
                   </v-col>
 
@@ -162,7 +188,8 @@
                       <v-col>
                         <v-card :color="argbToHex(selectedHct.argb)" density="compact">
                           <v-card-item>
-                            <v-card-subtitle class="font-mono text-subtitle-2">{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
+                            <v-card-title class="text-body-1 font-weight-light">Source</v-card-title>
+                            <v-card-subtitle class="font-mono">{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
                             <template #append>
                               <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copySelectedColorClickHandler" />
                               <v-btn icon="mdi-select-color" size="small" variant="text" @click="useSelectedColorClickHandler" />
@@ -268,20 +295,23 @@
                   </v-col>
 
                   <v-col cols="4">
-                    <!-- <v-sheet width="150" height="150" :color="hexFromArgb(selectedHct.argb)" elevation="10" rounded></v-sheet> -->
-                    <v-card :color="argbToHex(selectedHct.argb)">
-                      <v-card-item>
-                        <v-card-title>Hex Color</v-card-title>
-                        <v-card-subtitle>{{ argbToHex(selectedHct.argb) }}</v-card-subtitle>
-                        <template #append>
-                          <v-btn icon="mdi-select-color" size="small" variant="text" @click="useSelectedColorClickHandler"> </v-btn>
-                        </template>
-                      </v-card-item>
-                      <v-card-text>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum pariatur animi obcaecati dolor labore quos nobis,
-                        ea voluptatem officiis quibusdam molestias odio aliquam eligendi sapiente porro eveniet blanditiis optio et?
-                      </v-card-text>
-                    </v-card>
+                    <!-- <v-list> -->
+                    <template v-for="(item, idx) in customThemeColors" :key="`card-${item.name}-${idx}`">
+                      <!-- <v-sheet :color="item.hex" class="mb-2 pa-2 d-flex flex-column">
+                        <v-list-item-title> {{ item.title }} </v-list-item-title>
+                        <v-list-item-subtitle> {{ item.hex }} </v-list-item-subtitle>
+                      </v-sheet> -->
+                      <v-card class="mb-4" :color="item.hex" density="compact">
+                        <v-card-item>
+                          <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
+                          <v-card-subtitle class="font-mono text-subtitle-2">{{ item.hex }}</v-card-subtitle>
+                          <template #append>
+                            <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                            <v-btn icon="mdi-select-color" size="small" variant="text" />
+                          </template>
+                        </v-card-item>
+                      </v-card>
+                    </template>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -290,9 +320,104 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <!-- THEME COLORS ROW -->
     <v-row>
       <v-col>
-        <v-card title="Theme"> </v-card>
+        <v-card title="Light Theme">
+          <v-card-text>
+            <v-row>
+              <!-- HCT GENERATED LIGHT THEME COLORS -->
+              <v-col>
+                <template v-for="(item, idx) in lightThemeColors" :key="`card-light-01-${item.name}-${idx}`">
+                  <v-card class="mb-4" :color="item.hex" density="compact">
+                    <v-card-item>
+                      <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
+                      <v-card-subtitle class="text-uppercase">
+                        <code class="mono-sm--text font-weight-light">{{ item.hex }}</code>
+                      </v-card-subtitle>
+                      <template #append>
+                        <v-chip size="small">
+                          <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
+                        </v-chip>
+                        <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                        <v-btn icon="mdi-select-color" size="small" variant="text" />
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </template>
+              </v-col>
+              <!-- HCT TONAL LIGHT THEME COLORS -->
+              <v-col>
+                <template v-for="(item, idx) in lightToneContainerColors" :key="`card-light-02-${item.name}-${idx}`">
+                  <v-card class="mb-4" :color="item.hex" density="compact">
+                    <v-card-item>
+                      <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
+                      <v-card-subtitle class="text-uppercase">
+                        <code class="mono-sm--text font-weight-light">{{ item.hex }}</code>
+                      </v-card-subtitle>
+                      <template #append>
+                        <v-chip size="small">
+                          <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
+                        </v-chip>
+                        <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                        <v-btn icon="mdi-select-color" size="small" variant="text" />
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </template>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card title="Dark Theme">
+          <v-card-text>
+            <v-row>
+              <!-- HCT GENERATED LIGHT THEME COLORS -->
+              <v-col>
+                <template v-for="(item, idx) in darkThemeColors" :key="`card-dark-01-${item.name}-${idx}`">
+                  <v-card class="mb-4" :color="item.hex" density="compact">
+                    <v-card-item>
+                      <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
+                      <v-card-subtitle class="text-uppercase">
+                        <code class="mono-sm--text font-weight-light">{{ item.hex }}</code>
+                      </v-card-subtitle>
+                      <template #append>
+                        <v-chip size="small">
+                          <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
+                        </v-chip>
+                        <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                        <v-btn icon="mdi-select-color" size="small" variant="text" />
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </template>
+              </v-col>
+              <!-- HCT TONAL DARK THEME COLORS -->
+              <v-col>
+                <template v-for="(item, idx) in darkToneContainerColors" :key="`card-dark-02-${item.name}-${idx}`">
+                  <v-card class="mb-4" :color="item.hex" density="compact">
+                    <v-card-item>
+                      <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
+                      <v-card-subtitle class="text-uppercase">
+                        <code class="mono-sm--text font-weight-light">{{ item.hex }}</code>
+                      </v-card-subtitle>
+                      <template #append>
+                        <v-chip size="small">
+                          <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
+                        </v-chip>
+                        <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                        <v-btn icon="mdi-select-color" size="small" variant="text" />
+                      </template>
+                    </v-card-item>
+                  </v-card>
+                </template>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -304,11 +429,20 @@
   // https://material-foundation.github.io/material-theme-builder/
   // https://m3.material.io/styles/color/roles
   // https://m3.material.io/styles/color/system/how-the-system-works
+  // https://github.com/material-foundation/material-color-utilities/issues/90
 
   import { ref, onMounted, reactive, warn } from "vue";
-  import { argbFromHex, hexFromArgb, themeFromSourceColor, themeFromImage, applyTheme, Hct } from "@material/material-color-utilities";
+  import {
+    argbFromHex,
+    hexFromArgb,
+    themeFromSourceColor,
+    themeFromImage,
+    Hct,
+    CorePalette,
+    TonalPalette
+  } from "@material/material-color-utilities";
   import * as colorUtils from "@/utils/colorUtils.js";
-  import { sourceColorFromImage } from "@material/material-color-utilities";
+  import { applyTheme, sourceColorFromImage } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
   import { imgAssets } from "@/utils/images/image-assets.js";
 
@@ -340,6 +474,8 @@
     ...imgAssets
   ];
 
+  const hctTheme = ref(null);
+
   const paletteColors = reactive([
     { title: "Source", name: "source", hex: "#769CDF" },
     { title: "Primary", name: "primary", hex: "#769CDF" },
@@ -348,6 +484,79 @@
     { title: "Error", name: "error", hex: "#FF5449" },
     { title: "Neutral", name: "neutral", hex: "#919093" },
     { title: "Neutral Variant", name: "neutralVariant", hex: "#8E9098" }
+  ]);
+
+  const customThemeColors = reactive([
+    { title: "Success", name: "success", hex: "#4CAF50" },
+    { title: "Info", name: "info", hex: "#2196F3" },
+    { title: "Warning", name: "warning", hex: "#FB8C00" },
+    { title: "Error", name: "error", hex: "#CF6679" }
+  ]);
+
+  const darkThemeColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-80" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-80" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-80" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-80" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-10" },
+    { title: "Surface", name: "surface", hex: "#75786c", label: "N-10" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-10" }
+  ]);
+
+  const darkToneColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-80" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-80" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-80" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-80" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-10" },
+    { title: "Surface", name: "surface", hex: "#75786c", label: "N-10" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-30" }
+  ]);
+
+  const darkToneContainerColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-30" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-30" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-30" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-30" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-10" },
+    { title: "Surface", name: "surface", hex: "#75786c", label: "N-10" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-30" }
+  ]);
+
+  const lightThemeColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-40" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-40" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-40" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-40" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-99" },
+    { title: "Surface", name: "surface", hex: "#777771", label: "N-99" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-90" }
+  ]);
+
+  const lightToneColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-40" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-40" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-40" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-40" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-99" },
+    { title: "Surface", name: "surface", hex: "#777771", label: "N-99" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-90" }
+  ]);
+
+  const lightToneContainerColors = reactive([
+    // { title: "Source", name: "source", hex: "#3f4b2c" },
+    { title: "Primary", name: "primary", hex: "#5f8128", label: "P-90" },
+    { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-90" },
+    { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-90" },
+    { title: "Error", name: "error", hex: "#de3730", label: "E-90" },
+    { title: "Background", name: "background", hex: "#777771", label: "N-99" },
+    { title: "Surface", name: "surface", hex: "#777771", label: "N-99" },
+    { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-90" }
   ]);
 
   const selectedHct = ref(Hct.fromInt(argbFromHex(cardColor.value)));
@@ -433,15 +642,39 @@
   async function getThemeFromImage(imgObj) {
     console.log("UtilitiesView ::: getThemeFromImage");
 
+    const successCustom = {
+      name: "success",
+      value: argbFromHex("#4CAF50"),
+      blend: true
+    };
+    const infoCustom = {
+      name: "info",
+      value: argbFromHex("#2196F3"),
+      blend: true
+    };
+    const warningCustom = {
+      name: "warning",
+      value: argbFromHex("#FB8C00"),
+      blend: true
+    };
+    const errorCustom = {
+      name: "error",
+      value: argbFromHex("#CF6679"),
+      blend: true
+    };
+
     // get the theme from the image
-    const theme = await themeFromImage(imgObj);
+    const theme = await themeFromImage(imgObj, [successCustom, infoCustom, warningCustom, errorCustom]);
     console.log(" - theme from image: ", theme);
 
-    const hexColor = argbToHex(theme.source).toUpperCase();
+    hctTheme.value = reactive(theme); // set the reactive theme;
+
+    const hexColor = argbToHex(theme.source);
     console.log(" - theme source: ", hexColor);
 
     cardColor.value = hexColor;
     paletteColors.find((entry) => entry.name === "source").hex = hexColor;
+
     // update the hct colors with new source color
     setSelectedHctColors();
 
@@ -485,62 +718,93 @@
 
     console.log(paletteColors);
 
+    console.log("=========== CUSTOM COLORS ===========");
+
+    const customColors = theme.customColors;
+    customColors.forEach((entry) => {
+      console.log(" - custom color: ", entry.color.name);
+      console.log(" - custom color ARGB: ", entry.value);
+      console.log(" - custom color HEX: ", argbToHex(entry.value));
+      customThemeColors.find((item) => item.name === entry.color.name).hex = argbToHex(entry.value);
+    });
+
     console.log("=========== SCHEMES LIGHT ===========");
-    const lightPrimary = theme.schemes.light.primary;
-    console.log(" - lightPrimary: ", lightPrimary); //
-    console.log(" - lightPrimary HEX: ", argbToHex(lightPrimary)); //#6e3d00 - #8c5000
+    console.log(" - light scheme: ", theme.schemes.light);
 
-    const lightSecondary = theme.schemes.light.secondary;
-    console.log(" - lightSecondary: ", lightSecondary);
-    console.log(" - lightSecondary HEX: ", argbToHex(lightSecondary));
+    let schemeLight = theme.schemes.light;
 
-    const lightTertiary = theme.schemes.light.tertiary;
-    console.log(" - lightTertiary: ", lightTertiary);
-    console.log(" - lightTertiary HEX: ", argbToHex(lightTertiary));
+    lightThemeColors.forEach((entry) => {
+      entry.hex = argbToHex(schemeLight[entry.name]);
+      console.log(" - light theme entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
 
-    const lightBackground = theme.schemes.light.background;
-    console.log(" - lightBackground: ", lightBackground);
-    console.log(" - lightBackground HEX: ", argbToHex(lightBackground));
+    console.log("=========== SCHEMES LIGHT TONES ============");
 
-    const lightSurface = theme.schemes.light.surface;
-    console.log(" - lightSurface: ", lightSurface);
-    console.log(" - lightSurface HEX: ", argbToHex(lightSurface));
+    // WARNING: Material Theme Builder uses different tone values for background (87), surface (98) and surfaceVariant (98).
+    // For more information about this, see: https://github.com/material-foundation/material-theme-builder/issues/27
+    lightToneColors.forEach((entry) => {
+      if (theme.palettes[entry.name]) {
+        entry.hex = argbToHex(theme.palettes[entry.name].tone(40));
+      } else if (entry.name === "background" || entry.name === "surface") {
+        entry.hex = argbToHex(theme.palettes.neutral.tone(99));
+      } else if (entry.name === "surfaceVariant") {
+        entry.hex = argbToHex(theme.palettes.neutralVariant.tone(90));
+      }
+      console.log(" - light tone entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
+
+    lightToneContainerColors.forEach((entry) => {
+      if (theme.palettes[entry.name]) {
+        entry.hex = argbToHex(theme.palettes[entry.name].tone(90));
+      } else if (entry.name === "background" || entry.name === "surface") {
+        entry.hex = argbToHex(theme.palettes.neutral.tone(99));
+      } else if (entry.name === "surfaceVariant") {
+        entry.hex = argbToHex(theme.palettes.neutralVariant.tone(90));
+      }
+      console.log(" - light tone container entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
 
     console.log("=========== SCHEMES DARK ============");
-    const darkPrimary = theme.schemes.dark.primary;
-    console.log(" - darkPrimary: ", darkPrimary);
-    console.log(" - darkPrimary HEX: ", argbToHex(darkPrimary));
+    console.log(" - dark scheme: ", theme.schemes.dark);
 
-    const darkSecondary = theme.schemes.dark.secondary;
-    console.log(" - darkSecondary: ", darkSecondary);
-    console.log(" - darkSecondary HEX: ", argbToHex(darkSecondary));
+    let schemeDark = theme.schemes.dark;
 
-    const darkTertiary = theme.schemes.dark.tertiary;
-    console.log(" - darkTertiary: ", darkTertiary);
-    console.log(" - darkTertiary HEX: ", argbToHex(darkTertiary));
+    darkThemeColors.forEach((entry) => {
+      entry.hex = argbToHex(schemeDark[entry.name]);
+      console.log(" - dark theme entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
 
-    const darkBackground = theme.schemes.dark.background;
-    console.log(" - darkBackground: ", darkBackground);
-    console.log(" - darkBackground HEX: ", argbToHex(darkBackground));
+    console.log("=========== SCHEMES DARK TONES ============");
 
-    const darkSurface = theme.schemes.dark.surface;
-    console.log(" - darkSurface: ", darkSurface);
-    console.log(" - darkSurface HEX: ", argbToHex(darkSurface));
-  }
+    darkToneColors.forEach((entry) => {
+      if (theme.palettes[entry.name]) {
+        entry.hex = argbToHex(theme.palettes[entry.name].tone(80));
+      } else if (entry.name === "background" || entry.name === "surface") {
+        entry.hex = argbToHex(theme.palettes.neutral.tone(10));
+      } else if (entry.name === "surfaceVariant") {
+        entry.hex = argbToHex(theme.palettes.neutralVariant.tone(30));
+      }
+      console.log(" - dark tone entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
 
-  async function getImageColor(img) {
-    console.log("UtilitiesView ::: getImageColor");
-    try {
-      const imgColor = await sourceColorFromImage(img);
-      console.log(" - color from source:", imgColor);
-      const hexColor = colorUtils.intToHex(imgColor);
-      console.log(" - hexColor intToHex: ", hexColor);
-      const hexColor2 = argbToHex(imgColor);
-      console.log(" - hexColor 2 hexFromArgb: ", hexColor2);
-      cardColor.value = hexColor;
-    } catch (error) {
-      console.error("Error getting color from image:", error);
-    }
+    darkToneContainerColors.forEach((entry) => {
+      if (theme.palettes[entry.name]) {
+        entry.hex = argbToHex(theme.palettes[entry.name].tone(30));
+      } else if (entry.name === "background" || entry.name === "surface") {
+        entry.hex = argbToHex(theme.palettes.neutral.tone(10));
+      } else if (entry.name === "surfaceVariant") {
+        entry.hex = argbToHex(theme.palettes.neutralVariant.tone(30));
+      }
+      console.log(" - dark tone container entry: ", `${entry.title} - ${entry.name} - ${entry.hex}`);
+    });
+
+    console.log("=========== LIGHT SCHEME HEX ============");
+    const lightThemeHex = Object.fromEntries(Object.entries(theme.schemes.light.props).map(([key, value]) => [key, argbToHex(value)]));
+    console.log(" - light theme HEX: ", lightThemeHex);
+
+    console.log("=========== DARK SCHEME HEX ============");
+    const darkThemeHex = Object.fromEntries(Object.entries(theme.schemes.dark.props).map(([key, value]) => [key, argbToHex(value)]));
+    console.log(" - dark theme HEX: ", darkThemeHex);
   }
 
   function generateTheme(seedColor) {
@@ -559,24 +823,51 @@
       return;
     }
 
-    // const seedColor = "#F44336";
-    // const custom1 = {
-    //   name: "custom-1",
-    //   value: argbFromHex("#ff0000"),
-    //   blend: true
-    // };
+    const successCustom = {
+      name: "success",
+      value: argbFromHex("#4CAF50"),
+      blend: true
+    };
+    const infoCustom = {
+      name: "info",
+      value: argbFromHex("#2196F3"),
+      blend: true
+    };
+    const warningCustom = {
+      name: "warning",
+      value: argbFromHex("#FB8C00"),
+      blend: true
+    };
+    const errorCustom = {
+      name: "error",
+      value: argbFromHex("#CF6679"),
+      blend: true
+    };
+
+    const corePalette = new CorePalette(argbFromHex(seedColor), false);
+    console.log(" - corePalette: ", corePalette);
 
     // Get the theme from a hex color (#F44336 --> material red.base)
     // const theme = themeFromSourceColor(argbFromHex(seedColor), [custom1]);
 
-    const theme = themeFromSourceColor(argbFromHex(seedColor));
+    const theme = themeFromSourceColor(argbFromHex(seedColor), [successCustom, infoCustom, warningCustom, errorCustom]);
     // Print out the theme as JSON
     // console.log(JSON.stringify(theme, null, 2));
+
+    hctTheme.value = reactive(theme);
 
     const palette = theme.palettes;
     console.log(" - palette: ", palette);
     const colorScheme = theme.schemes;
     console.log(" - colorScheme: ", colorScheme);
+
+    const customColors = theme.customColors;
+    customColors.forEach((entry) => {
+      console.log(" - custom color: ", entry.color.name);
+      console.log(" - custom color ARGB: ", entry.value);
+      console.log(" - custom color HEX: ", argbToHex(entry.value));
+      customThemeColors.find((item) => item.name === entry.color.name).hex = argbToHex(entry.value);
+    });
 
     const sourceColorRGB = theme.source;
     const sourceColorHex = argbToHex(sourceColorRGB);
@@ -710,6 +1001,24 @@
     }
   }
 
+  function getTonePaletteFromHex(hex) {
+    console.log("UtilitiesView ::: getPaletteTone");
+    console.log(" - hex: ", hex);
+    let hctColor = Hct.fromInt(argbFromHex(hex));
+    let tonal = TonalPalette.fromInt(hctColor.argb);
+    console.log(" - tonal: ", tonal);
+    // tonal.tone(60);
+    console.log(" - tonal 60: ", tonal);
+    let tones = [];
+    [90, 80, 70, 60, 50, 40, 30, 20, 10].forEach((t) => {
+      let argb = tonal.tone(t);
+      tones.push({ tone: t, argb: argb, hct: Hct.fromInt(argb), hex: argbToHex(argb) });
+    });
+    console.log(" - tones: ", tones);
+    // return argbToHex(hctColor.toInt());
+    return tones;
+  }
+
   function editColorChangeHandler(color) {
     console.log("UtilitiesView ::: editColorChangeHandler");
     console.log(" - picker color: ", color);
@@ -717,13 +1026,29 @@
     // Update the palette color with the new value.
     // Assigning the color to the paletteColors object
     // will automatically update the theme store (not applicable here for now).
-    paletteColors.find((item) => item.name === selectedColorName.value).hex = color;
-    // If editing source color, update the card color as well.
     let colorName = selectedColorName.value;
+    paletteColors.find((item) => item.name === colorName).hex = color;
+    // If editing source color, update the card color as well.
     if (colorName === "source") {
       cardColor.value = color;
       // also update the selectedHct
       setSelectedHctColors();
+    }
+    // TODO: remove test code below
+    if (colorName === "primary") {
+      console.log("MODIFYING THE PRIMARY HCT COLOR");
+      console.log(" - hctTheme: ", hctTheme.value);
+
+      const primaryBefore = hctTheme.value.palettes.primary;
+      console.log(" - hctTheme palette primary before: ", primaryBefore);
+      const schemeBefore = hctTheme.value.schemes;
+      console.log(" - hctTheme schemes before: ", schemeBefore);
+
+      let colorRgb = argbFromHex(color);
+      console.log(" - colorRgb: ", colorRgb);
+      hctTheme.value.palettes.primary.keyColor.argb = colorRgb;
+      console.log(" - hctTheme palette primary after: ", hctTheme.value.palettes.primary);
+      console.log(" - hctTheme schemes after: ", hctTheme.value.schemes);
     }
   }
 
@@ -845,6 +1170,30 @@
     }
   }
 
+  const getDarkPrimary = () => {
+    console.log("UtilitiesView ::: getDarkPrimary");
+    console.log("hctTheme: ", hctTheme.value);
+    let answer = "";
+    if (hctTheme && hctTheme.value) {
+      console.log("hctTheme schemes: ", hctTheme.value.schemes);
+      console.log("hctTheme schemes dark: ", hctTheme.value.schemes.dark);
+      answer = hctTheme.value.schemes.dark.props.primary;
+    }
+    return answer;
+  };
+
+  const getPalettePrimary = () => {
+    console.log("UtilitiesView ::: getPalettePrimary");
+    console.log("hctTheme: ", hctTheme.value);
+    let answer = "";
+    if (hctTheme && hctTheme.value) {
+      console.log("hctTheme palettes: ", hctTheme.value.palettes);
+      console.log("hctTheme palettes primary: ", hctTheme.value.palettes.primary);
+      (answer = hctTheme.value.palettes.primary.keyColor), null, 2;
+    }
+    return answer;
+  };
+
   // TODO: UtilitisView - move argbToHex function to a util file.
   /**
    * Converts an ARGB color value to a hex color string and makes it uppercase (e.g. "#RRGGBB")
@@ -868,6 +1217,7 @@
    * #434943
    * #4d491d
    * #3B503C
+   * #890D3C
    */
 </script>
 
