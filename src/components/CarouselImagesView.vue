@@ -5,6 +5,7 @@
         <v-row class="align-sm-stretch">
           <!-- IMAGE CARDS -->
           <v-col cols="3" v-for="(k, idx2) in rowNumItems" :key="`card-${idx1}-${idx2}`">
+            <!-- 
             <v-card
               v-if="idx1 * rowNumItems + idx2 < picsum.length"
               :id="`img-card-${idx1 * rowNumItems + idx2}`"
@@ -14,14 +15,12 @@
               variant="outlined"
             >
               <template #image>
-                <!-- img source is automatically applied from the v-card image prop -->
                 <v-img
                   class="card-img-gradient"
                   gradient="to top, rgb(255 255 255 / 10%), rgb(0 0 0 / 33%)"
                   crossorigin="anonymous"
                 ></v-img>
               </template>
-              <!--  style="text-shadow: black 0px 0px 6px; background: rgb(255 255 255 / 12%)" -->
               <v-card-item class="card-item-img">
                 <v-card-title class="d-sm-none d-lg-flex">Color from image</v-card-title>
                 <v-card-subtitle>Image {{ idx1 * rowNumItems + k }}</v-card-subtitle>
@@ -31,7 +30,17 @@
                 <v-spacer></v-spacer>
                 <v-btn @click="imageButtonClickHandler(idx1, idx2)">Get Color</v-btn>
               </v-card-actions>
-            </v-card>
+            </v-card> 
+            -->
+            <SourceImageCard
+              v-if="idx1 * rowNumItems + idx2 < picsum.length"
+              :id="`img-card-${idx1 * rowNumItems + idx2}`"
+              :image="picsum[idx1 * rowNumItems + idx2]"
+              :index="idx1 * rowNumItems + idx2"
+              :isSelected="idx1 * rowNumItems + idx2 === selectedImageIdx"
+              @click:select="imageCardSelectHandler"
+            >
+            </SourceImageCard>
           </v-col>
         </v-row>
       </v-window-item>
@@ -239,7 +248,7 @@
   import { imgAssets } from "@/utils/images/image-assets-base64.js";
   import { argbFromHex, hexFromArgb, Hct, themeFromSourceColor, TonalPalette } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
-  import { info } from "sass";
+  import SourceImageCard from "./container/SourceImageCard.vue";
 
   // https://picsum.photos/
   const picsum = [
@@ -311,6 +320,34 @@
     // console.log(" - img: ", img);
     selectedImageIdx.value = idx;
     console.log(" - selectedImageIdx: ", selectedImageIdx.value);
+  }
+
+  function imageCardSelectHandler(idx) {
+    console.log("CarouselImagesView ::: imageCardSelectHandler");
+    console.log(" - idx: ", idx);
+    selectedImageIdx.value = idx;
+
+    // get the source color object from palette
+    const sourceObject = paletteColors.find((item) => item.name === "source");
+    console.log(" - sourceObject: ", sourceObject);
+
+    // update the title to reflect an image source
+    sourceObject.title = "Source (from image)";
+
+    // [*] find the HTMLImageElement for the card
+    const cardId = "img-card-" + idx.toString();
+    console.log(" - cardId: ", cardId);
+
+    // get the card matching the cardId
+    const cardElement = document.getElementById(cardId);
+    console.log(" - cardElement: ", cardElement);
+
+    // get the image from the card
+    const imgElement = cardElement.querySelector("img");
+
+    // set crossOrigin to allow CORS (generating color from image won't work without it)
+    imgElement.setAttribute("crossOrigin", "anonymous");
+    console.log(" - imgElement: ", idx, imgElement);
   }
 
   function paletteButtonClickHandler(item) {

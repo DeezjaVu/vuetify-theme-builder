@@ -82,6 +82,7 @@
     // When value = false, the dialog is being closed (via ouside click or esc key)
     // For now it is considered an OK and not a Cancel action.
     // Since bindings take care of most things, we do not need to do anything here.
+    // emit("change", value);
   }
 
   function headerDragStartHandler() {
