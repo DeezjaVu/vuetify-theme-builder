@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+**/node_modules
+package-lock.json
+
+# Build outputs
+dist
+build
+coverage
+.next
+
+# Large generated files
+*.min.js
+*.bundle.js
+
+# Other Folders
+.assets
+.templates
+
+# Other files you rarely edit
+*.svg
+*.png

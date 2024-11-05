@@ -46,23 +46,6 @@
 
           <!-- V-CARD TEXT -->
           <v-card-text class="my-2">
-            <!-- <v-list class="d-flex flex-column" density="compact" lines="two" active-class="active-disabled">
-              <v-list-item
-                v-for="item in menuItems"
-                :title="item.title"
-                :value="item.value"
-                :active="false"
-                @click="editColorClickHandler(item.value)"
-              >
-                <v-sheet class="px-2 my-1 py-1 border-thin font-mono" :color="themeColors[item.value]">
-                  color: {{ themeColors[item.value] }}
-                </v-sheet>
-              </v-list-item>
-            </v-list> -->
-            <!-- PALETTE COLORS NAV BUTTONS -->
-            <!-- <v-responsive class="px-3 py-4 bg-surface rounded"> -->
-            <!-- PALETTE COLORS ROWS -->
-            <!-- <v-spacer class="pt-2" vertical></v-spacer> -->
             <template v-for="item in paletteColors" :key="item.name">
               <v-row>
                 <v-col class="py-1">

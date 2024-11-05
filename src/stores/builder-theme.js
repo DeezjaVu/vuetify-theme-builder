@@ -67,8 +67,6 @@ const useThemeStore = defineStore("themeStore", {
      * Returns the computed themes, which are the resolved theme definitions
      * based on the themes specified in the vuetify.js config file.
      *
-     * The computed themes include properties that are generated from the themes specified in the vuetify.js config.
-     *
      * @example
      *   computedThemes["builder-dark"].colors["on-background"]
      *   computedThemes["builder-dark"].colors["on-error"]
@@ -284,7 +282,7 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
     /**
      * Sets the colors for the builder theme
      *
-     * @param {Object.<string,string>} colors - The colors to set, in the format of {colorName: hexValue}
+     * @param {Object.<string,string>} colors - The colors to set, in the format of `{colorName: hexValue}`
      *
      * @example
      * store.setColors({

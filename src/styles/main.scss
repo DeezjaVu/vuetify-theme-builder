@@ -4,6 +4,28 @@
 
 @use "variables" as *;
 
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(148, 148, 148);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #797979;
+}
+
 code,
 pre {
   font-family: $mono-font-family !important;
@@ -38,4 +60,20 @@ pre {
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+/**
+ * Styles for v-select component (combobox / dropdown)
+ *
+ */
+.v-select.v-input {
+  .v-field {
+    font-size: 0.9rem !important;
+    font-weight: normal !important;
+  }
+  // hide the rediculous dropdown messages.
+  .v-input__details {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }

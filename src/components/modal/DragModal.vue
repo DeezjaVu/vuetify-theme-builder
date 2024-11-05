@@ -1,6 +1,6 @@
 <template>
   <!-- DragModal content -->
-  <span class="drag-modal" :id="modalId"></span>
+  <span class="drag-modal" :ref="(vn) => (modalElement = vn)"></span>
   <slot></slot>
 </template>
 
@@ -8,6 +8,18 @@
   import { onBeforeUnmount, onMounted, ref } from "vue";
 
   const props = defineProps({
+    /**
+     * Used as `id` in localStorage, which then allows the position of the modal to be restored when the page is reloaded.
+     *
+     * When this prop is not set, the default value is `"drag-modal"`.     *
+     * This may cause issues when using the same modal component (with default id) on multiple pages.
+     *
+     * However, when using the same modal component acrros multiple pages with the same `modal-id` value,
+     * their position will be the same across pages.
+     *
+     * @type {string}
+     * @default "drag-modal"
+     */
     modalId: {
       type: String,
       required: true,
@@ -16,6 +28,8 @@
   });
 
   const emit = defineEmits(["modal:drag-start", "modal:drag-move", "modal:drag-end"]);
+
+  const modalElement = ref(null);
 
   // v-overlay-content element
   const dragElement = ref(null);
@@ -45,17 +59,16 @@
     scrollX.value = window.scrollX;
     scrollY.value = window.scrollY;
 
-    // let dragModal = document.querySelector("span.drag-modal");
-    let qs = "span[id=" + props.modalId + "]";
-    let spanElement = document.querySelector(qs);
-    // console.log(" - spanElement: ", spanElement);
+    console.log(" - modalElement: ", modalElement);
+
+    // let qs = "span[id=" + props.modalId + "]";
+    // let spanElement = document.querySelector(qs);
+    let spanElement = modalElement.value;
+    console.log(" - spanElement: ", spanElement);
 
     // find the active overlay element in the DOM and set it as the dragElement variable.
     let overlay = (dragElement.value = spanElement.parentElement.parentElement);
-    // console.log(" - dragElement: ", overlay);
-
-    // let overlayRect = overlay.getBoundingClientRect();
-    // console.log(" - overlayRect: ", overlayRect);
+    console.log(" - dragElement: ", overlay);
 
     // Get the margin value of the v-dialog-overlay (dragged) element.
     let compStyle = window.getComputedStyle(overlay);

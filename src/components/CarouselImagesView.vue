@@ -252,10 +252,10 @@
 
   // https://picsum.photos/
   const picsum = [
-    "https://picsum.photos//440/128?random=1",
-    "https://picsum.photos//440/128?random=2",
-    "https://picsum.photos//440/128?random=3",
-    "https://picsum.photos//440/128?random=4",
+    "https://picsum.photos/440/128?random=1",
+    "https://picsum.photos/440/128?random=2",
+    "https://picsum.photos/440/128?random=3",
+    "https://picsum.photos/440/128?random=4",
     // "https://picsum.photos//440/128?random=5"
     "https://picsum.photos/id/2/440/128",
     "https://picsum.photos/id/18/440/128",

@@ -2,10 +2,8 @@
   <!-- <v-layout row justify-center> -->
   <!--  max-width="348" -->
   <v-dialog class="position-modal-picker" absolute scrim="false" opacity="0.06" max-width="348" @update:model-value="dialogUpdateHandler">
-    <!-- <v-card title="Pick a color" :subtitle="props.colorName" flat> -->
     <v-card flat>
       <!-- V-CARD HEADER -->
-      <!-- <v-hover v-slot="{ isHovering, props }" @update:model-value="headerHoverHandler"> -->
       <drag-modal
         modal-id="color-dialog-item"
         @modal:drag-start="headerDragStartHandler"
@@ -24,7 +22,6 @@
           </template>
         </v-card-item>
       </drag-modal>
-      <!-- </v-hover> -->
 
       <!-- V-CARD TEXT -->
       <!-- :swatches="flatColorsHex" -->

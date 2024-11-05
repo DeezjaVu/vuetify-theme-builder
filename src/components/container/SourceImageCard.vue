@@ -10,7 +10,8 @@
       <v-card-title class="text-subtitle-1 d-sm-none d-lg-flex">Color from image</v-card-title>
       <v-card-subtitle class="text-subtitle-2 font-weight-light">Image {{ String(index + 1).padStart(2, "0") }}</v-card-subtitle>
       <template #append>
-        <v-btn icon="mdi-image-edit-outline" size="small" variant="text" v-if="allowUpload" @click="uploadButtonClickHandler"></v-btn>
+        <!-- <v-btn icon="mdi-image-edit-outline" size="small" variant="text" v-if="allowUpload" @click="uploadButtonClickHandler"></v-btn> -->
+        <v-btn icon="mdi-refresh" size="small" variant="text" v-if="allowRefresh" @click="refreshButtonClickHandler"></v-btn>
         <v-btn icon="mdi-select-color" size="small" variant="text" @click="imageButtonClickHandler"> </v-btn>
       </template>
     </v-card-item>
@@ -25,33 +26,36 @@
   import { onMounted, useAttrs } from "vue";
 
   const props = defineProps({
-    allowUpload: Boolean,
+    allowRefresh: Boolean,
     isSelected: Boolean,
     index: Number
   });
 
-  const emit = defineEmits(["click:select", "click:upload"]);
+  const emit = defineEmits(["click:select", "click:refresh"]);
 
   const attrs = useAttrs();
 
+  let initImageUrl = attrs.image;
+
   onMounted(() => {
-    console.log("ImageCard ::: onMounted");
-    console.log(" - props: ", props);
-    console.log(" - attrs image: ", attrs.image);
+    console.log("SourceImageCard ::: onMounted");
   });
 
   function imageButtonClickHandler() {
-    console.log("ImageCard ::: imageButtonClickHandler");
+    console.log("SourceImageCard ::: imageButtonClickHandler");
     console.log(" - props index: ", props.index);
-
     emit("click:select", props.index);
   }
 
-  function uploadButtonClickHandler() {
-    console.log("ImageCard ::: uploadButtonClickHandler");
-    console.log(" - props index: ", props.index);
+  /**
+   * Handles the refresh button click event.
+   * Logs the event and emits a "click:refresh" event with the current image index.
+   */
 
-    emit("click:upload", props.index);
+  function refreshButtonClickHandler() {
+    console.log("SourceImageCard ::: refreshButtonClickHandler");
+    console.log(" - props index: ", props.index);
+    emit("click:refresh", props.index);
   }
 </script>
 
