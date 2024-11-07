@@ -2,12 +2,10 @@
   <v-card color="white" density="compact" variant="outlined">
     <template #image>
       <!-- img source is automatically applied from the v-card image prop -->
-      <!-- <v-img gradient="to top, rgb(255 255 255 / 10%), rgb(0 0 0 / 33%)" crossorigin="anonymous"></v-img> -->
       <v-img crossorigin="anonymous"></v-img>
     </template>
-    <!--  style="text-shadow: black 0px 0px 6px; background: rgb(255 255 255 / 12%)" -->
     <v-card-item class="card-item-img">
-      <v-card-title class="text-subtitle-1 d-sm-none d-lg-flex">Color from image</v-card-title>
+      <!-- <v-card-title class="text-subtitle-1 d-sm-none d-lg-flex">Color from image</v-card-title> -->
       <v-card-subtitle class="text-subtitle-2 font-weight-light">Image {{ String(index + 1).padStart(2, "0") }}</v-card-subtitle>
       <template #append>
         <!-- <v-btn icon="mdi-image-edit-outline" size="small" variant="text" v-if="allowUpload" @click="uploadButtonClickHandler"></v-btn> -->
@@ -16,7 +14,7 @@
       </template>
     </v-card-item>
     <v-card-actions>
-      <v-icon icon="mdi-check" size="small" v-if="isSelected"></v-icon>
+      <v-icon v-if="isSelected" icon="mdi-check" size="small"></v-icon>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -66,7 +64,13 @@
     .v-card-title {
       font-size: 1rem !important;
       font-weight: normal !important;
-      // font-weight: 300 !important;
     }
+  }
+
+  // border around image card
+  .v-card.v-card--variant-outlined.text-white {
+    color: white !important;
+    // `outlined` card has border color same as text color, which is not good...
+    border-color: rgb(255 255 255 / 35%) !important;
   }
 </style>

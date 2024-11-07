@@ -240,6 +240,46 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-row justify="center" style="min-height: 460px">
+      <v-col>
+        <!--  EMPTY COLUMN  -->
+      </v-col>
+      <v-col>
+        <v-btn
+          class="ma-2"
+          color="primary"
+          @click="
+            expand = !expand;
+            expand2 = !expand2;
+          "
+        >
+          Expand Transition
+        </v-btn>
+        <v-card class="mx-auto bg-secondary">
+          <v-card-item>
+            <v-card-title>Card Title</v-card-title>
+            <v-card-subtitle>Card Subtitle</v-card-subtitle>
+          </v-card-item>
+          <v-expand-transition>
+            <v-card-text v-show="expand">
+              <v-slider></v-slider>
+            </v-card-text>
+          </v-expand-transition>
+          <v-card-actions class="mx-3 mb-1" v-show="expand">
+            <v-spacer></v-spacer>
+            <v-btn size="small" variant="tonal" @click="resetClickHandler">Reset</v-btn>
+            <v-btn size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+
+      <div class="mx-4 hidden-sm-and-down"></div>
+
+      <v-col>
+        <!--  EMPTY COLUMN  -->
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -264,6 +304,9 @@
     "https://picsum.photos/id/113/440/128",
     ...imgAssets
   ];
+
+  const expand = ref(false);
+  const expand2 = ref(false);
 
   const cardColor = ref("#769CDF");
   const rowNumItems = ref(8);

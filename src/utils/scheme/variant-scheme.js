@@ -16,6 +16,7 @@ import {
 } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
 import PaletteColor from "@/utils/palettes/palette-color.js";
+import ThemeColor from "@/utils/theme/theme-color";
 
 export class VariantScheme {
   /**
@@ -181,13 +182,29 @@ VariantScheme.paletteColors = [
 
 // TODO: create a class (ThemeColor) for each entry in the themeColors array.
 VariantScheme.themeColors = [
-  { title: "Primary", name: "primary", hex: "#5f8128", label: "P-30", argb: 0xff5f8128, tone: 30 },
-  { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-30", argb: 0xff717b60, tone: 30 },
-  { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-30", argb: 0xff527f7a, tone: 30 },
-  { title: "Error", name: "error", hex: "#de3730", label: "E-30", argb: 0xffde3730, tone: 30 },
-  { title: "Background", name: "background", hex: "#777771", label: "N-10", argb: 0xff777771, tone: 10 },
-  { title: "Surface", name: "surface", hex: "#75786c", label: "N-10", argb: 0xff75786c, tone: 10 },
-  { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-30", argb: 0xff75786c, tone: 30 }
+  { title: "Primary", name: "primary" },
+  { title: "Secondary", name: "secondary" },
+  { title: "Tertiary", name: "tertiary" },
+  { title: "Error", name: "error" },
+  { title: "Background", name: "background" },
+  { title: "Surface", name: "surface" },
+  { title: "Surface Variant", name: "surfaceVariant" }
+];
+
+// VariantScheme.themeColors = [
+//   { title: "Primary", name: "primary", hex: "#5f8128", label: "P-30", argb: 0xff5f8128, tone: 30 },
+//   { title: "Secondary", name: "secondary", hex: "#717b60", label: "S-30", argb: 0xff717b60, tone: 30 },
+//   { title: "Tertiary", name: "tertiary", hex: "#527f7a", label: "T-30", argb: 0xff527f7a, tone: 30 },
+//   { title: "Error", name: "error", hex: "#de3730", label: "E-30", argb: 0xffde3730, tone: 30 },
+//   { title: "Background", name: "background", hex: "#777771", label: "N-10", argb: 0xff777771, tone: 10 },
+//   { title: "Surface", name: "surface", hex: "#75786c", label: "N-10", argb: 0xff75786c, tone: 10 },
+//   { title: "Surface Variant", name: "surfaceVariant", hex: "#75786c", label: "NV-30", argb: 0xff75786c, tone: 30 }
+// ];
+
+VariantScheme.customColors = [
+  { title: "Success", name: "success", hex: "#22892F", label: "S-30", argb: 0xff5f8128, tone: 30 },
+  { title: "Info", name: "info", hex: "#028DE9", label: "I-30", argb: 0xff5f8128, tone: 30 },
+  { title: "Warning", name: "warning", hex: "#E58C00", label: "W-30", argb: 0xff5f8128, tone: 30 }
 ];
 
 /**
@@ -198,9 +215,10 @@ VariantScheme.themeColors = [
  */
 
 VariantScheme.createThemeFromScheme = (scheme) => {
-  let theme = structuredClone(VariantScheme.themeColors);
+  let theme = [];
+  let themeClone = structuredClone(VariantScheme.themeColors);
   // map the theme colors from the scheme
-  theme.forEach((entry) => {
+  themeClone.forEach((entry) => {
     // Theme style properties: the styles we're looking for within the Scheme have a "Container" suffix, e.g. `primaryContainer`.
     // However, `background` and `surfaceVariant` have no "Container" suffix.
     let propName;
@@ -217,11 +235,15 @@ VariantScheme.createThemeFromScheme = (scheme) => {
     let argb = scheme[propName];
     let hex = hexFromArgb(argb);
     let hct = Hct.fromInt(argb);
+    let tone = Math.round(hct.tone);
+    // entry.argb = argb;
+    // entry.hex = hex;
+    // entry.tone = Math.round(hct.tone);
+    // entry.label = entry.label.split("-")[0] + "-" + Math.round(hct.tone).toString();
 
-    entry.argb = argb;
-    entry.hex = hex;
-    entry.tone = Math.round(hct.tone);
-    entry.label = entry.label.split("-")[0] + "-" + Math.round(hct.tone).toString();
+    // title, name, hex, tone
+    let themeColor = new ThemeColor(entry.title, entry.name, hex, tone);
+    theme.push(themeColor);
   });
   return theme;
 };

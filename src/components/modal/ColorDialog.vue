@@ -25,8 +25,9 @@
 
       <!-- V-CARD TEXT -->
       <!-- :swatches="flatColorsHex" -->
-      <v-card-text class="d-flex ga-2">
+      <v-card-text class="d-flex pb-2 ga-2">
         <v-color-picker
+          class="my-0"
           dot-size="16"
           mode="hex"
           :modes="cpModes"
@@ -35,14 +36,13 @@
           hide-sliders
           show-swatches
           rounded="md"
-          class="my-0"
           @update:model-value="pickerUpdateHandler"
         ></v-color-picker>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="mt-0 pt-0">
         <v-spacer></v-spacer>
-        <v-btn color="primary" flat @click.native="cancelClickHandler">Cancel</v-btn>
-        <v-btn color="primary" flat @click.native="okClickHandler">Ok</v-btn>
+        <v-btn color="secondary" size="small" variant="flat" @click.native="cancelClickHandler">Cancel</v-btn>
+        <v-btn class="mr-4" color="secondary" size="small" variant="elevated" @click.native="okClickHandler">Ok</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -119,5 +119,9 @@
   .position-modal-picker > .v-overlay__content {
     left: 20px;
     top: 80px;
+  }
+
+  .v-color-picker.v-sheet {
+    border: thin solid rgba(0, 0, 0, 0.15);
   }
 </style>

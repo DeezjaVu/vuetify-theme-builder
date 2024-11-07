@@ -114,7 +114,7 @@
                   <v-card-title class="text-subtitle-1">{{ item.title }}</v-card-title>
                   <template #append>
                     <!-- <v-chip size="small" label="P-40">P-40</v-chip> -->
-                    <v-btn variant="text" size="small" icon="mdi-content-copy"> </v-btn>
+                    <v-btn variant="text" size="small" icon="mdi-content-copy" @click="copyColorClickHandler(item.hex)"> </v-btn>
                   </template>
                 </v-card-item>
                 <v-card-actions class="ga-0">
@@ -154,7 +154,7 @@
                   <!-- [*] (LEFT COLUMN) -->
                   <v-col cols="4">
                     <!-- DARK CUSTOM THEME COLORS -->
-                    <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-02-${item.name}-${idx}`">
+                    <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
                       <v-card class="d-flex flex-column mb-4" :color="item.hex" density="compact">
                         <v-card-item>
                           <v-card-title class="text-body-1 font-weight-light">{{ item.title }}</v-card-title>
@@ -165,25 +165,28 @@
                             <v-chip size="small" link @click="item.toggle = !item.toggle">
                               <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
                             </v-chip>
-                            <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                            <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copyColorClickHandler(item.hex)" />
                             <!-- <v-btn icon="mdi-select-color" size="small" variant="text" /> -->
                           </template>
                         </v-card-item>
-
-                        <v-card-actions v-show="item.toggle">
-                          <v-slider
-                            class="theme-slider-track"
-                            min="10"
-                            max="90"
-                            step="10"
-                            show-ticks="always"
-                            tick-size="5"
-                            label="Tone"
-                            track-fill-color="red"
-                            v-model="item.tone"
-                            @update:model-value="themeToneSliderUpdateHandler(item)"
-                          ></v-slider>
-                        </v-card-actions>
+                        <v-expand-transition duration="100">
+                          <v-card-text v-show="item.toggle" :key="`theme-light-text-${item.name}-${idx}`">
+                            <v-slider
+                              class="theme-slider-track"
+                              color="primary-lighten-2"
+                              min="10"
+                              max="90"
+                              step="10"
+                              show-ticks="always"
+                              tick-size="5"
+                              label="Tone"
+                              track-fill-color="red"
+                              v-model="item.tone"
+                              @update:model-value="themeToneSliderUpdateHandler(item)"
+                            ></v-slider>
+                          </v-card-text>
+                          <!-- <v-card-actions v-show="item.toggle"> </v-card-actions> -->
+                        </v-expand-transition>
                       </v-card>
                     </template>
                   </v-col>
@@ -191,7 +194,7 @@
                   <!-- [*] (MIDDLE COLUMN) -->
 
                   <v-col cols="4">
-                    <!-- <v-list> -->
+                    <!-- [*] CUSTOM PALETTE COLORS -->
                     <template v-for="(item, idx) in customThemeColors" :key="`card-${item.name}-${idx}`">
                       <v-card class="mb-4" :color="item.hex" density="compact">
                         <v-card-item>
@@ -200,17 +203,13 @@
                             <code class="mono-sm--text"> {{ item.hex }}</code>
                           </v-card-subtitle>
                           <template #append>
-                            <v-btn icon="mdi-content-copy" size="small" variant="text" />
-                            <v-btn icon="mdi-select-color" size="small" variant="text" />
+                            <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copyColorClickHandler(item.hex)" />
+                            <!-- <v-btn icon="mdi-select-color" size="small" variant="text" /> -->
                           </template>
                         </v-card-item>
                         <v-card-actions class="ga-0">
-                          <!--  font-mono mono-sm--text font-weight-light -->
-                          <!-- <template v-for="tone in getTonalPalettesForHex(item.hex)" :key="`custom-tone-${item.name}-${tone.tone}`"> -->
-                          <!-- { amount: t, argb: argb, hct: Hct.fromInt(blendArgb), hex: argbToHex(blendArgb) } -->
                           <template v-for="tone in getTonalPalettesForHex(item.hex)" :key="`custom-tone-${tone.tone}`">
                             <!-- TODO: UtitlitiesView ::: implement hover dialog with tone details -->
-                            <!-- border="md" elevation="2" -->
                             <v-sheet
                               class="d-flex align-center justify-center"
                               width="100%"
@@ -244,23 +243,27 @@
                             <v-chip size="small" link @click="item.toggle = !item.toggle">
                               <code class="mono-sm--text font-weight-light"> {{ item.label }} </code>
                             </v-chip>
-                            <v-btn icon="mdi-content-copy" size="small" variant="text" />
+                            <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copyColorClickHandler(item.hex)" />
                             <!-- <v-btn icon="mdi-select-color" size="small" variant="text" /> -->
                           </template>
                         </v-card-item>
-                        <v-card-actions v-if="item.toggle">
-                          <v-slider
-                            class="theme-slider-track"
-                            min="10"
-                            max="90"
-                            step="10"
-                            show-ticks="always"
-                            tick-size="5"
-                            label="Tone"
-                            v-model="item.tone"
-                            @update:model-value="themeToneSliderUpdateHandler(item)"
-                          ></v-slider>
-                        </v-card-actions>
+                        <v-expand-transition duration="100">
+                          <v-card-text v-if="item.toggle" :key="`theme-light-text-${item.name}-${idx}`">
+                            <!-- color="surface-brighter" -->
+                            <v-slider
+                              class="theme-slider-track"
+                              color="primary-lighten-2"
+                              min="10"
+                              max="90"
+                              step="10"
+                              show-ticks="always"
+                              tick-size="5"
+                              label="Tone"
+                              v-model="item.tone"
+                              @update:model-value="themeToneSliderUpdateHandler(item)"
+                            ></v-slider>
+                          </v-card-text>
+                        </v-expand-transition>
                       </v-card>
                     </template>
                   </v-col>
@@ -531,7 +534,7 @@
     console.log(" - sourceArgb: ", sourceArgb);
     let seedColor = hexFromArgb(sourceArgb);
     // update store with new source color
-    materialThemeStore.createThemeForHex(seedColor);
+    materialThemeStore.createSchemeForHex(seedColor);
   }
 
   /**
@@ -585,7 +588,7 @@
     materialThemeStore.currentVariant = value;
     console.log(" - store currentVariant: ", materialThemeStore.currentVariant);
     // generate a new theme based on the scheme with the selected variant
-    materialThemeStore.createThemeForHex(sourceColor.value);
+    materialThemeStore.createSchemeForHex(sourceColor.value);
   }
 
   function randomButtonClickHandler() {
@@ -597,7 +600,7 @@
     selectedImageIdx.value = -1;
 
     // create a new scheme with the random color
-    materialThemeStore.createThemeForHex(hex);
+    materialThemeStore.createSchemeForHex(hex);
 
     // update the title to reflect the source origin (image vs random color).
     const palettes = currentScheme.value.palettes;
@@ -619,7 +622,7 @@
     console.log(" - source color: ", sourceColor.value);
     if (palette.name === "source") {
       // use source color from store to reset the scheme
-      materialThemeStore.createThemeForHex(sourceColor.value);
+      materialThemeStore.createSchemeForHex(sourceColor.value);
       // materialThemeStore.createThemeForHex(palette.hex);
     } else {
       // TODO: figure out what to do when reset is triggered for non-source colors
@@ -629,18 +632,24 @@
   function paletteApplyClickHandler(idx, palette) {
     console.log("UtilitiesView ::: paletteApplyClickHandler");
     selectedImageIdx.value = -1;
+    // TODO: figure out what to do when apply is triggered for custom colors
     if (palette.name === "source") {
-      materialThemeStore.createThemeForHex(palette.hex);
+      materialThemeStore.createSchemeForHex(palette.hex);
     } else {
-      // TODO: figure out what to do when apply is triggered for non-source colors
-      // update the theme colors for the modified palette item
-      console.log(" - palette: ", palette);
+      materialThemeStore.updateThemeForPalette(palette);
     }
   }
 
-  function copySelectedColorClickHandler() {
+  /**
+   * Copies the given hex color to the clipboard.
+   *
+   * @param {string} hex - the color to copy, in hex format (e.g. #FF0000)
+   *
+   * @returns {void}
+   */
+  function copyColorClickHandler(hex) {
     console.log("UtilitiesView ::: copySelectedColorClickHandler");
-    let hex = argbToHex(selectedHct.value.argb);
+    // let hex = argbToHex(selectedHct.value.argb);
     console.log(" - hex: ", hex);
     // Clipboard.writeText(hex);
     navigator.clipboard.writeText(hex);
@@ -664,19 +673,6 @@
       tones.push({ tone: t, argb: argb, hct: Hct.fromInt(argb), hex: argbToHex(argb) });
     });
     return tones;
-  }
-
-  function paletteToggleClickHandler(item) {
-    console.log("UtilitiesView ::: paletteToggleClickHandler");
-    console.log(" - item: ", item);
-    let palettes = currentScheme.value.palettes;
-    palettes.forEach((entry) => {
-      if (entry.name === item.name) {
-        entry.toggle = !entry.toggle;
-      } else {
-        entry.toggle = false;
-      }
-    });
   }
 
   // TODO: display tone details for the selected (clicked) tone color.
@@ -770,18 +766,18 @@
     // Find the palette object in the current scheme that matches the theme item
     let paletteColor;
     if (item.name === "background" || item.name === "surface") {
-      paletteColor = palettes.find((x) => x.name === "neutral");
+      paletteColor = palettes.find((pc) => pc.name === "neutral");
     } else if (item.name === "surfaceVariant") {
-      paletteColor = palettes.find((x) => x.name === "neutralVariant");
+      paletteColor = palettes.find((pc) => pc.name === "neutralVariant");
     } else {
-      paletteColor = palettes.find((x) => x.name === item.name);
+      paletteColor = palettes.find((pc) => pc.name === item.name);
     }
     console.log(" - paletteColor: ", paletteColor);
     // With the matching palette found, create a list of tones - ranging from 10 to 90 - for that palette's hex value.
     // Then find the tone item in that list that matches the theme item's tone, which is also between 10 and 90, as set by the slider.
     // Note that the theme item's tone (`item.tone`) has already been updated by the slider (v-model).
     // So all we need to do now is to find the matching tone in the palette list
-    // and update the item's hex with the one from the tonal palette list.
+    // and update the item's hex and argb  with the values from the tonal palette list and update the label.
     if (paletteColor) {
       let tones = getTonalPalettesForHex(paletteColor.hex);
       console.log(" - tones: ", tones);
@@ -791,8 +787,12 @@
       if (toneItem) {
         // update the item hex with new hex color
         item.hex = toneItem.hex;
+        // item argb and label are read-only
+
+        // update the item argb with new argb
+        // item.argb = toneItem.argb;
         // update item label with new tone
-        item.label = item.label.split("-")[0] + "-" + toneItem.tone.toString();
+        // item.label = item.label.split("-")[0] + "-" + toneItem.tone.toString();
       }
     }
   }

@@ -15,6 +15,15 @@ import imgCrowds from "@/assets/images/stockcake/sunset-crowds-gather-small.jpg"
 import imgFabric from "@/assets/images/stockcake/close-up-fabric-small.jpg";
 import imgDrop from "@/assets/images/stockcake/water-drop-impact-small.jpg";
 
+import imgPexels01 from "@/assets/images/pexels/pexels-jordan-besson-2051439001-440x128.png";
+import imgPexels02 from "@/assets/images/pexels/pexels-quang-nguyen-vinh-222549-440x128.png";
+import imgPexels03 from "@/assets/images/pexels/pexels-kawserhamid-176342-440x128.png";
+import imgPexels04 from "@/assets/images/pexels/vibrant-sunflower-in-bloom-440x128.png";
+import imgPexels05 from "@/assets/images/pexels/pexels-postiglioni-421129-440x128.png";
+import imgPexels06 from "@/assets/images/pexels/pexels-incrediblerafa-4737522-440x128.png";
+import imgPexels07 from "@/assets/images/pexels/tenements-near-canal-440x128.png";
+import imgPexels08 from "@/assets/images/pexels/vibrant-red-apples-440x128.png";
+
 export const imgAssets = [
   imgTurquoise,
   imgLakeside,
@@ -30,7 +39,15 @@ export const imgAssets = [
   imgFinch,
   imgCrowds,
   imgFabric,
-  imgDrop
+  imgDrop,
+  imgPexels01,
+  imgPexels02,
+  imgPexels03,
+  imgPexels04,
+  imgPexels05,
+  imgPexels06,
+  imgPexels07,
+  imgPexels08
 ];
 
 export { imgTurquoise };
@@ -48,6 +65,14 @@ export { imgFinch };
 export { imgCrowds };
 export { imgFabric };
 export { imgDrop };
+export { imgPexels01 };
+export { imgPexels02 };
+export { imgPexels03 };
+export { imgPexels04 };
+export { imgPexels05 };
+export { imgPexels06 };
+export { imgPexels07 };
+export { imgPexels08 };
 
 export default {
   imgTurquoise,
@@ -64,5 +89,13 @@ export default {
   imgFinch,
   imgCrowds,
   imgFabric,
-  imgDrop
+  imgDrop,
+  imgPexels01,
+  imgPexels02,
+  imgPexels03,
+  imgPexels04,
+  imgPexels05,
+  imgPexels06,
+  imgPexels07,
+  imgPexels08
 };

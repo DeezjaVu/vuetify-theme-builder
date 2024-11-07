@@ -1,9 +1,21 @@
 <template>
+  <!-- COLOR DIALOG MODAL -->
+  <ColorDialog
+    id="palette-item-color-dialog"
+    v-model="paletteModalOpen"
+    :color-name="palette.name"
+    v-model:picker-color="inputHex"
+    persistent
+    @update:picker-color="paletteModalChangeHandler"
+    @update="paletteModalUpdateHandler"
+    @cancel="paletteModalCancelHandler"
+    @update:model-value="paletteModalUpdateModelHandler"
+  />
   <!-- PALETTE COLOR CARD -->
   <v-card
     :class="{
-      'rounded-pill': expandedIndex !== props.paletteIndex || expandedIndex === undefined,
-      'rounded-xl': isExpanded,
+      'rounded-pill': !isExpandedClass,
+      'rounded-xxl': isExpandedClass,
       'border-opacity-0': !isExpanded
     }"
     class="border-thin"
@@ -13,7 +25,7 @@
   >
     <v-card-item class="px-3">
       <template #prepend>
-        <v-btn class="mr-4" :color="palette.hex" icon @click="colorIconClickHandler()"></v-btn>
+        <v-btn class="mr-4 text-uppercase" :color="palette.hex" icon @click="colorIconClickHandler()"></v-btn>
       </template>
       <v-card-title class="text-body-1 font-weight-light">
         {{ palette.title }}
@@ -28,9 +40,9 @@
           so that we can clear the input field after the enter key was pressed and the color is applied
            -->
           <v-text-field
-            class="hex-field mono-sm--text font-weight-light"
+            class="hex-field mono-sm--text font-weight-light text-uppercase"
             v-model="inputHex"
-            width="60px"
+            width="96px"
             type="text"
             max="7"
             density="compact"
@@ -40,6 +52,8 @@
             single-line
             persistent-placeholder
             :placeholder="palette.hex"
+            append-icon="mdi-palette"
+            @click:append="hexFieldAppendClickHandler()"
             @update:model-value="hexFieldUpdateHandler"
             @keyup.enter="hexFieldKeyEnterHandler"
           ></v-text-field>
@@ -61,99 +75,102 @@
       </template>
     </v-card-item>
 
-    <v-card-text class="pt-1 pb-0" v-show="isExpanded">
-      <v-divider></v-divider>
-      <v-row class="mt-2" no-gutters>
-        <v-col>
-          <v-card-subtitle class="text-body-2 font-weight-light" color="primary">Hue:</v-card-subtitle>
-          <v-slider class="hue-slider-track" v-model="colorHue" min="0" max="360" step="1.0" @update:model-value="hueSliderUpdateHandler">
-            <template v-slot:append>
-              <v-text-field
-                class="font-mono--input mono-sm--input"
-                v-model="colorHue"
-                width="60"
-                type="number"
-                min="0"
-                max="360"
-                step="1"
-                density="compact"
-                single-line
-                hide-details
-                @update:model-value="hueSliderUpdateHandler"
-              >
-              </v-text-field>
-            </template>
-          </v-slider>
-        </v-col>
-      </v-row>
-      <v-row class="mt-1" no-gutters>
-        <v-col>
-          <v-card-subtitle class="text-body-2 font-weight-light">Chroma:</v-card-subtitle>
-          <v-slider
-            :ref="(vnode) => (chromaSlider = vnode ? vnode.$el : null)"
-            class="chroma-slider-track"
-            v-model="colorChroma"
-            min="0"
-            max="100"
-            step="1.0"
-            @update:model-value="chromaSliderUpdateHandler"
-          >
-            <template v-slot:append>
-              <v-text-field
-                class="font-mono--input mono-sm--input"
-                v-model="colorChroma"
-                width="60"
-                type="number"
-                min="0"
-                max="100"
-                step="1"
-                density="compact"
-                single-line
-                hide-details
-                @update:model-value="chromaSliderUpdateHandler"
-              >
-              </v-text-field>
-            </template>
-          </v-slider>
-        </v-col>
-      </v-row>
-      <v-row class="mt-1" no-gutters>
-        <v-col>
-          <v-card-subtitle class="text-body-2 font-weight-light">Tone:</v-card-subtitle>
-          <v-slider
-            :ref="(vnode) => (toneSlider = vnode ? vnode.$el : null)"
-            class="tone-slider-track"
-            v-model="colorTone"
-            min="0"
-            max="100"
-            step="1.0"
-            @update:model-value="toneSliderUpdateHandler"
-          >
-            <template v-slot:append>
-              <v-text-field
-                class="font-mono--input mono-sm--input"
-                v-model="colorTone"
-                width="60"
-                type="number"
-                density="compact"
-                single-line
-                hide-details
-                max="100"
-                min="0"
-                step="1"
-                @update:model-value="toneSliderUpdateHandler"
-              >
-              </v-text-field>
-            </template>
-          </v-slider>
-        </v-col>
-      </v-row>
-      <v-row class="mt-2" no-gutters>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-    </v-card-text>
+    <v-expand-transition @before-enter="expandTransitionBeforeEnterHandler" @after-leave="expandTransitionAfterLeaveHandler">
+      <v-card-text class="pt-1 pb-0" v-show="isExpanded">
+        <v-divider></v-divider>
+        <v-row class="mt-2" no-gutters>
+          <v-col>
+            <v-card-subtitle class="text-body-2 font-weight-light" color="primary">Hue:</v-card-subtitle>
+            <v-slider class="hue-slider-track" v-model="colorHue" min="0" max="360" step="1.0" @update:model-value="hueSliderUpdateHandler">
+              <template v-slot:append>
+                <v-text-field
+                  class="font-mono--input mono-sm--input"
+                  v-model="colorHue"
+                  width="60"
+                  type="number"
+                  min="0"
+                  max="360"
+                  step="1"
+                  density="compact"
+                  single-line
+                  hide-details
+                  @update:model-value="hueSliderUpdateHandler"
+                >
+                </v-text-field>
+              </template>
+            </v-slider>
+          </v-col>
+        </v-row>
+        <v-row class="mt-1" no-gutters>
+          <v-col>
+            <v-card-subtitle class="text-body-2 font-weight-light">Chroma:</v-card-subtitle>
+            <v-slider
+              :ref="(vnode) => (chromaSlider = vnode ? vnode.$el : null)"
+              class="chroma-slider-track"
+              v-model="colorChroma"
+              min="0"
+              max="100"
+              step="1.0"
+              @update:model-value="chromaSliderUpdateHandler"
+            >
+              <template v-slot:append>
+                <v-text-field
+                  class="font-mono--input mono-sm--input"
+                  v-model="colorChroma"
+                  width="60"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  density="compact"
+                  single-line
+                  hide-details
+                  @update:model-value="chromaSliderUpdateHandler"
+                >
+                </v-text-field>
+              </template>
+            </v-slider>
+          </v-col>
+        </v-row>
+        <v-row class="mt-1" no-gutters>
+          <v-col>
+            <v-card-subtitle class="text-body-2 font-weight-light">Tone:</v-card-subtitle>
+            <v-slider
+              :ref="(vnode) => (toneSlider = vnode ? vnode.$el : null)"
+              class="tone-slider-track"
+              v-model="colorTone"
+              min="0"
+              max="100"
+              step="1.0"
+              @update:model-value="toneSliderUpdateHandler"
+            >
+              <template v-slot:append>
+                <v-text-field
+                  class="font-mono--input mono-sm--input"
+                  v-model="colorTone"
+                  width="60"
+                  type="number"
+                  density="compact"
+                  single-line
+                  hide-details
+                  max="100"
+                  min="0"
+                  step="1"
+                  @update:model-value="toneSliderUpdateHandler"
+                >
+                </v-text-field>
+              </template>
+            </v-slider>
+          </v-col>
+        </v-row>
+        <v-row class="mt-2" no-gutters>
+          <v-col>
+            <v-divider></v-divider>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-expand-transition>
+
     <v-card-actions class="mx-3 mb-1" v-show="isExpanded">
       <v-spacer></v-spacer>
       <v-btn size="small" variant="tonal" @click="resetClickHandler">Reset</v-btn>
@@ -176,6 +193,8 @@
   const expandedIndex = defineModel("expandedIndex");
 
   const emit = defineEmits(["click:random", "click:reset", "click:apply"]);
+
+  const paletteModalOpen = ref(false);
 
   const randomTooltipOpen = ref(false);
 
@@ -204,6 +223,8 @@
   const isExpanded = computed(() => {
     return expandedIndex.value === props.paletteIndex;
   });
+
+  const isExpandedClass = ref(false);
 
   /**
    * Returns the HCT object from the palette's hex value.
@@ -373,6 +394,17 @@
    * COMPONENT EVENT HANDLERS
    */
 
+  function expandTransitionBeforeEnterHandler() {
+    console.log("PaletteItemCard ::: expandTransitionBeforeEnterHandler");
+    isExpandedClass.value = true;
+  }
+
+  function expandTransitionAfterLeaveHandler(evt) {
+    console.log("PaletteItemCard ::: expandTransitionAfterLeaveHandler");
+    console.log(" - event: ", evt);
+    isExpandedClass.value = false;
+  }
+
   /**
    * Handles the color icon click event.
    *
@@ -435,6 +467,66 @@
     // Clear the input hex value, so the placeholder is shown again.
     console.log("- inputHex: ", inputHex.value);
     inputHex.value = "";
+  }
+
+  /**
+   * PALETTE MODAL EVENT HANDLERS
+   */
+
+  /**
+   * Handles the click event on the palette hex input field's "append" button.
+   * This opens the color modal dialog and populates the input field with the current color.
+   *
+   * The current color is saved to the temp color before opening the modal, so it can be restored
+   * if the user cancels the modal dialog.
+   */
+  function hexFieldAppendClickHandler() {
+    console.log("PaletteItemCard ::: hexFieldAppendClickHandler");
+    // Save the current palette color before opening the modal.
+    setTempColor();
+    // Apply the palette color to the input hex,
+    // which will show the color updates from the modal in the (subtitle) input field.
+    inputHex.value = paletteRef.value.hex;
+    paletteModalOpen.value = true;
+  }
+
+  /**
+   * Handles the change event from the color modal dialog.
+   *
+   * Sets the modal's selected color as the palette color (which can be undone when the user cancels)
+   * and updates the hue, chroma and tone sliders and gradient backgrounds.
+   * @param {string} newHex - The new hex color code from the color modal dialog.
+   */
+  function paletteModalChangeHandler(newHex) {
+    console.log("PaletteItemCard ::: paletteModalChangeHandler");
+    console.log(" - newHex: ", newHex);
+    console.log(" - inputHex: ", inputHex.value);
+
+    props.palette.hex = newHex;
+    setSliderValues();
+    updateSliderBackgrounds();
+  }
+
+  function paletteModalUpdateHandler() {
+    console.log("PaletteItemCard ::: paletteModalUpdateHandler");
+    // Normally everything should already be set, because of the modal's `paletteModalChangeHandler`
+    // So just clean up what needs cleaning up.
+    inputHex.value = "";
+    paletteModalOpen.value = false;
+  }
+
+  function paletteModalCancelHandler() {
+    console.log("PaletteItemCard ::: paletteModalCancelHandler");
+    inputHex.value = "";
+    // Restore the original palette color, before making any UI changes.
+    props.palette.hex = tempColor.value;
+    setSliderValues();
+    updateSliderBackgrounds();
+    paletteModalOpen.value = false;
+  }
+
+  function paletteModalUpdateModelHandler() {
+    console.log("PaletteItemCard ::: paletteModalUpdateModelHandler");
   }
 
   /**
@@ -606,6 +698,11 @@
   }
 </script>
 <style scoped lang="scss">
+  // v-card border radius
+  .rounded-xxl {
+    border-radius: 32px !important;
+  }
+
   /**
    * Color input field styles.
    * 
@@ -619,15 +716,25 @@
     margin: 0 !important;
     padding: 0 !important;
     :deep(input.v-field__input) {
-      border-width: 0px !important;
-      border-style: none !important;
       font-size: small !important;
+      text-transform: uppercase !important;
       margin: 0 !important;
       padding: 0 !important;
       height: 20px !important;
       min-height: 20px !important;
       max-height: 20px !important;
       line-height: 1;
+    }
+    :deep(input.v-field__input)::placeholder {
+      font-size: small !important;
+      opacity: 0.65 !important;
+      text-transform: uppercase !important;
+    }
+    :deep(.v-input__append) {
+      height: 20px !important;
+      min-height: 20px !important;
+      max-height: 20px !important;
+      padding-top: 2px !important;
     }
   }
 
