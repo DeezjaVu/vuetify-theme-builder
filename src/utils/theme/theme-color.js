@@ -1,11 +1,20 @@
 import { argbFromHex, Hct } from "@material/material-color-utilities";
 
+/**
+ * Creates a new ThemeColor object.
+ *
+ * @param {string} title - The title of the theme color.
+ * @param {string} name - The name of the theme color. Will be used as the key in the theme object.
+ * @param {string} [hex="#000000"] - The initial hex color of the theme color.
+ * @param {number} [tone=30] - The initial tone value of the theme color.
+ */
 export default class ThemeColor {
   constructor(title, name, hex = "#000000", tone = 30) {
     this.title = title;
-    this.name = name;
+    Object.defineProperty(this, "name", { value: name, enumerable: true });
     this.hex = hex;
     this.tone = tone;
+    Object.defineProperty(this, "initialTone", { value: tone });
     this.toggle = false;
   }
   /**

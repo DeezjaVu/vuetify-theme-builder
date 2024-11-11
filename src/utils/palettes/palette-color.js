@@ -3,7 +3,7 @@ import { argbFromHex, Hct } from "@material/material-color-utilities";
 export default class PaletteColor {
   constructor(title, name, hex = "#000000") {
     this.title = title;
-    this.name = name;
+    Object.defineProperty(this, "name", { value: name, enumerable: true });
     this.hex = hex;
   }
   /**
@@ -19,5 +19,8 @@ export default class PaletteColor {
    */
   get hct() {
     return Hct.fromInt(this.argb);
+  }
+  get isCustom() {
+    return false;
   }
 }

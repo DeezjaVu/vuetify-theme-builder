@@ -246,31 +246,26 @@
         <!--  EMPTY COLUMN  -->
       </v-col>
       <v-col>
-        <v-btn
-          class="ma-2"
-          color="primary"
-          @click="
-            expand = !expand;
-            expand2 = !expand2;
-          "
-        >
-          Expand Transition
-        </v-btn>
+        <v-btn class="ma-2" color="primary" @click="expand = !expand"> Expand Transition </v-btn>
         <v-card class="mx-auto bg-secondary">
           <v-card-item>
             <v-card-title>Card Title</v-card-title>
             <v-card-subtitle>Card Subtitle</v-card-subtitle>
           </v-card-item>
+
           <v-expand-transition>
             <v-card-text v-show="expand">
               <v-slider></v-slider>
             </v-card-text>
           </v-expand-transition>
-          <v-card-actions class="mx-3 mb-1" v-show="expand">
-            <v-spacer></v-spacer>
-            <v-btn size="small" variant="tonal" @click="resetClickHandler">Reset</v-btn>
-            <v-btn size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
-          </v-card-actions>
+
+          <v-expand-transition>
+            <v-card-actions class="mx-3 mb-1" v-show="expand">
+              <v-spacer></v-spacer>
+              <v-btn size="small" variant="tonal" @click="resetClickHandler">Reset</v-btn>
+              <v-btn size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
+            </v-card-actions>
+          </v-expand-transition>
         </v-card>
       </v-col>
 

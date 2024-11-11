@@ -78,6 +78,7 @@
     <v-expand-transition @before-enter="expandTransitionBeforeEnterHandler" @after-leave="expandTransitionAfterLeaveHandler">
       <v-card-text class="pt-1 pb-0" v-show="isExpanded">
         <v-divider></v-divider>
+        <!-- [*] HUE SLIDER ROW -->
         <v-row class="mt-2" no-gutters>
           <v-col>
             <v-card-subtitle class="text-body-2 font-weight-light" color="primary">Hue:</v-card-subtitle>
@@ -101,9 +102,11 @@
             </v-slider>
           </v-col>
         </v-row>
+        <!-- [*] CHROMA SLIDER ROW -->
         <v-row class="mt-1" no-gutters>
           <v-col>
             <v-card-subtitle class="text-body-2 font-weight-light">Chroma:</v-card-subtitle>
+            <!-- ref is used to get the DOM element of the slider to be able to style its background -->
             <v-slider
               :ref="(vnode) => (chromaSlider = vnode ? vnode.$el : null)"
               class="chroma-slider-track"
@@ -132,9 +135,11 @@
             </v-slider>
           </v-col>
         </v-row>
+        <!-- [*] TONE SLIDER ROW -->
         <v-row class="mt-1" no-gutters>
           <v-col>
             <v-card-subtitle class="text-body-2 font-weight-light">Tone:</v-card-subtitle>
+            <!-- ref is used to get the DOM element of the slider to be able to style its background -->
             <v-slider
               :ref="(vnode) => (toneSlider = vnode ? vnode.$el : null)"
               class="tone-slider-track"
@@ -172,31 +177,47 @@
     </v-expand-transition>
 
     <v-card-actions class="mx-3 mb-1" v-show="isExpanded">
+      <template v-if="palette.isCustom">
+        <v-checkbox-btn
+          label="Harmonize"
+          v-model="palette.blend"
+          class="text-body-2 font-weight-light"
+          color="primary-lighten-2"
+          density="compact"
+          hide-details
+          :disabled="isDirty"
+          @update:model-value="blendUpdateHandler"
+        ></v-checkbox-btn>
+      </template>
       <v-spacer></v-spacer>
-      <v-btn size="small" variant="tonal" @click="resetClickHandler">Reset</v-btn>
-      <v-btn size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
+      <v-btn color="primary-lighten-2" size="small" variant="text" @click="resetClickHandler">Reset</v-btn>
+      <v-btn color="primary-lighten-2" size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup>
-  import { ref, onMounted, computed, toRefs, watch, warn } from "vue";
+  import { ref, onMounted, computed, toRefs, watch, warn, readonly } from "vue";
   import { Hct, hexFromArgb, argbFromHex, TonalPalette } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
+  import PaletteColor from "@/utils/palettes/palette-color";
+  import PaletteCustom from "@/utils/palettes/palette-custom";
 
   const props = defineProps({
-    palette: Object,
+    palette: PaletteColor | PaletteCustom,
     paletteIndex: Number,
     showRandom: Boolean
   });
 
   const expandedIndex = defineModel("expandedIndex");
 
-  const emit = defineEmits(["click:random", "click:reset", "click:apply"]);
+  const emit = defineEmits(["click:random", "click:reset", "click:apply", "update:blend"]);
 
   const paletteModalOpen = ref(false);
 
   const randomTooltipOpen = ref(false);
+
+  const isDirty = ref(false);
 
   const tempColor = ref("");
 
@@ -237,35 +258,40 @@
    * @returns {Hct}
    */
   const hctFromPaletteHex = computed(() => {
-    console.log("PaletteItemCard ::: computed ::: hctFromPaletteHex");
+    // console.log("PaletteItemCard ::: computed ::: hctFromPaletteHex");
     let argb = props.palette.argb;
     let hct = Hct.fromInt(argb);
     return hct;
   });
 
+  /**
+   * Returns true if the palette is custom and the palette has been modified (isDirty is true).
+   *
+   * This is to prevent the color dialog from opening if the paletter has been modified (unsaved changes).
+   */
+  const disableModal = computed(() => {
+    return props.palette.isCustom && isDirty.value;
+  });
+
+  /**
+   * PROPS WATCHERS
+   */
+
   // prettier-ignore
   watch(() => props.palette,
     (newValue, oldValue) => {
       console.log("PaletteItemCard ::: watch palette");
-      console.log("- newValue: ", newValue);
-      console.log("- oldValue: ", oldValue);
+      // console.log("- newValue: ", newValue);
+      // console.log("- oldValue: ", oldValue);
       let newHct = newValue.hct;
 
+      // TODO: check if the currentHct needs to be set in the props.palette watcher, as it is also set in the setSliderValues function.
       currentHct.value = newHct;
-      console.log("- currentHct: ", currentHct.value);
-
-      // Set slider values
-      // colorHue.value = Math.round(newHct.hue);
-      // colorChroma.value = Math.round(newHct.chroma);
-      // colorTone.value = Math.round(newHct.tone);
-
-      // console.log(" - colorHue: ", colorHue.value);
-      // console.log(" - colorChroma: ", colorChroma.value);
-      // console.log(" - colorTone: ", colorTone.value);
+      // console.log("- currentHct: ", currentHct.value);
 
       // Set temp color
       setTempColor();
-      // Set slider values
+      // Set slider values (also sets currentHct)
       setSliderValues();
       // Update slider backgrounds
       updateSliderBackgrounds();
@@ -278,22 +304,18 @@
 
   onMounted(() => {
     console.log("PaletteItemCard ::: onMounted");
-    console.log(" - props paletteIndex: ", props.paletteIndex);
-    console.log(" - model expandedIndex: ", expandedIndex.value);
 
-    console.log(" - colorHct: ", hctFromPaletteHex.value);
-
-    // get references to slider elements
+    // Get references to slider DOM elements via their ref attribute.
 
     let chromaElement = chromaSlider.value;
     chromaSliderTrack.value = chromaElement.querySelector(".v-slider-track .v-slider-track__background");
-    console.log(" - chromaSlider: ", chromaSlider.value);
-    console.log(" - chromaSliderTrack element: ", chromaSliderTrack.value);
+    // console.log(" - chromaSlider: ", chromaSlider.value);
+    // console.log(" - chromaSliderTrack element: ", chromaSliderTrack.value);
 
     let toneElement = toneSlider.value;
     toneSliderTrack.value = toneElement.querySelector(".v-slider-track .v-slider-track__background");
-    console.log(" - toneSlider: ", toneSlider.value);
-    console.log(" - toneSliderTrack element: ", toneSliderTrack.value);
+    // console.log(" - toneSlider: ", toneSlider.value);
+    // console.log(" - toneSliderTrack element: ", toneSliderTrack.value);
 
     setTempColor();
     setSliderValues();
@@ -309,7 +331,7 @@
    * This allows for the user to reset the hex color of the palette.
    */
   function setTempColor() {
-    console.log("PaletteItemCard ::: setTempColor");
+    // console.log("PaletteItemCard ::: setTempColor");
     if (props.palette) {
       tempColor.value = props.palette.hex;
     }
@@ -328,7 +350,7 @@
    * updated whenever the `palette` property changes.
    */
   function setSliderValues() {
-    console.log("PaletteItemCard ::: setSliderValues");
+    // console.log("PaletteItemCard ::: setSliderValues");
 
     let hct = (currentHct.value = hctFromPaletteHex.value);
 
@@ -336,11 +358,11 @@
     colorChroma.value = Math.round(hct.chroma);
     colorTone.value = Math.round(hct.tone);
 
-    console.log("- currentHct: ", currentHct.value);
+    // console.log("- currentHct: ", currentHct.value);
 
-    console.log("- colorHue: ", colorHue.value);
-    console.log("- colorChroma: ", colorChroma.value);
-    console.log("- colorTone: ", colorTone.value);
+    // console.log("- colorHue: ", colorHue.value);
+    // console.log("- colorChroma: ", colorChroma.value);
+    // console.log("- colorTone: ", colorTone.value);
   }
 
   /**
@@ -353,26 +375,20 @@
    * Logs a warning to the console if either `chromaSliderTrack` or `toneSliderTrack` is `null`.
    */
   function updateSliderBackgrounds() {
-    console.log("PaletteItemCard ::: updateSliderBackgrounds");
+    // console.log("PaletteItemCard ::: updateSliderBackgrounds");
 
     // new HCT color with the same hue, full chroma (100), and full tone (50)
     let bgHct = Hct.from(Math.round(Number(currentHct.value.hue)), 100, 50);
-    console.log(" - HCT from currentHct hue, chroma: 100, tone: 50: ", bgHct);
     let bgHex = hexFromArgb(bgHct.argb);
 
     let tp = TonalPalette.fromHueAndChroma(currentHct.value.hue, 100);
-    console.log(" - TonalPalette from currentHct: ", tp);
     let argb = tp.tone(50);
-    console.log(" - ARGB from TonalPalette with 50 tone: ", argb);
     let hex = hexFromArgb(argb);
-    console.log(" - HEX from ARGB: ", hex);
+    // console.log(" - HEX from ARGB: ", hex);
 
-    // console.log(" - chromaSliderTrack: ", chromaSliderTrack.value);
     if (chromaSliderTrack && chromaSliderTrack.value !== null) {
       let chromaStyle = chromaSliderTrack.value.style;
-      // console.log(" - chromaStyle: ", chromaStyle);
       let chromaBgStyle = "linear-gradient(to right, #777777 0%, #555555 100%)".replace("#555555", bgHex);
-      console.log(" - chromaBgStyle: ", chromaBgStyle);
       chromaStyle.setProperty("background", chromaBgStyle, "important");
     } else {
       console.warn("[UtilitiesView] chromaSliderTrack.value is null");
@@ -383,7 +399,7 @@
       let toneStyle = toneSliderTrack.value.style;
       // console.log(" - toneStyle: ", toneStyle);
       let toneBgStyle = "linear-gradient(to right, #000000 0%, #555555 50%, #FFFFFF 100%)".replace("#555555", bgHex);
-      console.log(" - toneBgStyle: ", toneBgStyle);
+      // console.log(" - toneBgStyle: ", toneBgStyle);
       toneStyle.setProperty("background", toneBgStyle, "important");
     } else {
       console.warn("[UtilitiesView] toneSliderTrack.value is null");
@@ -394,11 +410,23 @@
    * COMPONENT EVENT HANDLERS
    */
 
+  /**
+   * Called by Vuetify's `v-expand-transition` before the expansion animation starts.
+   *
+   * Sets the `isExpandedClass` to true which switches the card's rounded corners.
+   */
   function expandTransitionBeforeEnterHandler() {
     console.log("PaletteItemCard ::: expandTransitionBeforeEnterHandler");
     isExpandedClass.value = true;
   }
 
+  /**
+   * Called by Vuetify's `v-expand-transition` after the collapse animation ends.
+   *
+   * Resets the `isExpandedClass` to false which switches the card's rounded corners.
+   *
+   * @param {Object} evt - Event object from the `v-expand-transition` directive.
+   */
   function expandTransitionAfterLeaveHandler(evt) {
     console.log("PaletteItemCard ::: expandTransitionAfterLeaveHandler");
     console.log(" - event: ", evt);
@@ -423,8 +451,6 @@
     // Check if we're currently expanded (open) - if so, close by setting expandedIndex to -1.
     // If not, open by setting expandedIndex to the paletteIndex
     // and call setTempColor() to save the current source color.
-    // TODO: swap the palette color with the temporary color during editing (expended state).
-    // TODO: and swap back to the palette color when closing (collapsed state).
     // NOTE: isExpanded is false when the card is collapsed and needs to be opened,
     // [*] and true when the card is expanded and needs to be closed.
     if (isExpanded.value) {
@@ -482,6 +508,9 @@
    */
   function hexFieldAppendClickHandler() {
     console.log("PaletteItemCard ::: hexFieldAppendClickHandler");
+    if (disableModal.value) {
+      return;
+    }
     // Save the current palette color before opening the modal.
     setTempColor();
     // Apply the palette color to the input hex,
@@ -502,6 +531,8 @@
     console.log(" - newHex: ", newHex);
     console.log(" - inputHex: ", inputHex.value);
 
+    isDirty.value = true;
+
     props.palette.hex = newHex;
     setSliderValues();
     updateSliderBackgrounds();
@@ -518,6 +549,12 @@
   function paletteModalCancelHandler() {
     console.log("PaletteItemCard ::: paletteModalCancelHandler");
     inputHex.value = "";
+
+    // TODO: Fix isDirty.value being set to false when the user cancels the modal,
+    // as the palette may already have been dirty before.
+    // A solution could be to disable the modal dialog while the palette is dirty.
+    isDirty.value = false;
+
     // Restore the original palette color, before making any UI changes.
     props.palette.hex = tempColor.value;
     setSliderValues();
@@ -568,6 +605,8 @@
     console.log("PaletteItemCard ::: hueSliderUpdateHandler");
     // console.log(" - hue: ", hue);
 
+    isDirty.value = true;
+
     let h = Math.round(Number(hue));
     let c = Math.round(Number(colorChroma.value));
     let t = Math.round(Number(colorTone.value));
@@ -602,6 +641,8 @@
     console.log("PaletteItemCard ::: chromaSliderUpdateHandler");
     // console.log(" - chroma: ", chroma);
 
+    isDirty.value = true;
+
     let h = Math.round(Number(colorHue.value));
     let c = Math.round(Number(chroma));
     let t = Math.round(Number(colorTone.value));
@@ -634,6 +675,8 @@
     console.log("PaletteItemCard ::: toneSliderUpdateHandler");
     console.log(" - tone: ", tone);
 
+    isDirty.value = true;
+
     let h = colorHue.value;
     let c = Math.max(1, Number(colorChroma.value));
     let t = Math.max(1, Number(colorTone.value));
@@ -658,6 +701,14 @@
     console.log(" - currentHct: ", currentHct.value);
   }
 
+  function blendUpdateHandler() {
+    console.log("PaletteItemCard ::: blendUpdateHandler");
+    console.log(" - blend: ", props.palette.blend);
+    console.log(" - palette isDirty:", props.palette.isDirty);
+
+    emit("update:blend", props.palette.name, props.palette.blend);
+  }
+
   /**
    * Handles the click event of the reset button.
    *
@@ -671,7 +722,7 @@
     console.log("PaletteItemCard ::: resetClickHandler");
     console.log(" - palette color: ", props.palette.hex);
     console.log(" - tempColor: ", tempColor.value);
-
+    isDirty.value = false;
     props.palette.hex = tempColor.value;
     // reset slider values
     setSliderValues();
@@ -694,6 +745,8 @@
   function applyClickHandler() {
     console.log("PaletteItemCard ::: applyClickHandler");
     console.log(" - palette color: ", props.palette.hex);
+    isDirty.value = false;
+
     emit("click:apply", props.paletteIndex, props.palette);
   }
 </script>
@@ -787,6 +840,18 @@
   .tone-slider-track {
     :deep(.v-slider-track__background) {
       background: linear-gradient(to right, #000000 0%, #e4007b 50%, #ffffff 100%) !important;
+    }
+  }
+
+  /**
+   * Checkbox styles
+   */
+  .v-checkbox,
+  .v-checkbox-btn {
+    :deep(label.v-label) {
+      font-size: 0.75rem !important;
+      text-transform: uppercase !important;
+      word-break: normal !important;
     }
   }
 </style>

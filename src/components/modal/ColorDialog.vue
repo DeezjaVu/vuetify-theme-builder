@@ -1,7 +1,6 @@
 <template>
-  <!-- <v-layout row justify-center> -->
-  <!--  max-width="348" -->
-  <v-dialog class="position-modal-picker" absolute scrim="false" opacity="0.06" max-width="348" @update:model-value="dialogUpdateHandler">
+  <!-- MODAL COLOR DIALOG -->
+  <v-dialog class="position-modal-picker" absolute scrim="false" opacity="0.1" max-width="348" @update:model-value="dialogUpdateHandler">
     <v-card flat>
       <!-- V-CARD HEADER -->
       <drag-modal
@@ -39,10 +38,10 @@
           @update:model-value="pickerUpdateHandler"
         ></v-color-picker>
       </v-card-text>
-      <v-card-actions class="mt-0 pt-0">
+      <v-card-actions class="mx-4 mt-0 pt-1">
         <v-spacer></v-spacer>
-        <v-btn color="secondary" size="small" variant="flat" @click.native="cancelClickHandler">Cancel</v-btn>
-        <v-btn class="mr-4" color="secondary" size="small" variant="elevated" @click.native="okClickHandler">Ok</v-btn>
+        <v-btn color="primary-lighten-2" size="small" variant="text" @click.native="cancelClickHandler">Cancel</v-btn>
+        <v-btn class="" color="primary-lighten-2" size="small" variant="tonal" @click.native="okClickHandler">Ok</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -69,7 +68,7 @@
 
   onMounted(() => {
     console.log("ColorDialog ::: onMounted");
-    console.log(" - pickerColor: ", pickerColor);
+    // console.log(" - pickerColor: ", pickerColor);
   });
 
   function dialogUpdateHandler(value) {
@@ -119,6 +118,17 @@
   .position-modal-picker > .v-overlay__content {
     left: 20px;
     top: 80px;
+  }
+
+  .v-color-picker {
+    .v-color-picker__controls {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    input {
+      font-family: "Courier New", Courier, monospace !important;
+      border: thin solid rgba(255, 255, 255, 0.15) !important;
+    }
   }
 
   .v-color-picker.v-sheet {
