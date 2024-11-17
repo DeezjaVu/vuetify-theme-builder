@@ -1,18 +1,27 @@
 <template>
+  <!-- [*] THEME FULLSCREEN PREVIEW MODAL DIALOG -->
+  <ThemePreviewDialog
+    v-model="previewThemeOpen"
+    :previewTheme="previewTheme"
+    :themeName="previewThemeName"
+    @click:close="previewThemeOpen = false"
+    @click:copy="copyColorClickHandler"
+  />
+
   <v-container class="fill-height px-12 mx-auto">
     <!--  -->
-    <!-- TOP ROW - IMAGE CARDS -->
+    <!-- [*] TOP ROW - IMAGE CARDS -->
     <!--  -->
     <v-window class="v-container pa-0 mt-2 mb-6 mx-auto" show-arrows>
       <v-window-item v-for="(i, idx1) in Math.ceil(picsum.length / rowNumItems)" :key="`row-${idx1}`">
         <v-row class="align-sm-stretch">
           <!--  -->
-          <!-- IMAGE CARDS -->
+          <!-- [*] IMAGE CARDS -->
           <!--  -->
+          <!-- :id="`util-img-card-${idx1 * rowNumItems + idx2}`" -->
           <v-col cols="3" v-for="(k, idx2) in rowNumItems" :key="`util-card-${idx1}-${idx2}`">
             <SourceImageCard
               v-if="idx1 * rowNumItems + idx2 < picsum.length"
-              :id="`util-img-card-${idx1 * rowNumItems + idx2}`"
               :image="picsum[idx1 * rowNumItems + idx2]"
               :index="idx1 * rowNumItems + idx2"
               :isSelected="idx1 * rowNumItems + idx2 === selectedImageIdx"
@@ -26,14 +35,14 @@
       </v-window-item>
     </v-window>
 
-    <!-- BOTTOM ROW CARDS -->
+    <!-- [*] BOTTOM ROW - PALETTE MENU + PALETTE  CARDS -->
     <v-row>
-      <!-- LEFT SIDE COLUMN -->
+      <!-- [*] PALETTE MENU - LEFT SIDE COLUMN -->
       <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="700" class="d-flex flex-column">
-        <!-- SOURCE COLOR ROW -->
+        <!-- [*] SOURCE COLOR ROW -->
         <v-row class="flex-grow-0">
           <v-col>
-            <!-- SOURCE COLOR CARD -->
+            <!-- [*] SOURCE COLOR CARD -->
             <v-card class="d-flex flex-column" :color="sourceColor" density="compact" min-height="200" height="230px">
               <v-card-item>
                 <v-card-title class="text-subtitle-1">Tonal Palettes</v-card-title>
@@ -67,14 +76,14 @@
             </v-card>
           </v-col>
         </v-row>
-        <!-- [*] PALETTE COLORS NAV BUTTONS (LEFT SIDE COLUMN) -->
+        <!-- [*] PALETTE COLORS MENU BUTTONS (LEFT SIDE COLUMN) -->
         <v-card class="d-flex flex-column flex-grow-1 my-0" density="compact" min-height="810">
           <v-card-text class="my-4">
-            <!-- PALETTE COLORS ROWS -->
+            <!-- [*] PALETTE COLOR ROWS -->
             <template v-for="(item, idx) in currentScheme.palettes" :key="`palette-color-card-${item.name}-${idx}`">
               <v-row>
                 <v-col class="py-1">
-                  <!-- [*] PALETTE ITEM COLOR CARD -->
+                  <!-- [*] PALETTE COLOR MENU CARD -->
                   <PaletteItemCard
                     :palette="item"
                     :paletteIndex="idx"
@@ -88,11 +97,11 @@
                 </v-col>
               </v-row>
             </template>
-            <!-- [*] PALETTE CUSTOM COLORS ROWS -->
+            <!-- [*] PALETTE CUSTOM COLOR ROWS -->
             <template v-for="(item, idx) in currentScheme.custom" :key="`palette-custom-card-${item.name}-${idx}`">
               <v-row>
                 <v-col class="py-1">
-                  <!-- PALETTE ITEM COLOR CARD -->
+                  <!-- [*] PALETTE CUSTOM COLOR MENU CARD -->
                   <PaletteItemCard
                     :palette="item"
                     :paletteIndex="currentScheme.palettes.length + idx"
@@ -106,11 +115,21 @@
                 </v-col>
               </v-row>
             </template>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  v-model="includeOnColors"
+                  label="Include `on-` colors"
+                  color="primary-lighten-2"
+                  @update:model-value="includeOnColorsUpdateHandler"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
 
-      <!-- [*] PALETTE COLOR DETAILS CARDS (RIGHT SIDE COLUMN) -->
+      <!-- [*] PALETTE COLOR DETAIL CARDS (RIGHT SIDE COLUMN) -->
       <v-col>
         <v-row>
           <!-- [*] PALETTE DETAILS ROW -->
@@ -119,6 +138,7 @@
               <PaletteDetailsCard
                 :palette="item"
                 :tonalPalettes="getTonalPalettesForHex(item.hex)"
+                :toneDetails="ToneDetails.getInfoByName(item.name)"
                 @click:copy="copyColorClickHandler($event)"
               >
               </PaletteDetailsCard>
@@ -130,6 +150,7 @@
               <PaletteDetailsCard
                 :palette="item"
                 :tonalPalettes="getTonalPalettesForHex(item.customHex)"
+                :toneDetails="ToneDetails.getInfoByName(item.name)"
                 @click:copy="copyColorClickHandler($event)"
               >
               </PaletteDetailsCard>
@@ -146,6 +167,9 @@
                 <template #prepend>
                   <v-btn icon="mdi-export" variant="text" size="small"> </v-btn>
                 </template>
+                <template #append>
+                  <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`dark`)"> </v-btn>
+                </template>
               </v-card-item>
               <v-card-text class="d-flex flex-column pt-4">
                 <v-row>
@@ -155,6 +179,8 @@
                       <ThemeColorCard
                         :theme-color="item"
                         :cardIndex="idx"
+                        :isDark="true"
+                        :includeOnColors="includeOnColors"
                         @update:tone="themeToneSliderUpdateHandler($event)"
                         @click:copy="copyColorClickHandler($event)"
                       />
@@ -175,6 +201,9 @@
                 <template #prepend>
                   <v-btn icon="mdi-export" variant="text" size="small"> </v-btn>
                 </template>
+                <template #append>
+                  <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`light`)"> </v-btn>
+                </template>
               </v-card-item>
               <v-card-text class="d-flex flex-column pt-4">
                 <v-row>
@@ -185,6 +214,8 @@
                       <ThemeColorCard
                         :theme-color="item"
                         :cardIndex="idx"
+                        :isDark="false"
+                        :includeOnColors="includeOnColors"
                         @update:tone="themeToneSliderUpdateHandler($event)"
                         @click:copy="copyColorClickHandler($event)"
                       />
@@ -199,7 +230,9 @@
     </v-row>
     <!-- [*] THIS ROW IS BELOW THE TWO COLUMNS -->
     <v-row>
-      <v-col> </v-col>
+      <v-col cols="3">
+        <!-- [*] EMPTY COLUMN --  -->
+      </v-col>
     </v-row>
   </v-container>
   <v-snackbar v-model="clipboardOpen" timeout="3000" color="primary" variant="elevated">
@@ -223,23 +256,16 @@
   import { useMaterialThemeStore } from "@/stores/material-theme";
   import { storeToRefs } from "pinia";
   import ThemeColor from "@/utils/theme/theme-color";
-  import CustomColor from "@/utils/theme/custom-color";
+  import ToneDetails from "@/utils/palettes/tone-details";
 
   const materialThemeStore = useMaterialThemeStore();
-  console.log("materialThemeStore scheme variants: ", materialThemeStore.schemeVariants);
 
-  const { sourceColor, currentVariant, currentScheme } = storeToRefs(materialThemeStore);
-  console.log("UtilitiesView sourceColor: ", sourceColor);
+  const { sourceColor, currentVariant, currentScheme, includeOnColors } = storeToRefs(materialThemeStore);
 
-  const modalColorOpen = ref(false);
   const clipboardOpen = ref(false);
   const clipboardColor = ref("");
 
   const expandedPaletteIndex = ref(-1);
-
-  const tempColor = ref("");
-  const selectedColorName = ref("");
-  const selectedColor = ref("");
 
   const selectedImageIdx = ref(-1);
   const rowNumItems = ref(8);
@@ -247,35 +273,14 @@
   const picsum = ref(imgAssets);
 
   const schemeVariants = materialThemeStore.schemeVariants;
-  // console.log("schemeVariants: ", schemeVariants);
 
-  // const selectedSchemeVariant = ref(currentVariant);
+  const previewTheme = ref(null);
+  const previewThemeName = ref("");
+  const previewThemeOpen = ref(false);
 
   function selectedVariantDesc() {
     return schemeVariants.find((item) => item.value === currentVariant.value).desc;
   }
-
-  const paletteColors = reactive([
-    { title: "Source", name: "source", hex: "#769CDF" },
-    { title: "Primary", name: "primary", hex: "#769CDF" },
-    { title: "Secondary", name: "secondary", hex: "#8991A2" },
-    { title: "Tertiary", name: "tertiary", hex: "#A288A6" },
-    { title: "Error", name: "error", hex: "#FF5449" },
-    { title: "Neutral", name: "neutral", hex: "#919093" },
-    { title: "Neutral Variant", name: "neutralVariant", hex: "#8E9098" }
-  ]);
-
-  const customThemeColors = reactive([
-    { title: "Success", name: "success", hex: "#22892F" },
-    { title: "Info", name: "info", hex: "#028DE9" },
-    { title: "Warning", name: "warning", hex: "#E58C00" },
-    // { title: "Error", name: "error", hex: "#CF6679" }
-    { title: "Error", name: "error", hex: "#DE3730" }
-    // { title: "Success", name: "success", hex: "#4CAF50" },
-    // { title: "Info", name: "info", hex: "#2196F3" },
-    // { title: "Warning", name: "warning", hex: "#FB8C00" },
-    // { title: "Error", name: "error", hex: "#CF6679" }
-  ]);
 
   onMounted(() => {
     console.log("UtilitiesView ::: onMounted");
@@ -299,42 +304,37 @@
     // console.log(gradientCss);
   });
 
-  async function imageCardSelectHandler(idx) {
-    console.log("CarouselImagesView ::: imageCardSelectHandler");
+  async function imageCardSelectHandler(idx, el) {
+    console.log("UtilitiesView ::: imageCardSelectHandler");
     console.log(" - idx: ", idx);
+    console.log(" - image element: ", el);
+
     // TODO: move selected image index to store, so it can be restored when user navigates back.
     selectedImageIdx.value = idx;
 
-    const palettes = currentScheme.value.palettes;
-    console.log(" - palettes: ", palettes);
+    if (el) {
+      // set crossOrigin to allow CORS (generating color from image won't work without it)
+      el.setAttribute("crossOrigin", "anonymous");
+      console.log(" - img id: ", idx, "img element: ", el);
 
-    // get the source color object from palettes list
-    const sourceObject = palettes.find((item) => item.name === "source");
-    console.log(" - sourceObject: ", sourceObject);
+      const sourceArgb = await sourceColorFromImage(el);
+      console.log(" - sourceArgb: ", sourceArgb);
+      let sourceHex = hexFromArgb(sourceArgb);
+      // Create new scheme for the source color
+      materialThemeStore.createSchemeForHex(sourceHex);
 
-    // update the title to reflect an image source
-    sourceObject.title = "Source (from image)";
-
-    // [*] find the HTMLImageElement for the card
-    const cardId = "util-img-card-" + idx.toString();
-    console.log(" - cardId: ", cardId);
-
-    // get the card matching the cardId
-    const cardElement = document.getElementById(cardId);
-    console.log(" - cardElement: ", cardElement);
-
-    // get the image from the card
-    const imgElement = cardElement.querySelector("img");
-
-    // set crossOrigin to allow CORS (generating color from image won't work without it)
-    imgElement.setAttribute("crossOrigin", "anonymous");
-    console.log(" - imgElement: ", idx, imgElement);
-
-    const sourceArgb = await sourceColorFromImage(imgElement);
-    console.log(" - sourceArgb: ", sourceArgb);
-    let seedColor = hexFromArgb(sourceArgb);
-    // update store with new source color
-    materialThemeStore.createSchemeForHex(seedColor);
+      // TODO: move updating source title (from image vs from random color) to store or separate function
+      // Update the Source palette title to reflect an image source
+      const palettes = currentScheme.value.palettes;
+      console.log(" - palettes: ", palettes);
+      // get the source color object from palettes list
+      const sourceObject = palettes.find((item) => item.name === "source");
+      console.log(" - sourceObject: ", sourceObject);
+      // update the title to reflect an image source
+      sourceObject.title = "Source (Image " + (idx + 1).toString().padStart(2, "0") + ")";
+    } else {
+      console.warn("[UtilitiesView]: No image element found in `imageCardSelectHandler`");
+    }
   }
 
   /**
@@ -418,23 +418,33 @@
     console.log(" - palette: ", palette);
     console.log(" - source color: ", sourceColor.value);
     if (palette.name === "source") {
-      // use source color from store to reset the scheme
+      // Use source color from store (instead of palette) to reset the scheme.
       materialThemeStore.createSchemeForHex(sourceColor.value);
       // materialThemeStore.createThemeForHex(palette.hex);
     } else {
       // TODO: figure out what to do when reset is triggered for non-source colors
+      // If a palette is being reset after it was first applied,
+      // may need to update/reset the store as well.
+      materialThemeStore.updateThemeForPalette(palette);
     }
   }
 
   function paletteApplyClickHandler(idx, palette) {
     console.log("UtilitiesView ::: paletteApplyClickHandler");
     selectedImageIdx.value = -1;
-    // TODO: figure out what to do when apply is triggered for custom colors
+    // TODO: figure out what to do when apply is triggered for custom colors.
     if (palette.name === "source") {
       materialThemeStore.createSchemeForHex(palette.hex);
     } else {
       materialThemeStore.updateThemeForPalette(palette);
     }
+  }
+
+  function includeOnColorsUpdateHandler(value) {
+    console.log("UtilitiesView ::: includeOnColorsUpdateHandler");
+    // TODO: Update the store theme when includeOnColors is updated.
+    console.log(" - value: ", value);
+    console.log(" - materialThemeStore.includeOnColors: ", materialThemeStore.includeOnColors);
   }
 
   /**
@@ -492,34 +502,43 @@
    * Since the theme item is part of the `currentScheme` and thus the `materialThemeStore`,
    * those will automatically be updated (reactively).
    *
-   * @param {ThemeColor|CustomColor} item - The theme item to be updated. Must be of type `ThemeColor` or `CustomColor`.
+   * @param {ThemeColor} item - The theme item to be updated. Must be of type `ThemeColor`.
    */
   function themeToneSliderUpdateHandler(item) {
     console.log("UtilitiesView ::: themeToneSliderUpdateHandler");
     // INFO: modifying the theme item also updates the `currentScheme` and the `materialThemeStore`.
     console.log(" - item: ", item);
+    console.log(" - item.isCustom: ", item.isCustom);
+
     // If we were to change the tone of the item's hex directly, over time, its hex color would drift.
     // To prevent this and to keep a consistent theme color with each tone change,
     // we need to generate the item's hex color from its matching palette,
     // which is also where the item itself originated from.
+
     const palettes = currentScheme.value.palettes;
+    const custom = currentScheme.value.custom;
+
     // Find the palette object in the current scheme that matches the theme item
     let paletteColor;
-    if (item.name === "background" || item.name === "surface") {
+    if (item.isCustom) {
+      // If the theme item is a custom palette, use the `custom` palette list.
+      paletteColor = custom.find((pc) => pc.name === item.name);
+    } else if (item.name === "background" || item.name === "surface") {
       paletteColor = palettes.find((pc) => pc.name === "neutral");
     } else if (item.name === "surfaceVariant") {
       paletteColor = palettes.find((pc) => pc.name === "neutralVariant");
-    } else if (item.name === "error" || item.name === "success" || item.name === "info" || item.name === "warning") {
-      paletteColor = currentScheme.value.custom.find((pc) => pc.name === item.name);
     } else {
       paletteColor = palettes.find((pc) => pc.name === item.name);
     }
     console.log(" - paletteColor: ", paletteColor);
+
     // With the matching palette found, create a list of tones - ranging from 10 to 90 - for that palette's hex value.
-    // Then find the tone item in that list that matches the theme item's tone, which is also between 10 and 90, as set by the slider.
+    // Then find the tone item in that list that matches the theme item's (modified) tone,
+    // which is also between 10 and 90, as set by the slider.
     // Note that the theme item's tone (`item.tone`) has already been updated by the slider (v-model).
-    // So all we need to do now is to find the matching tone in the palette list
-    // and update the item's hex and argb  with the values from the tonal palette list and update the label.
+    // All we need to do now is to find the matching tone in the palette list
+    // and update the item's hex value with the values from the tonal palette list.
+
     if (paletteColor) {
       console.log(" - paletteColor isCustom: ", paletteColor.isCustom);
       let hex = paletteColor.isCustom ? paletteColor.customHex : paletteColor.hex;
@@ -531,28 +550,23 @@
       if (toneItem) {
         // update the item hex with new hex color
         item.hex = toneItem.hex;
+        materialThemeStore.updateThemeStyles();
       }
     }
+  }
+
+  function showThemePreview(value) {
+    console.log("UtilitiesView ::: showThemePreview");
+    console.log(" - value: ", value);
+    previewTheme.value = value === "light" ? currentScheme.value.light : currentScheme.value.dark;
+    previewThemeName.value = value === "light" ? "hct-light" : "hct-dark";
+    previewThemeOpen.value = true;
   }
 </script>
 
 <style lang="scss">
   /**
-   * Styles for the image card items
-   * NOTE: this style is important and shouldn't be removed as it is used to find items by class name.
-   */
-  // TODO: look into using refs for card images instead of using css class names.
-  .card-item-img {
-    // text-shadow: black 0px 0px 6px;
-    // background: linear-gradient(to top, rgb(255 255 255 / 0%), rgb(0 0 0 / 65%));
-    .v-card-title {
-      // font-size: 1.15rem !important;
-      font-weight: normal !important;
-    }
-  }
-
-  /**
-   * Styles for the Theme Color tone sliders
+   * Styles for the ThemeColor tone sliders
    */
   .theme-slider-track {
     .v-slider-track__background {

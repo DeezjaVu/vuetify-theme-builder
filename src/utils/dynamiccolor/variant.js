@@ -114,8 +114,8 @@ export class VariantDetails {
       title: "Rainbow",
       value: Variant.RAINBOW,
       desc:
-        "<p>A playful theme - the source color's hue does not appear in the theme.</p>" +
-        "<p>This Scheme comes closest to the Default Scheme, but uses <code>DynamicScheme</code> to generate the Tonal Palettes.</p>" +
+        "<p>A playful theme - the <mark>source</mark> color's hue does not appear in the theme.</p>" +
+        "<p>This scheme comes closest to the Default Scheme, but uses <code>DynamicScheme</code> to generate the Tonal Palettes.</p>" +
         "<p>This preset is nearly identical to the <code>Tonal Spot</code> scheme. Only difference is in the <code>`chroma`</code> of the Primary Tonal Palette.</p>"
     },
     {

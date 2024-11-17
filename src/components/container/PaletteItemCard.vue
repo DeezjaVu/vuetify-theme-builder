@@ -200,11 +200,11 @@
   import { ref, onMounted, computed, toRefs, watch, warn, readonly } from "vue";
   import { Hct, hexFromArgb, argbFromHex, TonalPalette } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
-  import PaletteColor from "@/utils/palettes/palette-color";
+  import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
 
   const props = defineProps({
-    palette: PaletteColor | PaletteCustom,
+    palette: PaletteCore | PaletteCustom,
     paletteIndex: Number,
     showRandom: Boolean
   });

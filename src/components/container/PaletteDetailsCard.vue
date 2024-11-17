@@ -15,34 +15,77 @@
       <template v-for="tone in tonalPalettes" :key="`tone-${palette.name}-${tone.tone}`">
         <!-- TODO: UtitlitiesView ::: implement hover dialog with tone details -->
         <!-- border="md" elevation="2" -->
-        <v-sheet
-          class="d-flex align-center justify-center"
-          width="100%"
-          height="50"
-          :color="tone.hex"
-          border="md"
-          elevation="2"
-          @click="toneButtonClickHandler(tone)"
-        >
-          <code class="mono-sm--text font-weight-light no-select">
-            {{ tone.tone }}
-          </code>
-        </v-sheet>
+        <v-hover @update:model-value="toneButtonHoverHandler(tone, $event)">
+          <template v-slot:default="{ isHovering, props }">
+            <v-sheet
+              class="d-flex align-center justify-center"
+              width="100%"
+              height="50"
+              v-bind="props"
+              :color="tone.hex"
+              border="md"
+              elevation="2"
+              @click="toneButtonClickHandler(tone)"
+            >
+              <code class="mono-sm--text font-weight-light no-select">
+                {{ tone.tone }}
+              </code>
+              <v-menu
+                activator="parent"
+                location="top"
+                target="cursor"
+                open-on-hover
+                open-delay="50"
+                close-delay="50"
+                :close-on-content-click="false"
+                persistent
+                :scrim="false"
+                transition="slide-x-transition"
+              >
+                <!-- TODO: UtitlitiesView ::: Refactor hover alert into separate component -->
+                <v-alert :color="tone.hex" width="380" density="compact" variant="elevated" class="elevation-10">
+                  <v-card-item>
+                    <v-card-subtitle>
+                      <span>tone: </span>
+                      <code class="mono-sm--text font-weight-light"> {{ tone.tone }} </code>
+                    </v-card-subtitle>
+                    <v-card-subtitle>
+                      <span>hex: </span>
+                      <code class="mono-sm--text font-weight-light"> {{ tone.hex }} </code>
+                    </v-card-subtitle>
+                    <v-card-subtitle>
+                      <span>argb: </span>
+                      <code class="mono-sm--text font-weight-light"> {{ tone.argb }} </code>
+                    </v-card-subtitle>
+                  </v-card-item>
+                  <!-- TONE INFO TEXT -->
+                  <v-card-text>
+                    <article class="text-body-2" v-html="hoverToneInfo"></article>
+                  </v-card-text>
+                </v-alert>
+              </v-menu>
+            </v-sheet>
+          </template>
+        </v-hover>
       </template>
     </v-card-actions>
   </v-card>
 </template>
 <script setup>
-  import PaletteColor from "@/utils/palettes/palette-color";
+  import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
-  import { onMounted } from "vue";
+  import { ref, onMounted } from "vue";
 
   const props = defineProps({
-    palette: PaletteColor | PaletteCustom,
-    tonalPalettes: Array
+    palette: PaletteCore | PaletteCustom,
+    tonalPalettes: Array,
+    toneDetails: Object
   });
 
   const emit = defineEmits(["click:copy"]);
+
+  const hoverTone = ref(null);
+  const hoverToneInfo = ref(null);
 
   /**
    * LIFECYCLE HOOKS
@@ -50,6 +93,7 @@
 
   onMounted(() => {
     console.log("PaletteDetailsCard ::: onMounted");
+    console.log(" - props toneDetails: ", props.toneDetails);
   });
 
   /**
@@ -68,5 +112,15 @@
 
   function toneButtonClickHandler(tone) {
     console.log("PaletteDetailsCard ::: toneButtonClickHandler");
+  }
+
+  function toneButtonHoverHandler(value, hover) {
+    console.log("PaletteDetailsCard ::: toneButtonHoverHandler");
+    console.log(" - value: ", value);
+    console.log(" - hover: ", hover);
+    let info = props.toneDetails.tones.find((t) => t.tone === value.tone).info;
+    console.log(" - tone info: ", info);
+    hoverTone.value = value;
+    hoverToneInfo.value = info;
   }
 </script>

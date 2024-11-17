@@ -40,6 +40,7 @@ const useThemeStore = defineStore("themeStore", {
       console.log("ThemeStore ::: builderDark");
       return state.themeInstance.themes["builder-dark"];
     },
+
     /**
      * Returns the builder light theme.
      *
@@ -50,6 +51,7 @@ const useThemeStore = defineStore("themeStore", {
       console.log(" - themes: ", state.themeInstance.themes);
       return state.themeInstance.themes["builder-light"];
     },
+
     /**
      * Returns the themes object, which is a map of theme names to their definitions.
      *
@@ -63,6 +65,7 @@ const useThemeStore = defineStore("themeStore", {
       // console.log(" - themes: ", state.themeInstance.themes);
       return state.themeInstance.themes;
     },
+
     /**
      * Returns the computed themes, which are the resolved theme definitions
      * based on the themes specified in the vuetify.js config file.

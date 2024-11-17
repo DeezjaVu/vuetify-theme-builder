@@ -24,9 +24,9 @@ export default createVuetify({
   theme: {
     defaultTheme: "dark",
     variations: {
-      colors: ["primary", "secondary", "primary-variant", "secondary-variant"],
-      lighten: 4,
-      darken: 4
+      colors: ["primary", "secondary", "tertiary", "primary-variant", "secondary-variant"],
+      lighten: 2,
+      darken: 2
     },
     themes: {
       light: {
@@ -46,13 +46,7 @@ export default createVuetify({
           error: VuetifyTheme.dark.error,
           info: VuetifyTheme.dark.info,
           success: VuetifyTheme.dark.success,
-          // warning: "#F39C12"
           warning: VuetifyTheme.dark.warning
-          // surface: "#E91E63",
-          // "on-surface": "#FFEB3B"
-          // "surface-bright": "#ccbfd6",
-          // "surface-light": "#424242",
-          // "surface-variant": "#a3a3a3"
         }
       },
       // By default, Vuetify will generate the theme colors and variables by calling
@@ -67,23 +61,33 @@ export default createVuetify({
       "hct-light": {
         dark: false,
         colors: {
-          primary: "#00677E",
-          secondary: "#4C626A",
-          tertiary: "#595C7E",
-          error: "#BA1A1A",
-          background: "#FBFCFE",
-          "surface-variant": "#DBE4E8"
+          primary: "#d9e2ff",
+          secondary: "#dbe2f9",
+          tertiary: "#fdd7fb",
+          success: "#94f991",
+          info: "#d2e4ff",
+          warning: "#ffdcbc",
+          error: "#ffdad6",
+          background: "#fbf8fd",
+          surface: "#efedf1",
+          "surface-light": "#e1e2ec",
+          "surface-variant": "#44474f"
         }
       },
       "hct-dark": {
         dark: true,
         colors: {
-          primary: "#5AD5F9",
-          secondary: "#B3CAD4",
-          tertiary: "#C2C4EB",
-          error: "#FFB4AB",
-          background: "#191C1D",
-          "surface-variant": "#40484B"
+          primary: "#16448f",
+          secondary: "#404759",
+          tertiary: "#593e5a",
+          success: "#005313",
+          info: "#00497e",
+          warning: "#683d00",
+          error: "#93000a",
+          background: "#121316",
+          surface: "#1f1f23",
+          "surface-light": "#44464f",
+          "surface-variant": "#a9abb4"
         }
       }
     }

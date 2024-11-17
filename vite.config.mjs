@@ -34,7 +34,8 @@ export default defineConfig({
       google: {
         families: [
           // { name: "Roboto", styles: "wght@100;300;400;500;700;900" },
-          { name: "Inter", styles: "wght@100;300;400;500;700;900" },
+          // { name: "Inter", styles: "wght@100;300;400;500;700;900" },
+          { name: "Work Sans", styles: "wght@100;300;400;500;700;900" },
           // { name: "Raleway", styles: "wght@100;300;400;500;700;900" },
           // { name: "Noto Sans Mono", styles: "wght@100;300;400;500;700;900" },
           { name: "IBM Plex Mono", styles: "wght@100;300;400;500;700;900" }

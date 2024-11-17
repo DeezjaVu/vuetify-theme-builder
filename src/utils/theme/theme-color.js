@@ -1,4 +1,4 @@
-import { argbFromHex, Hct } from "@material/material-color-utilities";
+import { argbFromHex, hexFromArgb, Hct, TonalPalette } from "@material/material-color-utilities";
 
 /**
  * Creates a new ThemeColor object.
@@ -9,14 +9,17 @@ import { argbFromHex, Hct } from "@material/material-color-utilities";
  * @param {number} [tone=30] - The initial tone value of the theme color.
  */
 export default class ThemeColor {
-  constructor(title, name, hex = "#000000", tone = 30) {
+  constructor(title, name, hex = "#000000", tone = 30, isCustom = false) {
     this.title = title;
     Object.defineProperty(this, "name", { value: name, enumerable: true });
     this.hex = hex;
     this.tone = tone;
     Object.defineProperty(this, "initialTone", { value: tone });
+    Object.defineProperty(this, "isCustom", { value: isCustom });
+
     this.toggle = false;
   }
+
   /**
    * The ARGB representation of the hex color.
    * @type {number}
@@ -31,6 +34,38 @@ export default class ThemeColor {
    */
   get hct() {
     return Hct.fromInt(this.argb);
+  }
+
+  /**
+   * Computes the hex color for the "on" color in a dark theme context.
+   *
+   * The method derives the tone based on the name of the theme color.
+   * - If the color name is "surfaceVariant", it applies a tone of 80.
+   * - For all other colors, it applies a tone of 90.
+   *
+   * @returns {string} The hex representation of the "on" color for dark themes.
+   */
+  get onDarkHex() {
+    const tp = TonalPalette.fromInt(this.argb);
+    const onArgb = this.name === "surfaceVariant" ? tp.tone(80) : tp.tone(90);
+    const hex = hexFromArgb(onArgb);
+    return hex;
+  }
+
+  /**
+   * Computes the hex color for the "on" color in a light theme context.
+   *
+   * The method derives the tone based on the name of the theme color.
+   * - If the color name is "background" or "surface", it applies a tone of 10.
+   * - For all other colors, it applies a tone of 30.
+   *
+   * @returns {string} The hex representation of the "on" color for light themes.
+   */
+  get onLightHex() {
+    const tp = TonalPalette.fromInt(this.argb);
+    const onArgb = this.name === "background" || this.name === "surface" ? tp.tone(10) : tp.tone(30);
+    const hex = hexFromArgb(onArgb);
+    return hex;
   }
 
   /**
@@ -66,7 +101,7 @@ ThemeColor.getLabelPrefix = function (name) {
     case "warning":
       return "CW";
     case "error":
-      return "E";
+      return "CE";
     case "background":
     case "surface":
       return "N";

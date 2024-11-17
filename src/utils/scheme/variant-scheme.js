@@ -15,10 +15,9 @@ import {
   TonalPalette
 } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
-import PaletteColor from "@/utils/palettes/palette-color.js";
+import PaletteCore from "@/utils/palettes/palette-core.js";
 import PaletteCustom from "@/utils/palettes/palette-custom";
 import ThemeColor from "@/utils/theme/theme-color";
-import CustomColor from "../theme/custom-color";
 // import CustomColor from "@/utils/theme/custom-color";
 
 export class VariantScheme {
@@ -27,9 +26,9 @@ export class VariantScheme {
    *
    * @param {integer} argb - The source color in ARGB format.
    * @param {Variant} variant - The variant type for the scheme.
-   * @param {Array<PaletteColor>} palettes - The palette colors (`PaletteColor`) associated with the scheme's source color.
-   * @param {Array<ThemeColor>} lightTheme - An array of colors (`ThemColor`) for the light theme.
-   * @param {Array<ThemeColor>} darkTheme - An array of colors (`{ThemColor}`) for the dark theme.
+   * @param {Array<PaletteCore>} palettes - The palette colors (`PaletteColor`) associated with the scheme's source color.
+   * @param {Array<ThemeColor>} lightTheme - An array of colors (`ThemeColor`) for the light theme.
+   * @param {Array<ThemeColor>} darkTheme - An array of colors (`{ThemeColor}`) for the dark theme.
    * @param {Array} custom - An optional array of custom theme colors, each with a title, name, and blend settings.
    */
   constructor(argb, variant, palettes, lightTheme, darkTheme, custom = []) {
@@ -61,7 +60,7 @@ export class VariantScheme {
    * - `hex`: The hex value of the color.
    *
    * The scheme also consists of a `light` and `dark` theme, which are
-   * represented as an array of objects, each with the following properties:
+   * represented as an array of `ThemeColor` objects, each with the following properties:
    *
    * - `name`: The name of the color, such as primary, secondary, background, etc.
    * - `argb`: The HCT ARGB value of the color.
@@ -73,7 +72,7 @@ export class VariantScheme {
    * @param {Number<Variant>} variant Which scheme variant to create. Must be one of the static `Variant` values, e.g. `Variant.TONAL_SPOT`.
    * @param {Array<Object>} custom An optional array of custom colors to include in the scheme.
    *
-   * @return {VariantScheme} An `VariantScheme` object instance.
+   * @return {VariantScheme} A `VariantScheme` object instance.
    */
   static createScheme(argb, variant, custom = []) {
     console.log("VariantScheme ::: createScheme");
@@ -82,6 +81,11 @@ export class VariantScheme {
     // console.log("- custom:", custom);
 
     let sourceHct = Hct.fromInt(argb);
+
+    // Material Utilities Dynamic Color Schemes creates only 1 flavor (light or dark).
+    // So to get the theme colors for both light and dark, we need to generate two schemes, using the same variant.
+    // Both generated schemes will have identical palettes, so we grab the Palette objects from one of the schemes
+    // to create a single palette object and map the light and dark theme colors to two ThemeColor objects, ´light` and `dark`.
 
     const { lightScheme, darkScheme } = VariantScheme.getSchemesForVariant(sourceHct, variant);
     // console.log(" - lightScheme: ", lightScheme);
@@ -99,7 +103,7 @@ export class VariantScheme {
 
     VariantScheme.paletteColors.forEach((entry) => {
       // console.log(" - entry.name: ", entry.name);
-      let pColor = new PaletteColor(entry.title, entry.name);
+      let pColor = new PaletteCore(entry.title, entry.name);
       if (entry.name === "source") {
         pColor.hex = hexFromArgb(argb);
       } else if (entry.name === "primary") {
@@ -155,9 +159,9 @@ export class VariantScheme {
 
     // TODO: Refactor custom color styles to a more elegant way.
 
-    // get custom color theme styles from Material Utilities.
+    // Get custom color theme styles from Material Utilities.
     const customStyles = customTmp.map((c) => customColor(argb, c));
-    // console.log(" - customStyles: ", customStyles);
+    console.log(" - customStyles: ", customStyles);
 
     // Grab the dark and light `colorContainer` style from the custom styles and and it to the scheme theme.
     customStyles.forEach((style) => {
@@ -180,13 +184,19 @@ export class VariantScheme {
       // console.log(" - darkArgb: ", darkArgb);
 
       let darkTone = Math.round(Hct.fromInt(darkArgb).tone);
-      // console.log(" - darkTone: ", darkTone);
+      console.log(" - darkTone: ", darkTone);
 
       let darkHex = hexFromArgb(darkArgb);
-      // console.log(" - darkHex: ", darkHex);
+      console.log(" - darkHex: ", darkHex);
 
-      let lightStyle = new CustomColor(styleTitle, styleName, lightHex, lightTone);
-      let darkStyle = new CustomColor(styleTitle, styleName, darkHex, darkTone);
+      // let onDarkHex = hexFromArgb(style.dark.onColorContainer);
+      // console.log(" - onDarkHex: ", onDarkHex);
+
+      // let onDarkTone = Math.round(Hct.fromInt(style.dark.onColorContainer).tone);
+      // console.log(" - onDarkTone: ", onDarkTone);
+
+      let lightStyle = new ThemeColor(styleTitle, styleName, lightHex, lightTone, true);
+      let darkStyle = new ThemeColor(styleTitle, styleName, darkHex, darkTone, true);
 
       lightTheme.push(lightStyle);
       darkTheme.push(darkStyle);
@@ -295,15 +305,19 @@ VariantScheme.themeColors = [
 ];
 
 /**
+ * @typedef {Object} CustomPalette
+ * @property {string} title The title of the custom palette color.
+ * @property {string} name The name of the custom palette color.
+ * @property {string} hex The hex color of the custom palette color.
+ * @property {number} source The source color of the custom palette color.
+ * @property {boolean} blend Whether the custom palette color should be blended with the source color.
+ */
+
+/**
  * The blend status of the custom palette colors is (indirectly) updated from the theme store.
  * This is then used when a new theme is created to maintain the custom palette blend status.
  *
- * @typedef {Array<Object>} paletteColors
- * @property {string} title
- * @property {string} name
- * @property {string} hex
- * @property {number} source
- * @property {boolean} blend
+ * @type {Array<CustomPalette>}
  */
 VariantScheme.customPaletteColors = [
   { title: "Success", name: "success", hex: "#22892F", source: 0xff22892f, blend: false },
@@ -325,8 +339,12 @@ VariantScheme.customPaletteColors = [
  * @return {Array<ThemeColor>} - An array of theme colors, with their `hex` and `tone` properties set from the scheme.
  */
 VariantScheme.createThemeFromScheme = (scheme) => {
+  console.log("VariantScheme.createThemeFromScheme");
+  console.log(" - scheme: ", scheme);
+
   let theme = [];
   let themeClone = structuredClone(VariantScheme.themeColors);
+
   // map the theme colors from the scheme
   themeClone.forEach((entry) => {
     // Theme style properties: the styles we're looking for within the Scheme have a "Container" suffix, e.g. `primaryContainer`.
@@ -344,9 +362,19 @@ VariantScheme.createThemeFromScheme = (scheme) => {
 
     // let propName = VariantScheme.names.find((item) => item.themeName === entry.name)?.styleName;
     const namesMap = new Map(VariantScheme.names.map((item) => [item.themeName, item.styleName]));
-
     const propName = namesMap.get(entry.name);
     // console.log("propName: ", propName);
+
+    const onNamesMap = new Map(VariantScheme.names.map((item) => [item.themeName, item.onStyleName]));
+    const onPropName = onNamesMap.get(entry.name);
+    console.log("onPropName: ", onPropName);
+    let onArgb = scheme[onPropName];
+    let onHex = hexFromArgb(onArgb);
+    let onHct = Hct.fromInt(onArgb);
+    let onTone = Math.round(onHct.tone);
+
+    console.log("onHex: ", onHex);
+    console.log("onTone: ", onTone);
 
     let argb = scheme[propName];
     let hex = hexFromArgb(argb);
@@ -361,13 +389,13 @@ VariantScheme.createThemeFromScheme = (scheme) => {
 };
 
 VariantScheme.names = [
-  { paletteName: "primary", themeName: "primary", styleName: "primaryContainer" },
-  { paletteName: "secondary", themeName: "secondary", styleName: "secondaryContainer" },
-  { paletteName: "tertiary", themeName: "tertiary", styleName: "tertiaryContainer" },
-  { paletteName: "error", themeName: "error", styleName: "errorContainer" },
-  { paletteName: "neutral", themeName: "background", styleName: "background" },
-  { paletteName: "neutral", themeName: "surface", styleName: "surfaceContainer" },
-  { paletteName: "neutralVariant", themeName: "surfaceVariant", styleName: "surfaceVariant" }
+  { paletteName: "primary", themeName: "primary", styleName: "primaryContainer", onStyleName: "onPrimaryContainer" },
+  { paletteName: "secondary", themeName: "secondary", styleName: "secondaryContainer", onStyleName: "onSecondaryContainer" },
+  { paletteName: "tertiary", themeName: "tertiary", styleName: "tertiaryContainer", onStyleName: "onTertiaryContainer" },
+  { paletteName: "error", themeName: "error", styleName: "errorContainer", onStyleName: "onErrorContainer" },
+  { paletteName: "neutral", themeName: "background", styleName: "background", onStyleName: "onBackground" },
+  { paletteName: "neutral", themeName: "surface", styleName: "surfaceContainer", onStyleName: "onSurface" },
+  { paletteName: "neutralVariant", themeName: "surfaceVariant", styleName: "surfaceVariant", onStyleName: "onSurfaceVariant" }
 ];
 
 // VariantScheme.names = new Map([

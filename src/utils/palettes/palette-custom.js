@@ -1,5 +1,31 @@
 import { argbFromHex, hexFromArgb, Blend, Hct } from "@material/material-color-utilities";
 
+/**
+ * Creates a new PaletteCustom object.
+ *
+ * Unlike a `PaletteCore`, a `PaletteCustom` is not generated from a Variant scheme.
+ *
+ * When a scheme is created, it will contain one of each of these custom palettes:
+ * - Success (success)
+ * - Info (info)
+ * - Warning (warning)
+ * - Error (error)
+ *
+ * The difference between `PaletteCustom` and a `PaletteCore` is that a custom palette
+ * can be harmonized (blended) with the scheme's source color.
+ *
+ * When `blend` is set to `true`, the custom palette is harmonized with the source color.
+ * The harmonized color are available via the `customArgb` and `customHex` properties and
+ * are used for display in the UI and generation of the Vuetify theme.
+ *
+ * The `hex` and `argb` properties always return the unblended color and should be used when editing the palette.
+ *
+ * @param {string} title - The title of the theme color. Used for display in the UI.
+ * @param {string} name - The name of the theme color. Will be used as the key in the theme object.
+ * @param {string} [hex="#000000"] - The hex color of the theme color.
+ * @param {number} [source=0xff000000] - The source color of the scheme. This is needed for blending.
+ * @param {boolean} [blend=false] - Whether the theme color should be blended with the source color. The default is `false`.
+ */
 export default class PaletteCustom {
   constructor(title, name, hex = "#000000", source = 0xff000000, blend = false) {
     this.title = title;
@@ -10,7 +36,7 @@ export default class PaletteCustom {
   }
 
   /**
-   * The ARGB representation of the custom hex color.
+   * The ARGB representation of the hex color.
    *
    * This always returns the unblended color, regardless of the blend setting.
    *
@@ -29,8 +55,8 @@ export default class PaletteCustom {
   }
 
   /**
-   * Always returns true, indicating that this is a custom color
-   * palette.
+   * Always returns true, indicating that this instance
+   * represents a custom color palette.
    *
    * @type {boolean}
    */
@@ -39,10 +65,10 @@ export default class PaletteCustom {
   }
 
   /**
-   * The ARGB representation of the custom hex color, after applying the
+   * The ARGB representation of the hex color, after applying the
    * blend mode if enabled.
    *
-   * If the blend mode is disabled, this returns the same value as
+   * If blend mode is disabled, this returns the same value as
    * the `argb` property.
    *
    * @type {number}
@@ -55,6 +81,15 @@ export default class PaletteCustom {
     return blendArgb;
   }
 
+  /**
+   * The hex representation of the custom color, after applying the
+   * blend mode if enabled.
+   *
+   * If the blend mode is disabled, this returns the same value as
+   * the `hex` property.
+   *
+   * @type {string}
+   */
   get customHex() {
     if (!this.blend) return this.hex;
     const blendHex = hexFromArgb(this.customArgb);

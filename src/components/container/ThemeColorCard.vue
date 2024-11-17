@@ -1,7 +1,9 @@
 <template>
   <v-card class="d-flex flex-column mb-4" :color="themeColor.hex" density="compact">
     <v-card-item>
-      <v-card-title class="text-body-1 font-weight-light">{{ themeColor.title }}</v-card-title>
+      <v-card-title class="text-body-1 font-weight-light" :style="`color:${getTitleColor()}`">
+        {{ themeColor.title }}
+      </v-card-title>
       <v-card-subtitle class="text-uppercase">
         <code class="mono-sm--text font-weight-light">{{ themeColor.hex }}</code>
       </v-card-subtitle>
@@ -35,13 +37,14 @@
   </v-card>
 </template>
 <script setup>
-  import CustomColor from "@/utils/theme/custom-color";
   import ThemeColor from "@/utils/theme/theme-color";
   import { onMounted } from "vue";
 
   const props = defineProps({
-    themeColor: ThemeColor | CustomColor,
-    cardIndex: Number
+    themeColor: ThemeColor,
+    cardIndex: Number,
+    isDark: Boolean,
+    includeOnColors: Boolean
   });
 
   const emit = defineEmits(["click:copy", "update:tone"]);
@@ -50,6 +53,17 @@
     console.log("ThemeColorCard ::: onMounted");
     // console.log(" - themeColor: ", props.themeColor);
   });
+
+  function getTitleColor() {
+    console.log("ThemeColorCard ::: getTitleColor");
+    // :includeOnColors="includeOnColors"
+    let onHex = props.isDark ? props.themeColor.onDarkHex : props.themeColor.onLightHex;
+    let includeOnColors = props.includeOnColors;
+    if (includeOnColors) {
+      return onHex;
+    }
+    return props.isDark ? "white" : "black";
+  }
 
   function copyColorClickHandler() {
     console.log("ThemeColorCard ::: copyColorClickHandler");

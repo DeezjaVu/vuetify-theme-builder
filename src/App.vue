@@ -84,8 +84,8 @@
     { title: "About", value: "about", href: "/about" },
     { title: "Colors", value: "colors-view", href: "/builder/colors" },
     { title: "Variables", value: "variables-view", href: "/builder/variables" },
-    { title: "Utilities", value: "utilities-view", href: "/builder/utilities" },
-    { title: "Carousel", value: "carousel-view", href: "/builder/carousel" }
+    { title: "Utilities", value: "utilities-view", href: "/builder/utilities" }
+    // { title: "Carousel", value: "carousel-view", href: "/builder/carousel" }
   ];
 
   // const bdDarklyHex = ref(appStore.bdDarklyHex);
