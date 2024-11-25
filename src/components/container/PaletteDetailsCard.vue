@@ -13,8 +13,7 @@
     <v-card-actions class="ga-0">
       <!--  font-mono mono-sm--text font-weight-light -->
       <template v-for="tone in tonalPalettes" :key="`tone-${palette.name}-${tone.tone}`">
-        <!-- TODO: UtitlitiesView ::: implement hover dialog with tone details -->
-        <!-- border="md" elevation="2" -->
+        <!-- [*] v-hover is required to gather/set the data for the hover alert -->
         <v-hover @update:model-value="toneButtonHoverHandler(tone, $event)">
           <template v-slot:default="{ isHovering, props }">
             <v-sheet
@@ -25,7 +24,6 @@
               :color="tone.hex"
               border="md"
               elevation="2"
-              @click="toneButtonClickHandler(tone)"
             >
               <code class="mono-sm--text font-weight-light no-select">
                 {{ tone.tone }}
@@ -33,14 +31,13 @@
               <v-menu
                 activator="parent"
                 location="top"
-                target="cursor"
                 open-on-hover
-                open-delay="50"
+                open-delay="200"
                 close-delay="50"
-                :close-on-content-click="false"
-                persistent
-                :scrim="false"
                 transition="slide-x-transition"
+                persistent
+                :close-on-content-click="false"
+                :scrim="false"
               >
                 <!-- TODO: UtitlitiesView ::: Refactor hover alert into separate component -->
                 <v-alert :color="tone.hex" width="380" density="compact" variant="elevated" class="elevation-10">
@@ -74,7 +71,7 @@
 <script setup>
   import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
-  import { ref, onMounted } from "vue";
+  import { ref, onMounted, watch, toRef } from "vue";
 
   const props = defineProps({
     palette: PaletteCore | PaletteCustom,
@@ -93,7 +90,7 @@
 
   onMounted(() => {
     console.log("PaletteDetailsCard ::: onMounted");
-    console.log(" - props toneDetails: ", props.toneDetails);
+    // console.log(" - props toneDetails: ", props.toneDetails);
   });
 
   /**
@@ -110,16 +107,12 @@
     emit("click:copy", hex);
   }
 
-  function toneButtonClickHandler(tone) {
-    console.log("PaletteDetailsCard ::: toneButtonClickHandler");
-  }
-
   function toneButtonHoverHandler(value, hover) {
-    console.log("PaletteDetailsCard ::: toneButtonHoverHandler");
-    console.log(" - value: ", value);
-    console.log(" - hover: ", hover);
+    // console.log("PaletteDetailsCard ::: toneButtonHoverHandler");
+    // console.log(" - value: ", value);
+    // console.log(" - hover: ", hover);
     let info = props.toneDetails.tones.find((t) => t.tone === value.tone).info;
-    console.log(" - tone info: ", info);
+    // console.log(" - tone info: ", info);
     hoverTone.value = value;
     hoverToneInfo.value = info;
   }

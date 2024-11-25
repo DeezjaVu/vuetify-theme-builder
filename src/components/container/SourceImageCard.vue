@@ -38,21 +38,20 @@
   const imageRef = ref(null);
 
   onMounted(() => {
-    console.log("SourceImageCard ::: onMounted");
-    console.log(" - props index: ", props.index);
+    // console.log("SourceImageCard ::: onMounted");
+    // console.log(" - props index: ", props.index);
   });
 
   function setImageElement(el) {
-    console.log("SourceImageCard ::: setImageElement");
-    // console.log(" - props index: ", props.index);
-    // console.log(" - el: ", el);
+    // console.log("SourceImageCard ::: setImageElement");
     if (el) {
       imageRef.value = el.$el;
       // [-] For some reason can't access img inside imageRef :(
       // [-] Maybe it's too early and it doesn't exist yet?
       // console.log(" - imageRef: ", imageRef.value);
     } else {
-      console.warn("[SourceImageCard]: No image element found in `setImageElement`");
+      // element is usually null when leaving the page - can safely ignore.
+      // console.warn("[SourceImageCard]: No image element found in `setImageElement`");
     }
   }
 
@@ -62,8 +61,8 @@
    * Emits a `click:select` event with the card `index` and the `HTMLImageElement`.
    */
   function imageSelectClickHandler() {
-    console.log("SourceImageCard ::: imageSelectClickHandler");
-    console.log(" - props index: ", props.index);
+    // console.log("SourceImageCard ::: imageSelectClickHandler");
+    // console.log(" - props index: ", props.index);
     let imgElement = imageRef.value.querySelector("img");
     // console.log(" - imgElement: ", imgElement);
     emit("click:select", props.index, imgElement);
@@ -74,8 +73,8 @@
    * Logs the event and emits a "click:refresh" event with the current image index.
    */
   function refreshClickHandler() {
-    console.log("SourceImageCard ::: refreshClickHandler");
-    console.log(" - props index: ", props.index);
+    // console.log("SourceImageCard ::: refreshClickHandler");
+    // console.log(" - props index: ", props.index);
     emit("click:refresh", props.index);
   }
 </script>

@@ -75,6 +75,7 @@ export default createVuetify({
         }
       },
       "hct-dark": {
+        // TODO: Find out why there's a primary-darken-1 color in the theme definition.
         dark: true,
         colors: {
           primary: "#16448f",

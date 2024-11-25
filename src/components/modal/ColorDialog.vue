@@ -67,7 +67,7 @@
   const cpModes = ["hex"];
 
   onMounted(() => {
-    console.log("ColorDialog ::: onMounted");
+    // console.log("ColorDialog ::: onMounted");
     // console.log(" - pickerColor: ", pickerColor);
   });
 

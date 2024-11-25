@@ -1,4 +1,4 @@
-import { argbFromHex, hexFromArgb, Blend, Hct } from "@material/material-color-utilities";
+import { argbFromHex, hexFromArgb, Blend, Hct, TonalPalette } from "@material/material-color-utilities";
 
 /**
  * Creates a new PaletteCustom object.
@@ -52,6 +52,15 @@ export default class PaletteCustom {
    */
   get hct() {
     return Hct.fromInt(this.argb);
+  }
+
+  /**
+   * The TonalPalette representation of the hex color.
+   * @type {TonalPalette}
+   */
+  get tonalPalette() {
+    let tp = TonalPalette.fromInt(this.customArgb);
+    return tp;
   }
 
   /**

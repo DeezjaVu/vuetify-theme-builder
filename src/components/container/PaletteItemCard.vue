@@ -23,10 +23,13 @@
     :color="isExpanded ? `surface-brighter` : `secondary`"
     density="compact"
   >
+    <!-- :loading="palette.isCustom && palette.blend" -->
     <v-card-item class="px-3">
+      <!-- [*] PALETTE COLOR ICON -->
       <template #prepend>
         <v-btn class="mr-4 text-uppercase" :color="palette.hex" icon @click="colorIconClickHandler()"></v-btn>
       </template>
+      <!-- [*] PALETTE COLOR TITLE & SUBTITLE -->
       <v-card-title class="text-body-1 font-weight-light">
         {{ palette.title }}
       </v-card-title>
@@ -36,9 +39,10 @@
         </template>
         <template v-else>
           <!-- 
-          The color input field v-model is set to a "dead" property 
+          The input field v-model is set to a "dead" property 
           so that we can clear the input field after the enter key was pressed and the color is applied
            -->
+          <!-- [*] HEX INPUT FIELD -->
           <v-text-field
             class="hex-field mono-sm--text font-weight-light text-uppercase"
             v-model="inputHex"
@@ -59,6 +63,7 @@
           ></v-text-field>
         </template>
       </v-card-subtitle>
+      <!-- [*] RANDOM COLOR BUTTON -->
       <template #append v-if="showRandom">
         <v-tooltip text="Random color." close-on-content-click v-model="randomTooltipOpen" @update:model-value="randomTooltipUpdateHandler">
           <template v-slot:activator="{ props }">
@@ -72,6 +77,31 @@
             ></v-btn>
           </template>
         </v-tooltip>
+      </template>
+      <!-- [*] CUSTOM PALETTE COLOR OPTIONS BUTTON -->
+      <template #append v-if="palette.isCustom">
+        <v-btn icon size="small" variant="text" aria-label="Custom color options">
+          <v-icon>mdi-dots-vertical</v-icon>
+          <v-menu activator="parent" location="end" :close-on-content-click="false">
+            <v-list density="compact">
+              <v-list-item>
+                <v-list-item-title class="text-body-2">Harmonize</v-list-item-title>
+                <v-list-item-subtitle class="font-weight-light">Blends this color with the scheme's source color.</v-list-item-subtitle>
+                <template v-slot:prepend="{ isSelected }">
+                  <v-list-item-action start>
+                    <v-checkbox-btn
+                      v-model="palette.blend"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hide-details
+                      @update:model-value="blendUpdateHandler()"
+                    ></v-checkbox-btn>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn>
       </template>
     </v-card-item>
 
@@ -177,18 +207,6 @@
     </v-expand-transition>
 
     <v-card-actions class="mx-3 mb-1" v-show="isExpanded">
-      <template v-if="palette.isCustom">
-        <v-checkbox-btn
-          label="Harmonize"
-          v-model="palette.blend"
-          class="text-body-2 font-weight-light"
-          color="primary-lighten-2"
-          density="compact"
-          hide-details
-          :disabled="isDirty"
-          @update:model-value="blendUpdateHandler"
-        ></v-checkbox-btn>
-      </template>
       <v-spacer></v-spacer>
       <v-btn color="primary-lighten-2" size="small" variant="text" @click="resetClickHandler">Reset</v-btn>
       <v-btn color="primary-lighten-2" size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
@@ -219,7 +237,7 @@
 
   const isDirty = ref(false);
 
-  const tempColor = ref("");
+  const tempHex = ref("");
 
   const paletteRef = toRefs(props).palette;
 
@@ -265,7 +283,7 @@
   });
 
   /**
-   * Returns true if the palette is custom and the palette has been modified (isDirty is true).
+   * Returns true if the palette is custom and the palette has been modified (isDirty = true).
    *
    * This is to prevent the color dialog from opening if the paletter has been modified (unsaved changes).
    */
@@ -283,13 +301,7 @@
       console.log("PaletteItemCard ::: watch palette");
       // console.log("- newValue: ", newValue);
       // console.log("- oldValue: ", oldValue);
-      let newHct = newValue.hct;
-
-      // TODO: check if the currentHct needs to be set in the props.palette watcher, as it is also set in the setSliderValues function.
-      currentHct.value = newHct;
-      // console.log("- currentHct: ", currentHct.value);
-
-      // Set temp color
+      // Set temp color (used for reset)
       setTempColor();
       // Set slider values (also sets currentHct)
       setSliderValues();
@@ -303,7 +315,7 @@
    */
 
   onMounted(() => {
-    console.log("PaletteItemCard ::: onMounted");
+    // console.log("PaletteItemCard ::: onMounted");
 
     // Get references to slider DOM elements via their ref attribute.
 
@@ -333,7 +345,7 @@
   function setTempColor() {
     // console.log("PaletteItemCard ::: setTempColor");
     if (props.palette) {
-      tempColor.value = props.palette.hex;
+      tempHex.value = props.palette.hex;
     }
   }
 
@@ -357,12 +369,6 @@
     colorHue.value = Math.round(hct.hue);
     colorChroma.value = Math.round(hct.chroma);
     colorTone.value = Math.round(hct.tone);
-
-    // console.log("- currentHct: ", currentHct.value);
-
-    // console.log("- colorHue: ", colorHue.value);
-    // console.log("- colorChroma: ", colorChroma.value);
-    // console.log("- colorTone: ", colorTone.value);
   }
 
   /**
@@ -375,34 +381,31 @@
    * Logs a warning to the console if either `chromaSliderTrack` or `toneSliderTrack` is `null`.
    */
   function updateSliderBackgrounds() {
-    // console.log("PaletteItemCard ::: updateSliderBackgrounds");
+    console.log("PaletteItemCard ::: updateSliderBackgrounds");
 
-    // new HCT color with the same hue, full chroma (100), and full tone (50)
-    let bgHct = Hct.from(Math.round(Number(currentHct.value.hue)), 100, 50);
-    let bgHex = hexFromArgb(bgHct.argb);
-
-    let tp = TonalPalette.fromHueAndChroma(currentHct.value.hue, 100);
+    // NOTE: Do not use the currentHct's hue as it may have shifted when tone and chroma are too high or too low.
+    //   [*] For some unknown reason it then gets stuck at 209, which then lead to the background gradient no longer updating.
+    // new HCT color with the slider hue, full chroma (100), and full tone (50)
+    let h = colorHue.value;
+    let tp = TonalPalette.fromHueAndChroma(h, 100);
     let argb = tp.tone(50);
-    let hex = hexFromArgb(argb);
-    // console.log(" - HEX from ARGB: ", hex);
+    let bgHex = hexFromArgb(argb);
 
     if (chromaSliderTrack && chromaSliderTrack.value !== null) {
       let chromaStyle = chromaSliderTrack.value.style;
       let chromaBgStyle = "linear-gradient(to right, #777777 0%, #555555 100%)".replace("#555555", bgHex);
       chromaStyle.setProperty("background", chromaBgStyle, "important");
     } else {
-      console.warn("[UtilitiesView] chromaSliderTrack.value is null");
+      console.warn("[PaletteItemCard] chromaSliderTrack.value is null");
     }
 
     // console.log(" - toneSliderTrack: ", toneSliderTrack.value);
     if (toneSliderTrack && toneSliderTrack.value !== null) {
       let toneStyle = toneSliderTrack.value.style;
-      // console.log(" - toneStyle: ", toneStyle);
       let toneBgStyle = "linear-gradient(to right, #000000 0%, #555555 50%, #FFFFFF 100%)".replace("#555555", bgHex);
-      // console.log(" - toneBgStyle: ", toneBgStyle);
       toneStyle.setProperty("background", toneBgStyle, "important");
     } else {
-      console.warn("[UtilitiesView] toneSliderTrack.value is null");
+      console.warn("[PaletteItemCard] toneSliderTrack.value is null");
     }
   }
 
@@ -556,7 +559,7 @@
     isDirty.value = false;
 
     // Restore the original palette color, before making any UI changes.
-    props.palette.hex = tempColor.value;
+    props.palette.hex = tempHex.value;
     setSliderValues();
     updateSliderBackgrounds();
     paletteModalOpen.value = false;
@@ -584,9 +587,7 @@
    * @param value The new value of the tooltip; true if opened, false if closed.
    */
   function randomTooltipUpdateHandler(value) {
-    console.log("UtilitiesView ::: randomTooltipUpdateHandler");
-    console.log(" - value: ", value);
-    console.log(" - randomTooltipOpen:", randomTooltipOpen.value);
+    // console.log("UtilitiesView ::: randomTooltipUpdateHandler");
     if (value) {
       setTimeout(() => {
         randomTooltipOpen.value = false;
@@ -602,8 +603,8 @@
    * @param hue The new hue value.
    */
   function hueSliderUpdateHandler(hue) {
-    console.log("PaletteItemCard ::: hueSliderUpdateHandler");
-    // console.log(" - hue: ", hue);
+    // console.log("PaletteItemCard ::: hueSliderUpdateHandler");
+    // console.log(" - slider hue: ", hue);
 
     isDirty.value = true;
 
@@ -617,15 +618,10 @@
     // Get the argb color from the tonal palette at the current tone
     // This will adjust the chroma if it's too high for the current tone.
     let argb = tp.tone(t);
-    console.log(" - tp, tone:", t, " - argb: ", argb);
     let hex = hexFromArgb(argb);
-    // console.log(" - hex: ", hex);
     props.palette.hex = hex;
-
     // Set the new hct color as the current one.
     currentHct.value = Hct.fromInt(argb);
-    // console.log(" - currentHct: ", currentHct.value);
-
     // Update the slider backgrounds with new hct color
     updateSliderBackgrounds();
   }
@@ -638,7 +634,7 @@
    * @param chroma The new chroma value.
    */
   function chromaSliderUpdateHandler(chroma) {
-    console.log("PaletteItemCard ::: chromaSliderUpdateHandler");
+    // console.log("PaletteItemCard ::: chromaSliderUpdateHandler");
     // console.log(" - chroma: ", chroma);
 
     isDirty.value = true;
@@ -655,13 +651,9 @@
     let argb = tp.tone(t);
     // console.log(" - tp, tone:", t, " - argb: ", argb);
     let hex = hexFromArgb(argb);
-    // console.log(" - hex: ", hex);
     props.palette.hex = hex;
-
     // Set the new hct color as the current one.
     currentHct.value = Hct.fromInt(argb);
-    // console.log(" - currentHct: ", currentHct.value);
-    // No need to update backgrounds.
   }
 
   /**
@@ -680,25 +672,18 @@
     let h = colorHue.value;
     let c = Math.max(1, Number(colorChroma.value));
     let t = Math.max(1, Number(colorTone.value));
-    // console.log(" - hue: ", h, " - chroma: ", c, " - tone: ", t);
 
     // Create a tonal palette from the new hue value and current chroma
     let tp = TonalPalette.fromHueAndChroma(h, c);
-    // console.log(" - TonalPalette from hue and chroma: ", tp);
 
     // Get the argb color from the tonal palette at the current tone.
     // This will adjust the chroma if it's too high for the current tone.
     let argb = tp.tone(t);
-    // console.log(" - argb: ", argb);
-    // console.log(" - TonalPalette keyColor: ", tp.keyColor);
-
     let hex = hexFromArgb(argb);
-    // console.log(" - hex: ", hex);
     props.palette.hex = hex;
 
     // Set the new hct color as the current one.
     currentHct.value = Hct.fromInt(argb);
-    console.log(" - currentHct: ", currentHct.value);
   }
 
   function blendUpdateHandler() {
@@ -721,9 +706,9 @@
   function resetClickHandler() {
     console.log("PaletteItemCard ::: resetClickHandler");
     console.log(" - palette color: ", props.palette.hex);
-    console.log(" - tempColor: ", tempColor.value);
+    console.log(" - tempColor: ", tempHex.value);
     isDirty.value = false;
-    props.palette.hex = tempColor.value;
+    props.palette.hex = tempHex.value;
     // reset slider values
     setSliderValues();
     // update/reset the temp color

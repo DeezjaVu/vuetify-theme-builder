@@ -1,4 +1,4 @@
-import { argbFromHex, Hct } from "@material/material-color-utilities";
+import { argbFromHex, Hct, TonalPalette } from "@material/material-color-utilities";
 
 /**
  * Creates a new PaletteCore object.
@@ -35,6 +35,7 @@ export default class PaletteCore {
     Object.defineProperty(this, "name", { value: name, enumerable: true });
     this.hex = hex;
   }
+
   /**
    * The ARGB representation of the hex color.
    * @type {number}
@@ -42,6 +43,7 @@ export default class PaletteCore {
   get argb() {
     return argbFromHex(this.hex);
   }
+
   /**
    * The HCT representation of the hex color.
    * @type {Hct}
@@ -49,6 +51,16 @@ export default class PaletteCore {
   get hct() {
     return Hct.fromInt(this.argb);
   }
+
+  /**
+   * The TonalPalette representation of the hex color.
+   * @type {TonalPalette}
+   */
+  get tonalPalette() {
+    let tp = TonalPalette.fromInt(this.argb);
+    return tp;
+  }
+
   /**
    * Returns false, indicating that this is not a custom color palette.
    * Custom color palettes are represented by the PaletteCustom class.
@@ -56,5 +68,13 @@ export default class PaletteCore {
    */
   get isCustom() {
     return false;
+  }
+
+  /**
+   * Checks if the palette is the source color palette.
+   * @type {boolean}
+   */
+  get isSource() {
+    return this.name === "source";
   }
 }

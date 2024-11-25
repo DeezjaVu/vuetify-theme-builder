@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 import { useTheme } from "vuetify";
 
 /**
@@ -25,92 +26,102 @@ import { useTheme } from "vuetify";
  * Access to it is provided by the useBuilderThemeStore() instead.
  *
  */
-const useThemeStore = defineStore("themeStore", {
-  state: () => ({
-    themeInstance: useTheme(),
-    currentThemeName: "builder-dark"
-  }),
-  getters: {
-    /**
-     * Returns the builder dark theme.
-     *
-     * @return {InternalThemeDefinition} The builder dark theme.
-     */
-    builderDark(state) {
-      console.log("ThemeStore ::: builderDark");
-      return state.themeInstance.themes["builder-dark"];
-    },
+const useThemeStore = defineStore("themeStore", () => {
+  //[-]============================
+  //[-] STATE (PROPERTIES)
+  //[-]============================
 
-    /**
-     * Returns the builder light theme.
-     *
-     * @return {InternalThemeDefinition} The builder light theme.
-     */
-    builderLight(state) {
-      console.log("ThemeStore ::: builderLight");
-      console.log(" - themes: ", state.themeInstance.themes);
-      return state.themeInstance.themes["builder-light"];
-    },
+  const themeInstance = ref(useTheme());
 
-    /**
-     * Returns the themes object, which is a map of theme names to their definitions.
-     *
-     * This is a reactive getter and will return the updated themes object
-     * when the theme instance is updated.
-     *
-     * @return {Record<string, InternalThemeDefinition>} The themes object.
-     */
-    themes(state) {
-      console.log("ThemeStore ::: themes");
-      // console.log(" - themes: ", state.themeInstance.themes);
-      return state.themeInstance.themes;
-    },
+  const currentThemeName = ref("builder-dark");
 
-    /**
-     * Returns the computed themes, which are the resolved theme definitions
-     * based on the themes specified in the vuetify.js config file.
-     *
-     * @example
-     *   computedThemes["builder-dark"].colors["on-background"]
-     *   computedThemes["builder-dark"].colors["on-error"]
-     *   computedThemes["builder-dark"].colors["on-warning"]
-     *   computedThemes["builder-dark"].colors["on-info"]
-     *
-     * @warning These properties should not be modified!
-     *
-     * This is a reactive getter and will return the updated computed themes
-     * whenever the theme changes.
-     *
-     * @returns {Record<string, InternalThemeDefinition>} The computed themes.
-     */
-    computedThemes(state) {
-      console.log("ThemeStore ::: computedThemes");
-      console.log(" - computedThemes: ", state.themeInstance.computedThemes);
-      return state.themeInstance.computedThemes;
-    }
-  }
+  //[-]============================
+  //[-] GETTERS (COMPUTED METHODS)
+  //[-]============================
+
+  /**
+   * Returns the builder dark theme.
+   *
+   * @return {InternalThemeDefinition} The builder dark theme.
+   */
+  const builderDark = computed(() => {
+    console.log("ThemeStore ::: builderDark");
+    return themeInstance.value.themes["builder-dark"];
+  });
+
+  /**
+   * Returns the builder light theme.
+   *
+   * @return {InternalThemeDefinition} The builder light theme.
+   */
+  const builderLight = computed((state) => {
+    console.log("ThemeStore ::: builderLight");
+    console.log(" - themes: ", themeInstance.themes);
+    return themeInstance.value.themes["builder-light"];
+  });
+
+  /**
+   * Returns the themes object, which is a map of theme names to their definitions.
+   *
+   * This is a reactive getter and will return the updated themes object
+   * when the theme instance is updated.
+   *
+   * @return {Record<string, InternalThemeDefinition>} The themes object.
+   */
+  const themes = computed((state) => {
+    console.log("ThemeStore ::: themes");
+    // console.log(" - themes: ", state.themeInstance.themes);
+    return themeInstance.value.themes;
+  });
+
+  /**
+   * Returns the computed themes, which are the resolved theme definitions
+   * based on the themes specified in the vuetify.js config file.
+   *
+   * @example
+   *   computedThemes["builder-dark"].colors["on-background"]
+   *   computedThemes["builder-dark"].colors["on-error"]
+   *   computedThemes["builder-dark"].colors["on-warning"]
+   *   computedThemes["builder-dark"].colors["on-info"]
+   *
+   * @warning These properties should not be modified!
+   *
+   * This is a reactive getter and will return the updated computed themes
+   * whenever the theme changes.
+   *
+   * @returns {Record<string, InternalThemeDefinition>} The computed themes.
+   */
+  const computedThemes = computed((state) => {
+    console.log("ThemeStore ::: computedThemes");
+    console.log(" - computedThemes: ", themeInstance.computedThemes);
+    return themeInstance.value.computedThemes;
+  });
+
+  return { themeInstance, currentThemeName, builderDark, builderLight, themes, computedThemes };
 });
 
 /**
  * The Builder theme store
  */
-export const useBuilderThemeStore = defineStore("builderTheme", {
-  persist: true,
-  /**
-   * The state of the builder theme store
-   *
-   * @typedef {Object} State
-   */
-  state: () => ({
-    themeStore: useThemeStore(),
+export const useBuilderThemeStore = defineStore(
+  "builderTheme",
+  () => {
+    persist: true;
 
-    // currentTheme: "builder-dark",
+    //[-]============================
+    //[-] STATE (PROPERTIES)
+    //[-]============================
+
+    const themeStore = ref(useThemeStore());
+
+    const currentTheme = ref("builder-dark");
+
     /**
      * The default colors for the builder theme.
      *
      * TODO: fetch default colors from the app's baked in themes (builder-dark, builder-light).
      */
-    defaultColors: {
+    const defaultColors = ref({
       light: {
         dark: false,
         colors: {
@@ -149,11 +160,11 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
           "on-surface-variant": "#424242"
         }
       }
-    },
+    });
     /**
      * The default themes
      */
-    defaultThemes: {
+    const defaultThemes = ref({
       light: {
         dark: false,
         colors: {
@@ -228,20 +239,23 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
           "theme-on-code": "#CCCCCC"
         }
       }
-    }
-  }),
-  getters: {
+    });
+
+    //[-]============================
+    //[-] GETTERS (COMPUTED METHODS)
+    //[-]============================
+
     /**
      * Returns the Vuetify theme instance.
      *
      * @return {ThemeInstance} The Vuetify theme instance.
      */
-    themeInstance(state) {
-      console.log("BuilderThemeStore ::: getTheme");
-      let store = state.themeStore;
-      let theme = store.themeInstance;
-      return theme;
-    },
+    // const themeInstance = computed((state) => {
+    //   console.log("BuilderThemeStore ::: getTheme");
+    //   let store = state.themeStore;
+    //   let theme = store.themeInstance;
+    //   return theme;
+    // });
 
     /**
      * Returns the name of the current theme,
@@ -255,33 +269,36 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
      *
      * @return {string} The current theme name.
      */
-    currentThemeName(state) {
+    const currentThemeName = computed(() => {
       console.log("BuilderThemeStore ::: currentThemeName");
-      let store = state.themeStore;
+      let store = themeStore.value;
       let name = store.currentThemeName;
       return name;
-    },
+    });
 
-    builderDark(state) {
+    const builderDark = computed(() => {
       console.log("BuilderThemeStore ::: builderDark");
       // TODO: remove builderDark redundancy in private store.
-      return state.themeStore.builderDark;
-    },
+      return themeStore.value.builderDark;
+    });
 
-    builderLight(state) {
+    const builderLight = computed(() => {
       console.log("BuilderThemeStore ::: builderLight");
       // TODO: remove builderLight redundancy in private store.
-      return state.themeStore.builderLight;
-    },
+      return themeStore.value.builderLight;
+    });
 
-    getDefaultColors(state) {
-      return state.defaultColors;
+    const getDefaultColors = computed(() => {
+      return defaultColors;
+    });
+
+    //[-]============================
+    //[-] ACTIONS (METHODS)
+    //[-]============================
+
+    function setTheme(theme) {
+      currentTheme = theme;
     }
-  },
-  actions: {
-    setTheme(theme) {
-      this.currentTheme = theme;
-    },
     /**
      * Sets the colors for the builder theme
      *
@@ -299,7 +316,7 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
      *   warning: "#F39C12"
      * })
      */
-    setColors(colors) {
+    function setColors(colors) {
       // this.colors = colors;
       /**
        * const target = { a: 1, b: 2 };
@@ -310,14 +327,15 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
        * console.log(returnedTarget);
        * // expected output: Object { a: 1, b: 4, c: 5 }
        */
-    },
-    updateThemeColor(themeName, colorName, colorValue) {
+    }
+
+    function updateThemeColor(themeName, colorName, colorValue) {
       console.log("BuilderThemeStore ::: updateThemeColor");
       console.log(" - themeName: ", themeName);
       console.log(" - colorName: ", colorName);
       console.log(" - colorValue: ", colorValue);
 
-      let themeStore = this.themeStore;
+      let themeStore = themeStore.value;
       // console.log(" - themeStore: ", themeStore);
       let builderDark = themeStore.builderDark;
       console.log(" - builder dark: ", builderDark);
@@ -325,5 +343,8 @@ export const useBuilderThemeStore = defineStore("builderTheme", {
       builderDark.colors[colorName] = colorValue;
       // console.log(" - builder dark after: ", builderDark);
     }
-  }
-});
+
+    return { currentThemeName, builderDark, builderLight, defaultThemes, getDefaultColors, setTheme, setColors, updateThemeColor };
+  },
+  { persist: true }
+);

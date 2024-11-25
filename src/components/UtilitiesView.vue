@@ -2,48 +2,56 @@
   <!-- [*] THEME FULLSCREEN PREVIEW MODAL DIALOG -->
   <ThemePreviewDialog
     v-model="previewThemeOpen"
+    v-model:themeName="previewThemeName"
     :previewTheme="previewTheme"
-    :themeName="previewThemeName"
     @click:close="previewThemeOpen = false"
     @click:copy="copyColorClickHandler"
+    @update:themeName="themeNameUpdateHandler"
   />
 
   <v-container class="fill-height px-12 mx-auto">
-    <!--  -->
+    <!-- [*] ===================== -->
     <!-- [*] TOP ROW - IMAGE CARDS -->
-    <!--  -->
-    <v-window class="v-container pa-0 mt-2 mb-6 mx-auto" show-arrows>
-      <v-window-item v-for="(i, idx1) in Math.ceil(picsum.length / rowNumItems)" :key="`row-${idx1}`">
-        <v-row class="align-sm-stretch">
-          <!--  -->
-          <!-- [*] IMAGE CARDS -->
-          <!--  -->
-          <!-- :id="`util-img-card-${idx1 * rowNumItems + idx2}`" -->
-          <v-col cols="3" v-for="(k, idx2) in rowNumItems" :key="`util-card-${idx1}-${idx2}`">
-            <SourceImageCard
-              v-if="idx1 * rowNumItems + idx2 < picsum.length"
-              :image="picsum[idx1 * rowNumItems + idx2]"
-              :index="idx1 * rowNumItems + idx2"
-              :isSelected="idx1 * rowNumItems + idx2 === selectedImageIdx"
-              :allowRefresh="idx1 * rowNumItems + idx2 < 4"
-              @click:select="imageCardSelectHandler"
-              @click:refresh="imageCardRefreshHandler"
-            >
-            </SourceImageCard>
-          </v-col>
-        </v-row>
-      </v-window-item>
-    </v-window>
+    <!-- [*] ===================== -->
+    <v-expand-transition>
+      <template v-if="showImageCards">
+        <v-window class="v-container pa-0 mt-2 mb-6 mx-auto" show-arrows>
+          <v-window-item v-for="(i, idx1) in Math.ceil(picsum.length / rowNumItems)" :key="`row-${idx1}`">
+            <v-row class="flex-1-1-100 align-sm-stretch">
+              <!-- [*] =================== -->
+              <!-- [*] IMAGE CARDS -->
+              <!-- [*] =================== -->
+              <v-col cols="3" v-for="(k, idx2) in rowNumItems" :key="`util-card-${idx1}-${idx2}`">
+                <SourceImageCard
+                  v-if="idx1 * rowNumItems + idx2 < picsum.length"
+                  :image="picsum[idx1 * rowNumItems + idx2]"
+                  :index="idx1 * rowNumItems + idx2"
+                  :isSelected="idx1 * rowNumItems + idx2 === selectedImageIdx"
+                  :allowRefresh="idx1 * rowNumItems + idx2 < 4"
+                  @click:select="imageCardSelectHandler"
+                  @click:refresh="imageCardRefreshHandler"
+                >
+                </SourceImageCard>
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
+      </template>
+    </v-expand-transition>
 
     <!-- [*] BOTTOM ROW - PALETTE MENU + PALETTE  CARDS -->
-    <v-row>
+    <!-- flex-1-1-100 is required to maintain a 100% width when the dark and light cards are collapsed -->
+    <v-row class="flex-1-1-100">
       <!-- [*] PALETTE MENU - LEFT SIDE COLUMN -->
-      <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="700" class="d-flex flex-column">
+      <!-- <v-col cols="12" sm="12" md="6" lg="4" xl="3" mobile-break-point="700" class="d-flex flex-column"> -->
+      <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="760">
         <!-- [*] SOURCE COLOR ROW -->
         <v-row class="flex-grow-0">
           <v-col>
             <!-- [*] SOURCE COLOR CARD -->
-            <v-card class="d-flex flex-column" :color="sourceColor" density="compact" min-height="200" height="230px">
+            <v-card class="d-flex flex-column" :color="sourceColor" density="compact" max-height="230">
+              <!-- :height="showVariantInfo ? 230 : auto" -->
+              <!-- :min-height="showVariantInfo ? 200 : auto" -->
               <v-card-item>
                 <v-card-title class="text-subtitle-1">Tonal Palettes</v-card-title>
                 <v-card-subtitle class="text-subtitle-2">Source</v-card-subtitle>
@@ -51,10 +59,15 @@
                   <v-btn variant="text" size="small" icon="mdi-export" @click="exportSchemeClickHandler"> </v-btn>
                 </template>
               </v-card-item>
-              <v-card-text style="flex-grow: 1; overflow-y: auto">
-                <div v-html="selectedVariantDesc()"></div>
-              </v-card-text>
-              <v-spacer vertical></v-spacer>
+
+              <v-expand-transition>
+                <!-- <v-card-text style="flex-grow: 1; overflow-y: auto" v-if="showVariantInfo"> -->
+                <v-card-text class="flex-grow-1 overflow-y-auto" v-if="showVariantInfo">
+                  <div v-html="selectedVariantDesc()"></div>
+                  <!-- <v-spacer vertical></v-spacer> -->
+                </v-card-text>
+              </v-expand-transition>
+
               <v-card-actions class="mt-auto px-4">
                 <!-- SCHEME VARIANT SELECTION -->
                 <span> Scheme Variant: </span>
@@ -72,13 +85,111 @@
                     <v-list-item class="variant-menu-item" v-bind="props" density="compact"></v-list-item>
                   </template>
                 </v-select>
+                <v-btn icon="mdi-cog" size="small" @click="showSettingsClickHandler"></v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
+
+        <!-- [*] SETTINGS -->
+
+        <v-expand-transition>
+          <template v-if="showSettings">
+            <v-row no-gutters>
+              <v-col>
+                <!-- NOTE: Adding padding or margin makes the transition jumpy when closing (JS/CSS still 20 years behind Flash/Flex - what a joke) -->
+                <!-- [*] UI SETTINGS CARD -->
+                <v-card variant="tonal">
+                  <v-card-item>
+                    <v-card-title class="text-subtitle-1">Page UI</v-card-title>
+                  </v-card-item>
+                  <v-card-text>
+                    <v-checkbox
+                      class="settings-label"
+                      v-model="showImageCards"
+                      label="Show images"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hide-details
+                      @update:model-value="showImageCardsUpdateHandler"
+                    ></v-checkbox>
+
+                    <v-checkbox
+                      class="settings-label"
+                      v-model="showVariantInfo"
+                      label="Show scheme variant info"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hide-details
+                      @update:model-value="showVariantInfoUpdateHandler"
+                    ></v-checkbox>
+
+                    <v-checkbox
+                      class="settings-label"
+                      v-model="showPaletteCards"
+                      label="Show detail palettes"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hide-details
+                      @update:model-value="showPaletteCardsUpdateHandler"
+                    ></v-checkbox>
+
+                    <v-checkbox
+                      class="settings-label"
+                      v-model="expandThemeCards"
+                      label="Expand theme cards"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hide-details
+                      @update:model-value="expandThemeCardsUpdateHandler"
+                    ></v-checkbox>
+                  </v-card-text>
+                </v-card>
+
+                <v-divider></v-divider>
+
+                <!-- [*] SCHEME SETTINGS CARD -->
+
+                <v-card variant="tonal">
+                  <v-card-item>
+                    <v-card-title class="text-subtitle-1">Scheme Settings</v-card-title>
+                  </v-card-item>
+                  <v-card-text>
+                    <!-- FIXME: Changing contrast resets all colors, including modified ones. -->
+                    <v-slider
+                      class="settings-label"
+                      v-model="currentContrast"
+                      label="Contrast:"
+                      min="0"
+                      max="1"
+                      step="0.5"
+                      hide-details
+                      density="compact"
+                      show-ticks="always"
+                      thumb-label
+                      @update:model-value="schemeContrastUpdateHandler"
+                    >
+                    </v-slider>
+                    <v-checkbox
+                      class="settings-label"
+                      v-model="includeOnColors"
+                      label="Include `on-` colors"
+                      color="primary-lighten-2"
+                      density="compact"
+                      hint="Include on-primary, on-secondary, etc... theme styles."
+                      persistent-hint
+                      @update:model-value="includeOnColorsUpdateHandler"
+                    ></v-checkbox>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-expand-transition>
+
         <!-- [*] PALETTE COLORS MENU BUTTONS (LEFT SIDE COLUMN) -->
         <v-card class="d-flex flex-column flex-grow-1 my-0" density="compact" min-height="810">
-          <v-card-text class="my-4">
+          <v-card-text class="my-2">
             <!-- [*] PALETTE COLOR ROWS -->
             <template v-for="(item, idx) in currentScheme.palettes" :key="`palette-color-card-${item.name}-${idx}`">
               <v-row>
@@ -87,7 +198,7 @@
                   <PaletteItemCard
                     :palette="item"
                     :paletteIndex="idx"
-                    :show-random="item.name === 'source'"
+                    :show-random="item.isSource"
                     v-model:expanded-index="expandedPaletteIndex"
                     @update:expanded-index="paletteExpandedUpdateHandler($event, idx)"
                     @click:random="randomButtonClickHandler"
@@ -115,123 +226,145 @@
                 </v-col>
               </v-row>
             </template>
-            <v-row>
-              <v-col>
-                <v-checkbox
-                  v-model="includeOnColors"
-                  label="Include `on-` colors"
-                  color="primary-lighten-2"
-                  @update:model-value="includeOnColorsUpdateHandler"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
 
       <!-- [*] PALETTE COLOR DETAIL CARDS (RIGHT SIDE COLUMN) -->
-      <v-col>
-        <v-row>
-          <!-- [*] PALETTE DETAILS ROW -->
-          <template v-for="item in currentScheme.palettes" :key="`color-details-card-${item.name}`">
-            <v-col v-if="item.name !== `source`" cols="12" sm="12" md="12" lg="6" xl="4">
-              <PaletteDetailsCard
-                :palette="item"
-                :tonalPalettes="getTonalPalettesForHex(item.hex)"
-                :toneDetails="ToneDetails.getInfoByName(item.name)"
-                @click:copy="copyColorClickHandler($event)"
-              >
-              </PaletteDetailsCard>
-            </v-col>
+      <v-col cols="12" sm="6" md="6" lg="8" xl="9" mobile-break-point="760">
+        <v-expand-transition>
+          <template v-if="showPaletteCards">
+            <v-row>
+              <!-- [*] PALETTE DETAILS ROW -->
+              <template v-for="item in currentScheme.palettes" :key="`color-details-card-${item.name}`">
+                <v-col v-if="item.name !== `source`" cols="12" sm="12" md="12" lg="6" xl="4">
+                  <PaletteDetailsCard
+                    :palette="item"
+                    :tonalPalettes="getTonalPalettesForHex(item.hex)"
+                    :toneDetails="ToneDetails.getInfoByName(item.name)"
+                    @click:copy="copyColorClickHandler($event)"
+                  >
+                  </PaletteDetailsCard>
+                </v-col>
+              </template>
+              <!-- [*] CUSTOM PALETTE DETAILS ROW -->
+              <template v-for="item in currentScheme.custom" :key="`custom-details-card-${item.name}`">
+                <v-col cols="12" sm="12" md="12" lg="6" xl="4">
+                  <PaletteDetailsCard
+                    :palette="item"
+                    :tonalPalettes="getTonalPalettesForHex(item.customHex)"
+                    :toneDetails="ToneDetails.getInfoByName(item.name)"
+                    @click:copy="copyColorClickHandler($event)"
+                  >
+                  </PaletteDetailsCard>
+                </v-col>
+              </template>
+            </v-row>
           </template>
-          <!-- [*] CUSTOM PALETTE DETAILS ROW -->
-          <template v-for="item in currentScheme.custom" :key="`custom-details-card-${item.name}`">
-            <v-col cols="12" sm="12" md="12" lg="6" xl="4">
-              <PaletteDetailsCard
-                :palette="item"
-                :tonalPalettes="getTonalPalettesForHex(item.customHex)"
-                :toneDetails="ToneDetails.getInfoByName(item.name)"
-                @click:copy="copyColorClickHandler($event)"
-              >
-              </PaletteDetailsCard>
-            </v-col>
-          </template>
-        </v-row>
+        </v-expand-transition>
 
         <!-- [*] DARK THEME COLORS ROW -->
         <v-row>
-          <v-col>
-            <v-card>
+          <v-col cols="12">
+            <v-card :color="surfaceDark">
               <v-card-item>
                 <v-card-title class="text-subtitle-1 font-weight-regular">Dark Theme Colors</v-card-title>
                 <template #prepend>
                   <v-btn icon="mdi-export" variant="text" size="small"> </v-btn>
                 </template>
                 <template #append>
+                  <v-btn
+                    :icon="showDarkThemeCard ? `mdi-menu-up` : `mdi-menu-down`"
+                    variant="text"
+                    size="small"
+                    @click="showDarkThemeCard = !showDarkThemeCard"
+                  >
+                  </v-btn>
                   <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`dark`)"> </v-btn>
                 </template>
               </v-card-item>
-              <v-card-text class="d-flex flex-column pt-4">
-                <v-row>
-                  <!-- [*] DARK CUSTOM THEME COLORS -->
-                  <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
-                    <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
-                      <ThemeColorCard
-                        :theme-color="item"
-                        :cardIndex="idx"
-                        :isDark="true"
-                        :includeOnColors="includeOnColors"
-                        @update:tone="themeToneSliderUpdateHandler($event)"
-                        @click:copy="copyColorClickHandler($event)"
-                      />
-                    </v-col>
-                  </template>
-                </v-row>
-              </v-card-text>
+              <v-expand-transition>
+                <v-card-text class="d-flex flex-column pt-4" v-if="showDarkThemeCard">
+                  <v-row>
+                    <!-- [*] DARK THEME COLOR CARDS -->
+                    <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
+                      <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
+                        <!-- :alwaysExpanded="expandThemeCards" -->
+                        <ThemeColorCard
+                          :theme-color="item"
+                          :cardIndex="idx"
+                          :isDark="true"
+                          :includeOnColors="includeOnColors"
+                          @update:tone="themeToneSliderUpdateHandler($event)"
+                          @click:copy="copyColorClickHandler($event)"
+                        />
+                      </v-col>
+                    </template>
+                  </v-row>
+                </v-card-text>
+              </v-expand-transition>
             </v-card>
           </v-col>
         </v-row>
 
         <!-- [*] LIGHT THEME COLORS ROW -->
         <v-row>
-          <v-col>
-            <v-card>
+          <v-col cols="12">
+            <v-card :color="surfaceLight">
               <v-card-item>
                 <v-card-title class="text-subtitle-1 font-weight-regular">Light Theme Colors</v-card-title>
                 <template #prepend>
                   <v-btn icon="mdi-export" variant="text" size="small"> </v-btn>
                 </template>
                 <template #append>
+                  <v-btn
+                    :icon="showLightThemeCard ? `mdi-menu-up` : `mdi-menu-down`"
+                    variant="text"
+                    size="small"
+                    @click="showLightThemeCard = !showLightThemeCard"
+                  >
+                  </v-btn>
                   <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`light`)"> </v-btn>
                 </template>
               </v-card-item>
-              <v-card-text class="d-flex flex-column pt-4">
-                <v-row>
-                  <!-- [*] LIGHT THEME COLORS -->
-                  <!-- DARK CUSTOM THEME COLORS -->
-                  <template v-for="(item, idx) in currentScheme.light" :key="`card-light-${item.name}-${idx}`">
-                    <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
-                      <ThemeColorCard
-                        :theme-color="item"
-                        :cardIndex="idx"
-                        :isDark="false"
-                        :includeOnColors="includeOnColors"
-                        @update:tone="themeToneSliderUpdateHandler($event)"
-                        @click:copy="copyColorClickHandler($event)"
-                      />
-                    </v-col>
-                  </template>
-                </v-row>
-              </v-card-text>
+              <v-expand-transition>
+                <v-card-text class="d-flex flex-column pt-4" v-if="showLightThemeCard">
+                  <v-row>
+                    <!-- [*] LIGHT THEME COLOR CARDS -->
+                    <!-- DARK CUSTOM THEME COLORS -->
+                    <template v-for="(item, idx) in currentScheme.light" :key="`card-light-${item.name}-${idx}`">
+                      <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
+                        <ThemeColorCard
+                          :theme-color="item"
+                          :cardIndex="idx"
+                          :isDark="false"
+                          :includeOnColors="includeOnColors"
+                          @update:tone="themeToneSliderUpdateHandler($event)"
+                          @click:copy="copyColorClickHandler($event)"
+                        />
+                      </v-col>
+                    </template>
+                  </v-row>
+                </v-card-text>
+              </v-expand-transition>
             </v-card>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
     <!-- [*] THIS ROW IS BELOW THE TWO COLUMNS -->
-    <v-row>
+    <v-row class="flex-1-1-100">
       <v-col cols="3">
-        <!-- [*] EMPTY COLUMN --  -->
+        <!-- [*] EMPTY COLUMN  -->
+      </v-col>
+      <v-col cols="3">
+        <!-- [*] EMPTY COLUMN  -->
+      </v-col>
+      <v-col cols="3">
+        <!-- [*] EMPTY COLUMN  -->
+      </v-col>
+      <v-col cols="3">
+        <!-- [*] EMPTY COLUMN  -->
       </v-col>
     </v-row>
   </v-container>
@@ -248,8 +381,10 @@
   // https://m3.material.io/styles/color/system/how-the-system-works
   // https://github.com/material-foundation/material-color-utilities/issues/90
 
-  import { ref, onMounted, reactive } from "vue";
-  import { argbFromHex, hexFromArgb, Hct, TonalPalette, sourceColorFromImage } from "@material/material-color-utilities";
+  import ThemePreviewDialog from "@/components/modal/ThemePreviewDialog.vue";
+
+  import { ref, onMounted, computed } from "vue";
+  import { argbFromHex, hexFromArgb, Hct, TonalPalette, Contrast, sourceColorFromImage } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
   import { imgAssets } from "@/utils/images/image-assets.js";
   import { Variant } from "/node_modules/@material/material-color-utilities/dynamiccolor/variant.js";
@@ -260,10 +395,28 @@
 
   const materialThemeStore = useMaterialThemeStore();
 
-  const { sourceColor, currentVariant, currentScheme, includeOnColors } = storeToRefs(materialThemeStore);
+  const {
+    sourceColor,
+    currentContrast,
+    includeOnColors,
+    showImageCards,
+    showVariantInfo,
+    showPaletteCards,
+    expandThemeCards,
+    showDarkThemeCard,
+    showLightThemeCard,
+    currentVariant,
+    currentScheme
+  } = storeToRefs(materialThemeStore);
 
   const clipboardOpen = ref(false);
   const clipboardColor = ref("");
+
+  const showSettings = ref(false);
+  // const showImageCards = ref(true);
+  // const showVariantInfo = ref(true);
+  // const showPaletteCards = ref(true);
+  // const expandThemeCards = ref(false);
 
   const expandedPaletteIndex = ref(-1);
 
@@ -278,15 +431,28 @@
   const previewThemeName = ref("");
   const previewThemeOpen = ref(false);
 
+  function themeNameUpdateHandler(value) {
+    console.log("UtilitiesView ::: themeNameUpdateHandler");
+    console.log("- value: ", value);
+  }
+
   function selectedVariantDesc() {
     return schemeVariants.find((item) => item.value === currentVariant.value).desc;
   }
 
+  const surfaceDark = computed(() => {
+    return currentScheme.value.dark.find((item) => item.name === `surface`).hex;
+  });
+
+  const surfaceLight = computed(() => {
+    return currentScheme.value.light.find((item) => item.name === `surface`).hex;
+  });
+
   onMounted(() => {
     console.log("UtilitiesView ::: onMounted");
 
-    // INFO: If you want to get a color (argb) from the Tonal Palette, use the following:
-    // const primary98 = TonalPalette.fromInt(primary).tone(98);
+    // INFO: The (Vuetify) theme styles need to be initialized with the default scheme.
+    materialThemeStore.updateThemeStyles();
 
     // INFO: snipped to get color gradient css
     const colors = [
@@ -358,6 +524,11 @@
   function exportSchemeClickHandler() {
     console.log("UtilitiesView ::: exportSchemeClickHandler");
     // TODO:Implement scheme export.
+  }
+
+  function showSettingsClickHandler() {
+    console.log("UtilitiesView ::: showSettingsClickHandler");
+    showSettings.value = !showSettings.value;
   }
 
   /**
@@ -440,11 +611,61 @@
     }
   }
 
+  // [*]=============================
+  // [*] SETTINGS EVENT HANDLERS
+  // [*]=============================
+
+  function showVariantInfoUpdateHandler(value) {
+    console.log("UtilitiesView ::: showVariantInfoUpdateHandler");
+    console.log(" - value: ", value);
+    console.log(" - showVariantInfo: ", showVariantInfo.value);
+  }
+
+  function showImageCardsUpdateHandler(value) {
+    console.log("UtilitiesView ::: showImageCardsUpdateHandler");
+    console.log(" - value: ", value);
+    console.log(" - showImageCards: ", showImageCards.value);
+  }
+
+  function showPaletteCardsUpdateHandler(value) {
+    console.log("UtilitiesView ::: showPaletteCardsUpdateHandler");
+    console.log(" - value: ", value);
+    console.log(" - showPaletteCards: ", showPaletteCards.value);
+  }
+
+  function expandThemeCardsUpdateHandler(value) {
+    console.log("UtilitiesView ::: expandThemeCardsUpdateHandler");
+    console.log(" - value: ", value);
+    console.log(" - expandThemeCards: ", expandThemeCards);
+    // toggle all theme cards expanded state
+    materialThemeStore.toggleAllThemeCards();
+    // currentScheme.value.light.forEach((tcolor) => (tcolor.toggle = value));
+    // currentScheme.value.dark.forEach((tcolor) => (tcolor.toggle = value));
+  }
+
+  function schemeContrastUpdateHandler(value) {
+    console.log("UtilitiesView ::: schemeContrastUpdateHandler");
+    console.log(" - value: ", value);
+    // TODO: Update the store theme when schemeContrast is updated.
+    console.log(" - materialThemeStore.currentContrast: ", materialThemeStore.currentContrast);
+    // FIXME: The scheme should not be recreated, instead,
+    // [+] create a temp new scheme and use the tone values of the temp scheme to update the current scheme.
+    materialThemeStore.updateScheme();
+  }
+
+  /**
+   * Handles updates to the inclusion of "on-" colors in the theme styles.
+   *
+   * This function is triggered when the "include on-colors" setting is changed.
+   * The entire scheme does not need to be updated, only the theme styles.
+   *
+   * @param {boolean} value - Indicates whether "on-" colors should be included.
+   */
   function includeOnColorsUpdateHandler(value) {
     console.log("UtilitiesView ::: includeOnColorsUpdateHandler");
-    // TODO: Update the store theme when includeOnColors is updated.
     console.log(" - value: ", value);
-    console.log(" - materialThemeStore.includeOnColors: ", materialThemeStore.includeOnColors);
+    // Only theme styles need to be updated, not the whole scheme.
+    materialThemeStore.updateThemeStyles();
   }
 
   /**
@@ -465,8 +686,21 @@
     clipboardOpen.value = true;
   }
 
+  /**
+   * Returns an array of tonal palettes for the given hex color.
+   *
+   * The array contains objects with the following properties:
+   * - tone: The tone value (0-100)
+   * - argb: The ARGB color value at the given tone
+   * - hct: The HCT representation of the color at the given tone
+   * - hex: The hex color value at the given tone
+   *
+   * @param {string} hex - The hex color value for which to generate the tonal palettes.
+   *
+   * @returns {Array} An array of tonal palettes.
+   */
   function getTonalPalettesForHex(hex) {
-    console.log("UtilitiesView ::: getTonalPalettesForHex");
+    // console.log("UtilitiesView ::: getTonalPalettesForHex");
     // console.log(" - hex: ", hex);
 
     let hctColor = Hct.fromInt(argbFromHex(hex));
@@ -478,18 +712,6 @@
       tones.push({ tone: t, argb: argb, hct: Hct.fromInt(argb), hex: hexFromArgb(argb) });
     });
     return tones;
-  }
-
-  // TODO: display tone details for the selected (clicked) tone color.
-  function toneButtonClickHandler(tone) {
-    console.log("UtilitiesView ::: toneButtonClickHandler");
-    console.log(" - tone: ", tone);
-    let palette = TonalPalette.fromInt(tone.argb);
-    console.log(" - palette: ", palette);
-    // selectedColor.value = tone.hex;
-    // tempColor.value = tone.hex;
-    // selectedColorName.value = tone.tone;
-    // modalColorOpen.value = true;
   }
 
   /**
@@ -506,55 +728,14 @@
    */
   function themeToneSliderUpdateHandler(item) {
     console.log("UtilitiesView ::: themeToneSliderUpdateHandler");
-    // INFO: modifying the theme item also updates the `currentScheme` and the `materialThemeStore`.
-    console.log(" - item: ", item);
-    console.log(" - item.isCustom: ", item.isCustom);
-
-    // If we were to change the tone of the item's hex directly, over time, its hex color would drift.
-    // To prevent this and to keep a consistent theme color with each tone change,
-    // we need to generate the item's hex color from its matching palette,
-    // which is also where the item itself originated from.
-
-    const palettes = currentScheme.value.palettes;
-    const custom = currentScheme.value.custom;
-
-    // Find the palette object in the current scheme that matches the theme item
-    let paletteColor;
-    if (item.isCustom) {
-      // If the theme item is a custom palette, use the `custom` palette list.
-      paletteColor = custom.find((pc) => pc.name === item.name);
-    } else if (item.name === "background" || item.name === "surface") {
-      paletteColor = palettes.find((pc) => pc.name === "neutral");
-    } else if (item.name === "surfaceVariant") {
-      paletteColor = palettes.find((pc) => pc.name === "neutralVariant");
-    } else {
-      paletteColor = palettes.find((pc) => pc.name === item.name);
-    }
-    console.log(" - paletteColor: ", paletteColor);
-
-    // With the matching palette found, create a list of tones - ranging from 10 to 90 - for that palette's hex value.
-    // Then find the tone item in that list that matches the theme item's (modified) tone,
-    // which is also between 10 and 90, as set by the slider.
-    // Note that the theme item's tone (`item.tone`) has already been updated by the slider (v-model).
-    // All we need to do now is to find the matching tone in the palette list
-    // and update the item's hex value with the values from the tonal palette list.
-
-    if (paletteColor) {
-      console.log(" - paletteColor isCustom: ", paletteColor.isCustom);
-      let hex = paletteColor.isCustom ? paletteColor.customHex : paletteColor.hex;
-      let tones = getTonalPalettesForHex(hex);
-      console.log(" - tones: ", tones);
-      let toneItem = tones.find((t) => t.tone === item.tone);
-      console.log(" - tone item: ", toneItem);
-      console.log(" - tone item hex: ", toneItem.hex);
-      if (toneItem) {
-        // update the item hex with new hex color
-        item.hex = toneItem.hex;
-        materialThemeStore.updateThemeStyles();
-      }
-    }
+    materialThemeStore.updateThemeItem(item);
   }
 
+  /**
+   * Shows the theme preview modal dialog for the given theme (light or dark).
+   *
+   * @param {string} value - The theme to show in the preview dialog. Must be either "light" or "dark".
+   */
   function showThemePreview(value) {
     console.log("UtilitiesView ::: showThemePreview");
     console.log(" - value: ", value);
@@ -600,6 +781,12 @@
     .v-list-item-title {
       font-size: 0.9rem !important;
       font-weight: normal !important;
+    }
+  }
+
+  .settings-label {
+    label {
+      font-size: 0.9rem !important;
     }
   }
 </style>
