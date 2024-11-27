@@ -1,10 +1,10 @@
 <template>
   <v-card class="d-flex flex-column mb-4" :color="themeColor.hex" density="compact">
     <v-card-item>
-      <v-card-title class="text-body-1 font-weight-light theme-title" :style="titleStyle">
+      <v-card-title class="text-body-1 font-weight-light text-theme-color" :style="titleStyle">
         {{ themeColor.title }}
       </v-card-title>
-      <v-card-subtitle class="text-uppercase">
+      <v-card-subtitle class="text-theme-color text-uppercase" :style="titleStyle">
         <code class="mono-sm--text font-weight-light">{{ themeColor.hex }}</code>
       </v-card-subtitle>
       <template #append>
@@ -15,24 +15,32 @@
         <!-- <v-btn icon="mdi-select-color" size="small" variant="text" /> -->
       </template>
     </v-card-item>
-    <v-expand-transition duration="150">
-      <v-card-text v-show="themeColor.toggle" :key="`theme-light-text-${themeColor.name}-${cardIndex}`" style="height: 46px">
-        <!-- show-ticks="always" -->
-        <!-- tick-size="5" -->
-        <!-- v-if="themeColor.toggle" -->
+    <v-expand-transition duration="500">
+      <!-- The `card-text` has bottom padding and margin removed. -->
+      <!-- A fixed height is set based on a bottom padding of 0.625 rem (same as card-item top padding) -->
+      <!-- This fixes the expand-transition stuttering issue -->
+      <v-card-text
+        v-show="themeColor.toggle"
+        :key="`theme-light-text-${themeColor.name}-${cardIndex}`"
+        class="pb-0 mb-0"
+        style="height: 50px"
+      >
+        <!-- v-if="isExpanded" -->
         <v-slider
-          v-if="isExpanded"
-          class="theme-slider-track"
+          class="theme-slider-track mx-0"
           color="primary-lighten-2"
-          min="10"
-          max="90"
-          step="5"
           label="Tone"
-          track-fill-color="red"
-          track-size="1"
+          min="5"
+          max="95"
+          step="5"
+          track-size="10"
           v-model="themeColor.tone"
           @update:model-value="toneSliderUpdateHandler"
-        ></v-slider>
+        >
+          <template #append>
+            <v-btn class="ma-0" icon="mdi-refresh" size="small" variant="text" @click="refreshClickHandler"></v-btn>
+          </template>
+        </v-slider>
       </v-card-text>
     </v-expand-transition>
   </v-card>
@@ -44,7 +52,7 @@
   const props = defineProps({
     themeColor: ThemeColor,
     cardIndex: Number,
-    isDark: Boolean,
+    // isDark: Boolean,
     includeOnColors: Boolean
     // alwaysExpanded: Boolean
   });
@@ -57,7 +65,6 @@
 
   onMounted(() => {
     console.log("ThemeColorCard ::: onMounted");
-    // console.log(" - themeColor: ", props.themeColor);
   });
 
   /**
@@ -69,7 +76,6 @@
   // @see https://www.telerik.com/blogs/passing-variables-to-css-on-a-vue-component
   // @see https://www.lambdatest.com/blog/css-color-contrast/
   const titleStyle = computed(() => {
-    console.log("ThemeColorCard ::: titleStyle");
     if (!props.includeOnColors) return {};
     return {
       "--on-title-color": props.themeColor.onHex,
@@ -110,7 +116,8 @@
    * Emits an update event with the theme color object when the tone slider value changes.
    *
    * The emitted event is `update:tone` and its payload is the full `themeColor` object.
-   * This is needed because the theme color hex value is determined by the palette the theme color belongs to and the tone value.
+   * This is needed because the theme color hex value needs to be updated as well,
+   * which is determined by the palette the theme color belongs to.
    *
    * @emits {ThemeColor} update:tone - The theme color object with its updated tone value.
    */
@@ -120,10 +127,25 @@
     // console.log(" - themeColor tone: ", props.themeColor.tone);
     emit("update:tone", props.themeColor);
   }
+
+  /**
+   * Resets the theme color's tone value to its original value.
+   *
+   * Emits an update event with the theme color object when the tone slider value changes.
+   * This is needed because the theme color hex value needs to be reset as well,
+   * which is determined by the palette the theme color belongs to.
+   *
+   * @emits {ThemeColor} update:tone - The theme color object with its updated tone value.
+   */
+  function refreshClickHandler() {
+    console.log("ThemeColorCard ::: refreshClickHandler");
+    props.themeColor.resetTone();
+    emit("update:tone", props.themeColor);
+  }
 </script>
 
 <style scoped lang="scss">
-  .theme-title {
+  .text-theme-color {
     // color: color-contrast(var(--on-title-color) vs var(--bg-title-color)) !important;
     color: var(--on-title-color) !important;
     // background-color: var(--bg-title-color) !important;

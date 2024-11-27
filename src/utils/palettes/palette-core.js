@@ -4,7 +4,7 @@ import { argbFromHex, Hct, TonalPalette } from "@material/material-color-utiliti
  * Creates a new PaletteCore object.
  *
  * Represents a palette generated from the scheme variants.
- * When a scheme is created, it will contain one of these objects for each color in the scheme.
+ * When a scheme is created, it will contain these objects.
  * - Source (source)
  * - Primary (primary)
  * - Secondary (secondary)
@@ -62,9 +62,9 @@ export default class PaletteCore {
   }
 
   /**
-   * Returns false, indicating that this is not a custom color palette.
-   * Custom color palettes are represented by the PaletteCustom class.
-   * @type {boolean}
+   * Indicates whether this instance represents a custom palette.
+   *
+   * @type {boolean} Always `false` for a `PaletteCore` instance.
    */
   get isCustom() {
     return false;

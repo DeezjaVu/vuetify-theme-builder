@@ -5,7 +5,7 @@ import { argbFromHex, hexFromArgb, Blend, Hct, TonalPalette } from "@material/ma
  *
  * Unlike a `PaletteCore`, a `PaletteCustom` is not generated from a Variant scheme.
  *
- * When a scheme is created, it will contain one of each of these custom palettes:
+ * When a scheme is created, it will contain these custom palettes:
  * - Success (success)
  * - Info (info)
  * - Warning (warning)
@@ -55,7 +55,8 @@ export default class PaletteCustom {
   }
 
   /**
-   * The TonalPalette representation of the hex color.
+   * The `TonalPalette` representation of the `ThemeColor`.
+   * Uses the `customArgb` property, which results in a harmonized `TonalPalette` when blend is enabled.
    * @type {TonalPalette}
    */
   get tonalPalette() {
@@ -64,10 +65,8 @@ export default class PaletteCustom {
   }
 
   /**
-   * Always returns true, indicating that this instance
-   * represents a custom color palette.
-   *
-   * @type {boolean}
+   * Indicates whether this instance represents a custom palette.
+   * @type {boolean} Always `true` for a `PaletteCustom` instance.
    */
   get isCustom() {
     return true;

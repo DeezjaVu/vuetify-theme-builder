@@ -298,9 +298,6 @@
   // prettier-ignore
   watch(() => props.palette,
     (newValue, oldValue) => {
-      console.log("PaletteItemCard ::: watch palette");
-      // console.log("- newValue: ", newValue);
-      // console.log("- oldValue: ", oldValue);
       // Set temp color (used for reset)
       setTempColor();
       // Set slider values (also sets currentHct)
@@ -381,7 +378,7 @@
    * Logs a warning to the console if either `chromaSliderTrack` or `toneSliderTrack` is `null`.
    */
   function updateSliderBackgrounds() {
-    console.log("PaletteItemCard ::: updateSliderBackgrounds");
+    // console.log("PaletteItemCard ::: updateSliderBackgrounds");
 
     // NOTE: Do not use the currentHct's hue as it may have shifted when tone and chroma are too high or too low.
     //   [*] For some unknown reason it then gets stuck at 209, which then lead to the background gradient no longer updating.

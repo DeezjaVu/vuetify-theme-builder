@@ -4,7 +4,7 @@
       <v-card color="background" variant="flat">
         <v-toolbar color="primary">
           <v-app-bar-nav-icon @click="navDrawerOpen = !navDrawerOpen"></v-app-bar-nav-icon>
-          <v-toolbar-title>Theme Preview &mdash; <code>[kitchen sink]</code></v-toolbar-title>
+          <v-toolbar-title class="primary">Theme Preview &mdash; <code>[kitchen sink]</code></v-toolbar-title>
           <v-spacer></v-spacer>
           <v-select
             label="Theme"
@@ -23,7 +23,7 @@
           </v-toolbar-items>
         </v-toolbar>
 
-        <v-navigation-drawer v-model="navDrawerOpen" width="250" expand-on-hover temporary>
+        <v-navigation-drawer v-model="navDrawerOpen" width="250" temporary>
           <v-list :items="navItems"></v-list>
         </v-navigation-drawer>
 
@@ -114,7 +114,7 @@
                       <v-card-text class="font-weight-light mx-4">
                         <v-row>
                           <v-col>
-                            <v-btn-toggle v-model="text" :color="selectedToggleColor" rounded="0" group>
+                            <v-btn-toggle v-model="toggleText" :color="selectedToggleColor" mandatory rounded="xl" group>
                               <v-btn value="left"> Left </v-btn>
                               <v-btn value="center"> Center </v-btn>
                               <v-btn value="right"> Right </v-btn>
@@ -317,7 +317,7 @@
                       <v-row>
                         <v-col>
                           <!-- DEFAULT EXCLUSIVE -->
-                          <v-btn-toggle v-model="toggle_exclusive" :color="selectedToggleColor">
+                          <v-btn-toggle v-model="toggleExclusive" :color="selectedToggleColor">
                             <v-btn icon="mdi-format-align-left"> </v-btn>
                             <v-btn icon="mdi-format-align-center"> </v-btn>
                             <v-btn icon="mdi-format-align-right"> </v-btn>
@@ -327,7 +327,7 @@
                         <v-divider class="hidden-sm-and-down" vertical></v-divider>
                         <v-col>
                           <!-- DEFAULT TEXT OPTIONS -->
-                          <v-btn-toggle v-model="text" :color="selectedToggleColor" rounded="0" group>
+                          <v-btn-toggle v-model="toggleText" :color="selectedToggleColor" mandatory rounded="0" group>
                             <v-btn value="left"> Left </v-btn>
                             <v-btn value="center"> Center </v-btn>
                             <v-btn value="right"> Right </v-btn>
@@ -508,10 +508,8 @@
     { title: "Inset", value: "inset" }
   ]);
 
-  function darkMode() {
-    console.log("ThemePreviewDialog ::: darkMode");
-    return props.themeName === "hct-dark";
-  }
+  const toggleText = ref("center");
+  const toggleExclusive = ref(1);
 
   /**
    * LIFECYCLE HOOKS
@@ -549,12 +547,13 @@
    * EVENT HANDLERS
    */
 
-  function darkModeUpdateHandler(value) {
-    console.log("ThemePreviewDialog ::: darkModeUpdateHandler");
-    console.log(" - value: ", value);
-    props.themeName = value ? "hct-dark" : "hct-light";
-  }
-
+  /**
+   * Event handler for the copy button click event.
+   *
+   * Emits a `click:copy` event with the hex color as the payload.
+   *
+   * @param {string} hex - the color to copy, in hex format (e.g. #FF0000)
+   */
   function copyColorClickHandler(hex) {
     console.log("ThemePreviewDialog ::: copyColorClickHandler");
     emit("click:copy", hex);
@@ -564,11 +563,16 @@
   export default {
     data() {
       return {
-        text: "center",
-        toggle_exclusive: 1
+        toggleText: "center",
+        toggleExclusive: 1
       };
     }
   };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  code {
+    background-color: rgb(var(--v-theme-code));
+    color: rgb(var(--v-theme-on-code));
+  }
+</style>

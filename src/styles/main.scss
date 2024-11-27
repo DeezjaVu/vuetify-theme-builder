@@ -82,3 +82,32 @@ mark {
     visibility: hidden !important;
   }
 }
+
+/**
+   * Styles for the (UtilitiesView) ThemeColorCard tone sliders
+   */
+.theme-slider-track {
+  .v-slider-track__background {
+    background: linear-gradient(to right, #000000 0%, #ffffff 100%) !important;
+    opacity: 0.25 !important;
+  }
+  .v-slider-thumb__surface {
+    opacity: 0.75 !important;
+  }
+  .v-slider-track__fill {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .v-input__details {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .v-slider__label {
+    font-size: 0.9em !important;
+    font-weight: 300 !important;
+  }
+  input {
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+}

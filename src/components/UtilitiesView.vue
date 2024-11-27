@@ -289,13 +289,12 @@
                     <!-- [*] DARK THEME COLOR CARDS -->
                     <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
                       <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
-                        <!-- :alwaysExpanded="expandThemeCards" -->
+                        <!-- :isDark="true" -->
                         <ThemeColorCard
                           :theme-color="item"
                           :cardIndex="idx"
-                          :isDark="true"
                           :includeOnColors="includeOnColors"
-                          @update:tone="themeToneSliderUpdateHandler($event)"
+                          @update:tone="themeToneSliderUpdateHandler($event, true)"
                           @click:copy="copyColorClickHandler($event)"
                         />
                       </v-col>
@@ -331,15 +330,14 @@
                 <v-card-text class="d-flex flex-column pt-4" v-if="showLightThemeCard">
                   <v-row>
                     <!-- [*] LIGHT THEME COLOR CARDS -->
-                    <!-- DARK CUSTOM THEME COLORS -->
                     <template v-for="(item, idx) in currentScheme.light" :key="`card-light-${item.name}-${idx}`">
                       <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
+                        <!-- :isDark="false" -->
                         <ThemeColorCard
                           :theme-color="item"
                           :cardIndex="idx"
-                          :isDark="false"
                           :includeOnColors="includeOnColors"
-                          @update:tone="themeToneSliderUpdateHandler($event)"
+                          @update:tone="themeToneSliderUpdateHandler($event, false)"
                           @click:copy="copyColorClickHandler($event)"
                         />
                       </v-col>
@@ -726,9 +724,9 @@
    *
    * @param {ThemeColor} item - The theme item to be updated. Must be of type `ThemeColor`.
    */
-  function themeToneSliderUpdateHandler(item) {
+  function themeToneSliderUpdateHandler(item, isDark) {
     console.log("UtilitiesView ::: themeToneSliderUpdateHandler");
-    materialThemeStore.updateThemeItem(item);
+    materialThemeStore.updateThemeItem(item, isDark);
   }
 
   /**
@@ -746,32 +744,6 @@
 </script>
 
 <style lang="scss">
-  /**
-   * Styles for the ThemeColor tone sliders
-   */
-  .theme-slider-track {
-    .v-slider-track__background {
-      background: linear-gradient(to right, #000000 0%, #ffffff 100%) !important;
-      opacity: 0.5 !important;
-    }
-    .v-slider-track__fill {
-      display: none !important;
-      visibility: hidden !important;
-    }
-    .v-input__details {
-      display: none !important;
-      visibility: hidden !important;
-    }
-    .v-slider__label {
-      font-size: 0.9em !important;
-      font-weight: 300 !important;
-    }
-    input {
-      height: 32px !important;
-      min-height: 32px !important;
-    }
-  }
-
   /**
    * Styles for the `Scheme Variant` dropdown menu items (v-select).
    */

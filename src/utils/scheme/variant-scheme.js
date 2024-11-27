@@ -11,7 +11,9 @@ import {
   SchemeNeutral,
   SchemeRainbow,
   SchemeTonalSpot,
-  SchemeVibrant
+  SchemeVibrant,
+  DynamicScheme,
+  TonalPalette
 } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
 import { SchemeTriadic } from "@/utils/scheme/scheme-triadic.js";
@@ -94,10 +96,25 @@ export class VariantScheme {
     // to create a single palette object and map the light and dark theme colors to two ThemeColor objects, ´light` and `dark`.
 
     const { lightScheme, darkScheme } = VariantScheme.getSchemesForVariant(sourceHct, variant, contrast);
-    // console.log(" - lightScheme: ", lightScheme);
-    // console.log(" - darkScheme: ", darkScheme);
+    console.log(" - lightScheme: ", lightScheme);
+    console.log(" - darkScheme: ", darkScheme);
 
-    // INFO: The dark and light schemes have identical palettes, regardless of variant.
+    let sfLight = lightScheme.surfaceVariant;
+    let sfDark = darkScheme.surfaceVariant;
+
+    console.log(" - light scheme surfaceVariant: ", sfLight);
+    console.log(" - dark scheme surfaceVariant: ", sfLight);
+
+    let tpLight = TonalPalette.fromInt(sfLight);
+    let tpDark = TonalPalette.fromInt(sfDark);
+
+    console.log(" - surfaceVariant light TonalPalette: ", tpLight);
+    console.log(" - surfaceVariant dark TonalPalette: ", tpDark);
+
+    console.log(" - surfaceVariant light tone: ", Math.round(tpLight.keyColor.tone));
+    console.log(" - surfaceVariant dark tone: ", Math.round(tpDark.keyColor.tone));
+
+    // NOTE: The dark and light schemes have identical palettes, regardless of variant.
 
     const palettes = this.createPalettesFromScheme(lightScheme);
     console.log(" - palettes: ", palettes);
@@ -115,45 +132,17 @@ export class VariantScheme {
     // `surfaceVariant` is created from the `neutralVariantPalette`, with a tone of `30` (NV-30).
 
     const customPalettes = [];
-    const customTmp = [];
     VariantScheme.customPaletteColors.forEach((entry) => {
-      // Create temp custom objects to pass to `customColor`.
-      customTmp.push({ name: entry.name, value: argbFromHex(entry.hex), blend: entry.blend });
-      // args: title, name, hex, source, blend
-      let pColor = new PaletteCustom(entry.title, entry.name, entry.hex, argb, entry.blend);
-      customPalettes.push(pColor);
-    });
+      // args: title, name, hex, source argb, blend
+      let pc = new PaletteCustom(entry.title, entry.name, entry.hex, argb, entry.blend);
+      customPalettes.push(pc);
 
-    // TODO: Refactor custom color styles to a more elegant way.
-
-    // Get custom color theme styles from Material Utilities.
-    const customStyles = customTmp.map((c) => customColor(argb, c));
-    console.log(" - customStyles: ", customStyles);
-
-    // Grab the dark and light `colorContainer` style from the custom styles and and it to the scheme theme.
-    customStyles.forEach((style) => {
-      let styleName = style.color.name;
-      // console.log(" - style: ", style);
-
-      // Custom styles do not have a title, so find it based on the name.
-      let styleTitle = VariantScheme.customPaletteColors.find((item) => item.name === styleName)?.title;
-      console.log(" - styleTitle: ", styleTitle);
-
-      // [*] LIGHT COLOR
-      let lightArgb = style.light.colorContainer;
-      let lightTone = Math.round(Hct.fromInt(lightArgb).tone);
-      let lightHex = hexFromArgb(lightArgb);
-
-      // [*] DARK COLOR
-      let darkArgb = style.dark.colorContainer;
-      let darkTone = Math.round(Hct.fromInt(darkArgb).tone);
-      let darkHex = hexFromArgb(darkArgb);
-
-      let lightStyle = new ThemeColor(styleTitle, styleName, lightHex, lightTone, true);
-      let darkStyle = new ThemeColor(styleTitle, styleName, darkHex, darkTone, true);
-
-      lightTheme.push(lightStyle);
-      darkTheme.push(darkStyle);
+      // args: title, name, palette, tone, dark, custom
+      // CustomColor needs the palette from PaletteCustom, in case it is harmonized (blend = true).
+      let lightColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 90, false, true);
+      let darkColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 30, true, true);
+      lightTheme.push(lightColor);
+      darkTheme.push(darkColor);
     });
 
     const variantScheme = new VariantScheme(argb, variant, palettes, lightTheme, darkTheme, customPalettes);
@@ -182,7 +171,7 @@ export class VariantScheme {
  *
  * @param {Hct} sourceHct - The source color in HCT format.
  * @param {number} variant - The variant to use. One of the static Variant constants, e.g. `Variant.CONTENT`.
- * @return {{lightScheme: Scheme, darkScheme: Scheme}} - The light and dark schemes.
+ * @returns {{lightScheme: Scheme, darkScheme: Scheme}} - The light and dark schemes as: `{lightScheme, darkScheme}`.
  * @throws {Error} - If the variant is not supported.
  */
 VariantScheme.getSchemesForVariant = (sourceHct, variant, contrast = 0.0) => {
@@ -334,7 +323,7 @@ VariantScheme.customPaletteColors = [
 /**
  * Creates a theme from a given scheme.
  *
- * @param {Object} scheme - The scheme to create a theme from.
+ * @param {DynamicScheme} scheme - The scheme to create a theme from.
  * @return {Array<ThemeColor>} - An array of theme colors, with their `hex` and `tone` properties set from the scheme.
  */
 VariantScheme.createThemeFromScheme = (scheme) => {
@@ -344,42 +333,82 @@ VariantScheme.createThemeFromScheme = (scheme) => {
   let theme = [];
   let themeClone = structuredClone(VariantScheme.themeColors);
 
+  const isDark = scheme.isDark;
+
   // map the theme colors from the scheme
   themeClone.forEach((entry) => {
     // Theme style properties: the styles we're looking for within the Scheme have a "Container" suffix, e.g. `primaryContainer`.
     // So we map out theme colors to the `Container` properties, e.g. `primaryContainer`
-    const namesMap = new Map(VariantScheme.names.map((item) => [item.themeName, item.styleName]));
-    const propName = namesMap.get(entry.name);
+    const styleName = VariantScheme.names.find((item) => item.themeName === entry.name).styleName;
+    const paletteName = VariantScheme.names.find((item) => item.themeName === entry.name).tonalPaletteName;
+    console.log(" - entry name:", entry.name);
+    console.log(" - styleName: ", styleName);
+    console.log(" - paletteName: ", paletteName);
+
+    const palette = scheme[paletteName];
+    console.log(" - palette: ", palette);
 
     // (container) color styles
-    let argb = scheme[propName];
+    let argb = scheme[styleName];
     let hex = hexFromArgb(argb);
     let hct = Hct.fromInt(argb);
     let tone = Math.round(hct.tone);
 
-    // title, name, hex, tone
-    let themeColor = new ThemeColor(entry.title, entry.name, hex, tone);
+    // title, name, tonalpalette, tone, isDark, isCustom
+    let themeColor = new ThemeColor(entry.title, entry.name, palette, tone, isDark, false);
     theme.push(themeColor);
   });
   return theme;
 };
 
 VariantScheme.names = [
-  { paletteName: "primary", themeName: "primary", styleName: "primaryContainer", onStyleName: "onPrimaryContainer" },
-  { paletteName: "secondary", themeName: "secondary", styleName: "secondaryContainer", onStyleName: "onSecondaryContainer" },
-  { paletteName: "tertiary", themeName: "tertiary", styleName: "tertiaryContainer", onStyleName: "onTertiaryContainer" },
-  { paletteName: "error", themeName: "error", styleName: "errorContainer", onStyleName: "onErrorContainer" },
-  { paletteName: "neutral", themeName: "background", styleName: "background", onStyleName: "onBackground" },
-  { paletteName: "neutral", themeName: "surface", styleName: "surfaceContainer", onStyleName: "onSurface" },
-  { paletteName: "neutralVariant", themeName: "surfaceVariant", styleName: "surfaceVariant", onStyleName: "onSurfaceVariant" }
+  {
+    paletteName: "primary",
+    themeName: "primary",
+    styleName: "primaryContainer",
+    onStyleName: "onPrimaryContainer",
+    tonalPaletteName: "primaryPalette"
+  },
+  {
+    paletteName: "secondary",
+    themeName: "secondary",
+    styleName: "secondaryContainer",
+    onStyleName: "onSecondaryContainer",
+    tonalPaletteName: "secondaryPalette"
+  },
+  {
+    paletteName: "tertiary",
+    themeName: "tertiary",
+    styleName: "tertiaryContainer",
+    onStyleName: "onTertiaryContainer",
+    tonalPaletteName: "tertiaryPalette"
+  },
+  {
+    paletteName: "error",
+    themeName: "error",
+    styleName: "errorContainer",
+    onStyleName: "onErrorContainer",
+    tonalPaletteName: "errorPalette"
+  },
+  {
+    paletteName: "neutral",
+    themeName: "background",
+    styleName: "background",
+    onStyleName: "onBackground",
+    tonalPaletteName: "neutralPalette"
+  },
+  {
+    paletteName: "neutral",
+    themeName: "surface",
+    styleName: "surfaceContainer",
+    onStyleName: "onSurface",
+    tonalPaletteName: "neutralPalette"
+  },
+  {
+    paletteName: "neutralVariant",
+    themeName: "surfaceVariant",
+    styleName: "surfaceVariant",
+    onStyleName: "onSurfaceVariant",
+    tonalPaletteName: "neutralVariantPalette"
+  }
 ];
-
-// VariantScheme.names = new Map([
-//   ["primary", { paletteName: "primary", themeName: "primary", styleName: "primaryContainer" }],
-//   ["secondary", { paletteName: "secondary", themeName: "secondary", styleName: "secondaryContainer" }],
-//   ["tertiary", { paletteName: "tertiary", themeName: "tertiary", styleName: "tertiaryContainer" }],
-//   ["error", { paletteName: "error", themeName: "error", styleName: "errorContainer" }],
-//   ["background", { paletteName: "neutral", themeName: "background", styleName: "background" }],
-//   ["surface", { paletteName: "neutral", themeName: "surface", styleName: "surfaceContainer" }],
-//   ["surfaceVariant", { paletteName: "neutralVariant", themeName: "surfaceVariant", styleName: "neutralVariant" }]
-// ]);
