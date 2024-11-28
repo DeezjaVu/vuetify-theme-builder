@@ -190,6 +190,19 @@
         <!-- [*] PALETTE COLORS MENU BUTTONS (LEFT SIDE COLUMN) -->
         <v-card class="d-flex flex-column flex-grow-1 my-0" density="compact" min-height="810">
           <v-card-text class="my-2">
+            <!-- TEST PALETTE COLOR ROW -->
+            <!-- 
+            <v-row>
+              <v-col class="py-1">
+                <PaletteItemTestCard
+                  :palette="currentScheme.palettes[0]"
+                  :paletteIndex="0"
+                  v-model:expanded-index="expandedPaletteIndex"
+                ></PaletteItemTestCard>
+              </v-col>
+            </v-row> 
+            -->
+
             <!-- [*] PALETTE COLOR ROWS -->
             <template v-for="(item, idx) in currentScheme.palettes" :key="`palette-color-card-${item.name}-${idx}`">
               <v-row>
@@ -449,23 +462,24 @@
   onMounted(() => {
     console.log("UtilitiesView ::: onMounted");
 
-    // INFO: The (Vuetify) theme styles need to be initialized with the default scheme.
-    materialThemeStore.updateThemeStyles();
-
-    // INFO: snipped to get color gradient css
-    const colors = [
-      Hct.from(0, 100, 50),
-      Hct.from(60, 100, 50),
-      Hct.from(120, 100, 50),
-      Hct.from(180, 100, 50),
-      Hct.from(240, 100, 50),
-      Hct.from(300, 100, 50),
-      Hct.from(360, 100, 50)
-    ];
-    const hexColors = colors.map((color) => hexFromArgb(color.argb));
-    const gradientCss = `linear-gradient(to right, ${hexColors.join(", ")})`;
+    // INFO: snippet to get color gradient css
+    // const colors = [
+    //   Hct.from(1, 100, 53),
+    //   Hct.from(61, 100, 53),
+    //   Hct.from(121, 100, 53),
+    //   Hct.from(181, 100, 53),
+    //   Hct.from(241, 100, 53),
+    //   Hct.from(301, 100, 53),
+    //   Hct.from(1, 100, 53)
+    // ];
+    // const hexColors = colors.map((color) => hexFromArgb(color.argb));
+    // const gradientCss = `linear-gradient(to right, ${hexColors.join(", ")})`;
     // linear-gradient(to right, #E7007D, #B26300, #6D7F00, #008673, #007FB4, #8851FF, #E7007D)
     // console.log(gradientCss);
+
+    // console.log(" - default hex string: ", "0xFF39548D");
+    // console.log(" - default decimal argb: ", 0xff39548d);
+    // console.log(" - default hex string argb: ", Number("0xFF" + "#39548D".replace("#", "")));
   });
 
   async function imageCardSelectHandler(idx, el) {
@@ -511,9 +525,7 @@
   function imageCardRefreshHandler(idx) {
     console.log("CarouselImagesView ::: imageCardRefreshHandler");
     console.log(" - idx: ", idx);
-    let r = Math.floor(Math.random() * 1000).toString();
-    // Math.random().toString();
-    // let r = new Date().getMilliseconds().toString();
+    let r = Date.now().toString();
     let imgUrl = "https://picsum.photos/440/128?random=" + r;
     console.log(" - imgUrl: ", imgUrl);
     picsum.value[idx] = imgUrl;

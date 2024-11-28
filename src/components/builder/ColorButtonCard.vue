@@ -7,6 +7,7 @@
     </v-card-text>
     <v-card-actions>
       <v-select
+        class="mx-2"
         label="Variant"
         v-model="btnVariant"
         :items="btnVariants"

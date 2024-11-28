@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import { DynamicScheme } from "@material/material-color-utilities";
-// import { Variant } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
 import { TonalPalette } from "@material/material-color-utilities";
 import * as math from "@material/material-color-utilities";

@@ -271,32 +271,32 @@
               </v-row>
               <!-- [*] ALERTS ROW -->
               <v-row dense>
+                <!-- [*] DEFAULT ALERT COLUMN -->
                 <v-col cols="12" sm="6" md="4" lg="4" xl>
-                  <!-- [*] DEFAULT ALERT -->
                   <v-alert class="font-weight-light" title="Default Alert" icon="$vuetify" :variant="selectedCardVariant">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   </v-alert>
                 </v-col>
+                <!-- [*] SUCCESS ALERT COLUMN -->
                 <v-col cols="12" sm="6" md="4" lg="4" xl>
-                  <!-- [*] SUCCESS ALERT -->
                   <v-alert class="font-weight-light" title="Success Alert" type="success" :variant="selectedCardVariant">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   </v-alert>
                 </v-col>
+                <!-- [*] INFO ALERT COLUMN -->
                 <v-col cols="12" sm="6" md="4" lg="4" xl>
-                  <!-- [*] INFO ALERT -->
                   <v-alert class="font-weight-light" title="Info Alert" type="info" :variant="selectedCardVariant">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   </v-alert>
                 </v-col>
+                <!-- [*] WARNING ALERT COLUMN -->
                 <v-col cols="12" sm="6" md="4" lg="4" xl>
-                  <!-- [*] WARNING ALERT -->
                   <v-alert class="font-weight-light" title="Warning Alert" type="warning" :variant="selectedCardVariant">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   </v-alert>
                 </v-col>
+                <!-- [*] ERROR ALERT COLUMN -->
                 <v-col cols="12" sm="6" md="4" lg="4" xl>
-                  <!-- [*] ERROR ALERT -->
                   <v-alert class="font-weight-light" title="Error Alert" type="error" :variant="selectedCardVariant">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   </v-alert>

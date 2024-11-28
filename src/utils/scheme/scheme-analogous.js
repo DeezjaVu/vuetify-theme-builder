@@ -20,25 +20,26 @@ import { TonalPalette } from "@material/material-color-utilities";
 import * as math from "@material/material-color-utilities";
 
 /**
- * A custom Dynamic Color scheme based on the <code>`Triadic`</code> color principle.
- * Triadic color schemes tend to be more bold and playful.
+ * A custom Dynamic Color scheme based on the <code>`Analogous`</code> color principle.
+ * Analogous produces a harmonious effect with colors adjacent to each other.
  *
  * The source color is used as the primary palette.
- * The secondary and tertiary palettes are equally distributed from the source color by 90 degrees in each direction.
+ * The secondary and tertiary palettes are equally distributed from the source color by 30 degrees in each direction.
  * Primary, secondary, and tertiary palettes use the same chroma as the source color.
  *
  * @see https://www.figma.com/resource-library/what-are-triadic-colors/
  */
-export class SchemeTriadic extends DynamicScheme {
+export class SchemeAnalogous extends DynamicScheme {
   constructor(sourceColorHct, isDark, contrastLevel) {
     super({
       sourceColorArgb: sourceColorHct.toInt(),
       variant: Variant.SPLIT,
       contrastLevel,
       isDark,
+      // TODO: Use a chroma of 36 for primary/secondary/tertiary palettes.
       primaryPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, sourceColorHct.chroma),
-      secondaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 90.0), sourceColorHct.chroma),
-      tertiaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue - 90.0), sourceColorHct.chroma),
+      secondaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 30.0), sourceColorHct.chroma),
+      tertiaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue - 30.0), sourceColorHct.chroma),
       neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 4.0),
       neutralVariantPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0)
     });

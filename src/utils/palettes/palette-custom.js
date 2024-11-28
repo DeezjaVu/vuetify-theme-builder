@@ -47,7 +47,10 @@ export default class PaletteCustom {
   }
 
   /**
-   * The HCT representation of the custom hex color.
+   * The HCT representation of the hex color.
+   *
+   * This always returns the unblended color, regardless of the blend setting.
+   *
    * @type {Hct}
    */
   get hct() {

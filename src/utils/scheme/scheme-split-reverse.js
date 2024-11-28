@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import { DynamicScheme } from "@material/material-color-utilities";
-// import { Variant } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
 import { TonalPalette } from "@material/material-color-utilities";
 import * as math from "@material/material-color-utilities";
@@ -36,7 +35,7 @@ export class SchemeSplitReverse extends DynamicScheme {
       variant: Variant.SPLIT,
       contrastLevel,
       isDark,
-      primaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 180), 20),
+      primaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 180.0), 20),
       secondaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 30.0), 20),
       tertiaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue - 30.0), 20),
       neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 4.0),

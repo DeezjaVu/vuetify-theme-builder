@@ -11,7 +11,7 @@
         <v-chip size="small" link @click="toggleExpandClickHandler()">
           <code class="mono-sm--text font-weight-light"> {{ themeColor.label }} </code>
         </v-chip>
-        <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copyColorClickHandler" />
+        <v-btn icon="mdi-content-copy" size="small" variant="plain" @click="copyColorClickHandler" />
         <!-- <v-btn icon="mdi-select-color" size="small" variant="text" /> -->
       </template>
     </v-card-item>
@@ -38,7 +38,8 @@
           @update:model-value="toneSliderUpdateHandler"
         >
           <template #append>
-            <v-btn class="ma-0" icon="mdi-refresh" size="small" variant="text" @click="refreshClickHandler"></v-btn>
+            <!-- <v-btn class="ma-0" icon="mdi-refresh" size="small" variant="text" @click="refreshClickHandler"></v-btn> -->
+            <v-btn class="ma-0" icon="mdi-arrow-u-left-top" size="small" variant="plain" @click="refreshClickHandler"></v-btn>
           </template>
         </v-slider>
       </v-card-text>

@@ -216,7 +216,7 @@
 
 <script setup>
   import { ref, onMounted, computed, toRefs, watch, warn } from "vue";
-  import { Hct, hexFromArgb, TonalPalette } from "@material/material-color-utilities";
+  import { Hct, hexFromArgb, argbFromHex, TonalPalette } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
   import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
@@ -276,10 +276,10 @@
    * @returns {Hct}
    */
   const hctFromPaletteHex = computed(() => {
-    // console.log("PaletteItemCard ::: computed ::: hctFromPaletteHex");
-    let argb = props.palette.argb;
-    let hct = Hct.fromInt(argb);
-    return hct;
+    console.log("PaletteItemTestCard ::: computed ::: hctFromPaletteHex");
+    // let argb = props.palette.argb;
+    // let hct = Hct.fromInt(argb);
+    return props.palette.hct;
   });
 
   /**
@@ -416,7 +416,7 @@
    * Sets the `isExpandedClass` to true which switches the card's rounded corners.
    */
   function expandTransitionBeforeEnterHandler() {
-    // console.log("PaletteItemCard ::: expandTransitionBeforeEnterHandler");
+    console.log("PaletteItemCard ::: expandTransitionBeforeEnterHandler");
     isExpandedClass.value = true;
   }
 
@@ -428,8 +428,8 @@
    * @param {Object} evt - Event object from the `v-expand-transition` directive.
    */
   function expandTransitionAfterLeaveHandler(evt) {
-    // console.log("PaletteItemCard ::: expandTransitionAfterLeaveHandler");
-    // console.log(" - event: ", evt);
+    console.log("PaletteItemCard ::: expandTransitionAfterLeaveHandler");
+    console.log(" - event: ", evt);
     isExpandedClass.value = false;
   }
 
@@ -445,9 +445,9 @@
    * @param event The click event.
    */
   function colorIconClickHandler() {
-    // console.log("PaletteItemCard ::: colorIconClickHandler");
-    // console.log(" - palette name: ", props.palette.name);
-    // console.log(" - isExpanded:", isExpanded.value);
+    console.log("PaletteItemCard ::: colorIconClickHandler");
+    console.log(" - palette name: ", props.palette.name);
+    console.log(" - isExpanded:", isExpanded.value);
     // Check if we're currently expanded (open) - if so, close by setting expandedIndex to -1.
     // If not, open by setting expandedIndex to the paletteIndex
     // and call setTempColor() to save the current source color.
@@ -606,8 +606,8 @@
     isDirty.value = true;
 
     let h = Math.round(Number(hue));
-    let c = Math.max(1, Number(colorChroma.value));
-    let t = Math.max(1, Math.min(99.0, Number(colorTone.value)));
+    let c = Math.round(Number(colorChroma.value));
+    let t = Math.round(Number(colorTone.value));
 
     // Create a tonal palette from the new hue value and current chroma
     let tp = TonalPalette.fromHueAndChroma(h, c);
@@ -631,8 +631,8 @@
    * @param chroma The new chroma value.
    */
   function chromaSliderUpdateHandler(chroma) {
-    // console.log("PaletteItemCard ::: chromaSliderUpdateHandler");
-    // console.log(" - chroma: ", chroma);
+    console.log("PaletteItemCard ::: chromaSliderUpdateHandler");
+    console.log(" - chroma: ", chroma);
 
     isDirty.value = true;
 
@@ -640,8 +640,20 @@
     let c = Math.max(1, Number(colorChroma.value));
     let t = Math.max(1, Math.min(99.0, Number(colorTone.value)));
 
+    console.log(" - slider hue: ", h);
+    console.log(" - slider chroma: ", c);
+    console.log(" - slider tone: ", t);
+
     // Create a tonal palette from the new hue value and current chroma
     let tp = TonalPalette.fromHueAndChroma(h, c);
+
+    console.log(" - chroma slider tonal palette: ", tp);
+    console.log(" - chroma slider keyColor: ", tp.keyColor);
+    let toneArgb = tp.tone(t);
+    let toneHct = Hct.fromInt(toneArgb);
+    console.log(" - chroma slider tone argb: ", toneArgb);
+    console.log(" - chroma slider tone hct: ", toneHct);
+    console.log(" - hct from hue, chroma, tone: ", Hct.from(h, c, t));
 
     // Get the argb color from the tonal palette at the current tone.
     // This will adjust the chroma if it's too high for the current tone.
@@ -670,8 +682,19 @@
     let c = Math.max(1, Number(colorChroma.value));
     let t = Math.max(1, Math.min(99.0, Number(colorTone.value)));
 
+    console.log(" - slider hue: ", h);
+    console.log(" - slider chroma: ", c);
+    console.log(" - slider tone: ", t);
+
     // Create a tonal palette from the new hue value and current chroma
     let tp = TonalPalette.fromHueAndChroma(h, c);
+    console.log(" - tone slider tonal palette:", tp);
+    console.log(" - tone slider keyColor: ", tp.keyColor);
+    let toneArgb = tp.tone(t);
+    let toneHct = Hct.fromInt(toneArgb);
+    console.log(" - tone slider tone argb: ", toneArgb);
+    console.log(" - tone slider tone hct: ", toneHct);
+    console.log(" - hct from hue, chroma, tone: ", Hct.from(h, c, t));
 
     // Get the argb color from the tonal palette at the current tone.
     // This will adjust the chroma if it's too high for the current tone.
@@ -808,9 +831,8 @@
     :deep(.v-slider-track__background) {
       // material theme builder hue values: 0, 60, 120, 180, 240, 300, 360 (chroma: 100, tone: 50)
       // material theme builder gradient: #E7007D, #B66500 , #6D7F00 , #008673 , #007FB4 , #8851FF , #E7007D
-
-      // background: linear-gradient(to right, #e7007d, #b26300, #6d7f00, #008673, #007fb4, #8851ff, #e7007d) !important;
-      background: linear-gradient(to right, #f50181, #bc6a00, #728700, #008f7c, #0087c1, #925cff, #f50181) !important;
+      // background: linear-gradient(to right, #E7007D, #B26300, #6D7F00, #008673, #007FB4, #8851FF, #E7007D) !important;
+      background: linear-gradient(to right, #e7007d, #b26300, #6d7f00, #008673, #007fb4, #8851ff, #e7007d) !important;
     }
   }
 

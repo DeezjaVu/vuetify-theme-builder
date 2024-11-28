@@ -7,7 +7,7 @@
       </v-card-subtitle> -->
       <template #append>
         <!-- <v-chip size="small" label="P-40">P-40</v-chip> -->
-        <v-btn variant="text" size="small" icon="mdi-content-copy" @click="copyClickHandler"> </v-btn>
+        <v-btn icon="mdi-content-copy" size="small" variant="plain" @click="copyClickHandler"> </v-btn>
       </template>
     </v-card-item>
     <v-card-actions class="ga-0">

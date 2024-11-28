@@ -45,7 +45,7 @@ export class Variant {
   static get FRUIT_SALAD() {
     return 8;
   }
-  static get TRIADIC() {
+  static get ANALOGOUS() {
     return 9;
   }
   static get SPLIT() {
@@ -53,6 +53,9 @@ export class Variant {
   }
   static get SPLIT_REVERSE() {
     return 11;
+  }
+  static get TRIADIC() {
+    return 12;
   }
 }
 
@@ -103,10 +106,10 @@ export class VariantDetails {
       value: Variant.FIDELITY,
       desc:
         "<p>A scheme that places the source color in <code>`Scheme.primaryContainer`</code>.</p>" +
-        "<p>Primary Container is the source color, adjusted for color relativity.</p>" +
+        "<p>Primary palette is the source color, adjusted for color relativity.</p>" +
         "<p>It maintains constant appearance in light mode and dark mode.</p>" +
         "<p>This adds ~5 tone in light mode, and subtracts ~5 tone in dark mode.</p>" +
-        "<p>Tertiary Container is the complement to the source color, using <code>`TemperatureCache`</code>.</p>" +
+        "<p>Tertiary palette is the complement to the source color, using <code>`TemperatureCache`</code>.</p>" +
         "<p>Fidelity and Content schemes are identical. The only difference is the <code>`TemperatureCache`</code> value used for the Tertiary TonalPalette.</p>"
     },
     {
@@ -153,12 +156,12 @@ export class VariantDetails {
       desc: "A Dynamic Color scheme that maxes out colorfulness at each position in the Primary Tonal Palette."
     },
     {
-      title: "Triadic",
-      value: Variant.TRIADIC,
+      title: "Analogous",
+      value: Variant.ANALOGOUS,
       desc:
-        "<p>A custom Dynamic Color scheme based on the <code>`Triadic`</code> color principle. Triadic color schemes tend to be more bold and playful.</p>" +
+        "<p>A custom Dynamic Color scheme based on the <code>`Analogous`</code> color principle, which produces a harmonious effect with colors adjacent to each other.</p>" +
         "<p>The source color is used as the primary palette.</p>" +
-        "<p>The secondary and tertiary palettes are equally distributed from the source color by 90 degrees in each direction.</p>" +
+        "<p>The secondary and tertiary palettes are equally distributed from the source color by 30 degrees in each direction.</p>" +
         "<p>Primary, secondary, and tertiary palettes use the same chroma as the source color.</p>"
     },
     {
@@ -179,6 +182,15 @@ export class VariantDetails {
         "<p>The secondary and tertiary palettes are split from the source color by 30 degrees in each direction,</p>" +
         "<p>which is the same as the <code>`Split`</code> scheme, but offset by 180 degrees.</p>" +
         "<p>Primary, secondary, and tertiary palettes have a fixed chroma of 20.</p>"
+    },
+    {
+      title: "Triadic",
+      value: Variant.TRIADIC,
+      desc:
+        "<p>A custom Dynamic Color scheme based on the <code>`Triadic`</code> color principle. Triadic color schemes tend to be more bold and playful.</p>" +
+        "<p>The source color is used as the primary palette.</p>" +
+        "<p>The secondary and tertiary palettes are equally distributed from the source color by 90 degrees in each direction.</p>" +
+        "<p>Primary, secondary, and tertiary palettes use the same chroma as the source color.</p>"
     }
   ]);
 }

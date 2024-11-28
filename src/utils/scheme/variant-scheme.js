@@ -16,9 +16,10 @@ import {
   TonalPalette
 } from "@material/material-color-utilities";
 import { Variant } from "@/utils/dynamiccolor/variant.js";
-import { SchemeTriadic } from "@/utils/scheme/scheme-triadic.js";
+import { SchemeAnalogous } from "@/utils/scheme/scheme-analogous.js";
 import { SchemeSplit } from "@/utils/scheme/scheme-split.js";
 import { SchemeSplitReverse } from "@/utils/scheme/scheme-split-reverse.js";
+import { SchemeTriadic } from "@/utils/scheme/scheme-triadic.js";
 import PaletteCore from "@/utils/palettes/palette-core.js";
 import PaletteCustom from "@/utils/palettes/palette-custom.js";
 import ThemeColor from "@/utils/theme/theme-color.js";
@@ -99,22 +100,7 @@ export class VariantScheme {
     console.log(" - lightScheme: ", lightScheme);
     console.log(" - darkScheme: ", darkScheme);
 
-    let sfLight = lightScheme.surfaceVariant;
-    let sfDark = darkScheme.surfaceVariant;
-
-    console.log(" - light scheme surfaceVariant: ", sfLight);
-    console.log(" - dark scheme surfaceVariant: ", sfLight);
-
-    let tpLight = TonalPalette.fromInt(sfLight);
-    let tpDark = TonalPalette.fromInt(sfDark);
-
-    console.log(" - surfaceVariant light TonalPalette: ", tpLight);
-    console.log(" - surfaceVariant dark TonalPalette: ", tpDark);
-
-    console.log(" - surfaceVariant light tone: ", Math.round(tpLight.keyColor.tone));
-    console.log(" - surfaceVariant dark tone: ", Math.round(tpDark.keyColor.tone));
-
-    // NOTE: The dark and light schemes have identical palettes, regardless of variant.
+    // NOTE: The dark and light schemes have identical TonalPalettes, regardless of variant.
 
     const palettes = this.createPalettesFromScheme(lightScheme);
     console.log(" - palettes: ", palettes);
@@ -212,6 +198,10 @@ VariantScheme.getSchemesForVariant = (sourceHct, variant, contrast = 0.0) => {
     case Variant.VIBRANT:
       lightScheme = new SchemeVibrant(sourceHct, false, contrast);
       darkScheme = new SchemeVibrant(sourceHct, true, contrast);
+      break;
+    case Variant.ANALOGOUS:
+      lightScheme = new SchemeAnalogous(sourceHct, false, contrast);
+      darkScheme = new SchemeAnalogous(sourceHct, true, contrast);
       break;
     case Variant.TRIADIC:
       lightScheme = new SchemeTriadic(sourceHct, false, contrast);
@@ -324,7 +314,7 @@ VariantScheme.customPaletteColors = [
  * Creates a theme from a given scheme.
  *
  * @param {DynamicScheme} scheme - The scheme to create a theme from.
- * @return {Array<ThemeColor>} - An array of theme colors, with their `hex` and `tone` properties set from the scheme.
+ * @return {Array<ThemeColor>} - An array of theme colors, with their `tonalPalette` and `tone` properties set from the scheme.
  */
 VariantScheme.createThemeFromScheme = (scheme) => {
   console.log("VariantScheme.createThemeFromScheme");
@@ -338,19 +328,15 @@ VariantScheme.createThemeFromScheme = (scheme) => {
   // map the theme colors from the scheme
   themeClone.forEach((entry) => {
     // Theme style properties: the styles we're looking for within the Scheme have a "Container" suffix, e.g. `primaryContainer`.
-    // So we map out theme colors to the `Container` properties, e.g. `primaryContainer`
+    // So we map out theme color names to their `Container` equivalent, e.g. `primary` --> `primaryContainer`.
     const styleName = VariantScheme.names.find((item) => item.themeName === entry.name).styleName;
+    // We also need to grab the TonalPalette the style originates from, so can modify its tone while keeping the color consistent.
     const paletteName = VariantScheme.names.find((item) => item.themeName === entry.name).tonalPaletteName;
-    console.log(" - entry name:", entry.name);
-    console.log(" - styleName: ", styleName);
-    console.log(" - paletteName: ", paletteName);
-
+    // Get the scheme's (original) TonalPalette
     const palette = scheme[paletteName];
-    console.log(" - palette: ", palette);
 
-    // (container) color styles
+    // Get the scheme's (container) color style and extract the tone.
     let argb = scheme[styleName];
-    let hex = hexFromArgb(argb);
     let hct = Hct.fromInt(argb);
     let tone = Math.round(hct.tone);
 
