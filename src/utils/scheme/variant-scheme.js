@@ -1,8 +1,6 @@
 import {
   Hct,
-  argbFromHex,
   hexFromArgb,
-  customColor,
   SchemeContent,
   SchemeExpressive,
   SchemeFidelity,
@@ -13,8 +11,12 @@ import {
   SchemeTonalSpot,
   SchemeVibrant,
   DynamicScheme,
-  TonalPalette
+  TonalPalette,
+  DislikeAnalyzer,
+  TemperatureCache
 } from "@material/material-color-utilities";
+import * as math from "@material/material-color-utilities";
+
 import { Variant } from "@/utils/dynamiccolor/variant.js";
 import { SchemeAnalogous } from "@/utils/scheme/scheme-analogous.js";
 import { SchemeSplit } from "@/utils/scheme/scheme-split.js";
@@ -83,13 +85,30 @@ export class VariantScheme {
    *
    * @return {VariantScheme} A `VariantScheme` object instance.
    */
-  static createScheme(argb, variant, contrast = 0.0, custom = []) {
+  static createScheme(argb, variant, contrast = 0.0) {
     console.log("VariantScheme ::: createScheme");
     // console.log("- argb:", argb);
     // console.log("- variant:", variant);
     // console.log("- custom:", custom);
 
     let sourceHct = Hct.fromInt(argb);
+
+    let sourceTempCache = new TemperatureCache(sourceHct);
+    let complementTempCacheHct = sourceTempCache.complement;
+    let analogousTempCacheHcts = sourceTempCache.analogous(3);
+    let complementHct = Hct.from(math.sanitizeDegreesDouble(sourceHct.hue + 180.0), sourceHct.chroma, 50.0);
+    console.log(" - sourceHct: ", sourceHct);
+    console.log(" - sourceTempCache: ", sourceTempCache);
+    console.log(" - complement tempCacheHct: ", complementTempCacheHct);
+    console.log(" - analogousTempCacheHcts: ", analogousTempCacheHcts);
+    console.log(" - complementHct (hue+180): ", complementHct);
+
+    let tempCachePalette = TonalPalette.fromInt(DislikeAnalyzer.fixIfDisliked(complementTempCacheHct).toInt());
+    let complementFixedPalette = TonalPalette.fromInt(DislikeAnalyzer.fixIfDisliked(complementHct.toInt()));
+    let complement180Palette = TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceHct.hue + 180.0), sourceHct.chroma);
+    console.log(" - tempCachePalette: ", tempCachePalette);
+    console.log(" - complementFixedPalette: ", complementFixedPalette);
+    console.log(" - complement180Palette: ", complement180Palette);
 
     // Material Utilities Dynamic Color Schemes creates only 1 flavor (light or dark).
     // So to get the theme colors for both light and dark, we need to generate two schemes, using the same variant.

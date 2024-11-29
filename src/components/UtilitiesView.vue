@@ -628,37 +628,29 @@
   function showVariantInfoUpdateHandler(value) {
     console.log("UtilitiesView ::: showVariantInfoUpdateHandler");
     console.log(" - value: ", value);
-    console.log(" - showVariantInfo: ", showVariantInfo.value);
   }
 
   function showImageCardsUpdateHandler(value) {
     console.log("UtilitiesView ::: showImageCardsUpdateHandler");
     console.log(" - value: ", value);
-    console.log(" - showImageCards: ", showImageCards.value);
   }
 
   function showPaletteCardsUpdateHandler(value) {
     console.log("UtilitiesView ::: showPaletteCardsUpdateHandler");
     console.log(" - value: ", value);
-    console.log(" - showPaletteCards: ", showPaletteCards.value);
   }
 
   function expandThemeCardsUpdateHandler(value) {
     console.log("UtilitiesView ::: expandThemeCardsUpdateHandler");
     console.log(" - value: ", value);
-    console.log(" - expandThemeCards: ", expandThemeCards);
     // toggle all theme cards expanded state
     materialThemeStore.toggleAllThemeCards();
-    // currentScheme.value.light.forEach((tcolor) => (tcolor.toggle = value));
-    // currentScheme.value.dark.forEach((tcolor) => (tcolor.toggle = value));
   }
 
   function schemeContrastUpdateHandler(value) {
     console.log("UtilitiesView ::: schemeContrastUpdateHandler");
     console.log(" - value: ", value);
-    // TODO: Update the store theme when schemeContrast is updated.
-    console.log(" - materialThemeStore.currentContrast: ", materialThemeStore.currentContrast);
-    // FIXME: The scheme should not be recreated, instead,
+    // FIXME: The scheme should not be recreated, as changes made by the user will be lost, instead,
     // [+] create a temp new scheme and use the tone values of the temp scheme to update the current scheme.
     materialThemeStore.updateScheme();
   }
@@ -683,11 +675,9 @@
    *
    * @param {string} hex - the color to copy, in hex format (e.g. #FF0000)
    *
-   * @returns {void}
    */
   function copyColorClickHandler(hex) {
     console.log("UtilitiesView ::: copySelectedColorClickHandler");
-    // let hex = argbToHex(selectedHct.value.argb);
     console.log(" - hex: ", hex);
     // Clipboard.writeText(hex);
     navigator.clipboard.writeText(hex);
@@ -713,12 +703,14 @@
     // console.log("UtilitiesView ::: getTonalPalettesForHex");
     // console.log(" - hex: ", hex);
 
-    let hctColor = Hct.fromInt(argbFromHex(hex));
-    let tonal = TonalPalette.fromInt(hctColor.argb);
+    // let hctColor = Hct.fromInt(argbFromHex(hex));
+    // let tonal = TonalPalette.fromInt(hctColor.argb);
+    const hexArgb = argbFromHex(hex);
+    const tonal = TonalPalette.fromInt(hexArgb);
 
-    let tones = [];
+    const tones = [];
     [10, 20, 30, 40, 50, 60, 70, 80, 90].forEach((t) => {
-      let argb = tonal.tone(t);
+      const argb = tonal.tone(t);
       tones.push({ tone: t, argb: argb, hct: Hct.fromInt(argb), hex: hexFromArgb(argb) });
     });
     return tones;

@@ -33,7 +33,7 @@ export class SchemeTriadic extends DynamicScheme {
   constructor(sourceColorHct, isDark, contrastLevel) {
     super({
       sourceColorArgb: sourceColorHct.toInt(),
-      variant: Variant.SPLIT,
+      variant: Variant.TRIADIC,
       contrastLevel,
       isDark,
       primaryPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, sourceColorHct.chroma),

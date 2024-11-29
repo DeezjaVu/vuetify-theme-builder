@@ -141,7 +141,7 @@
                         <code class="text-uppercase">{{ getHexFor(`surface`) }}</code>
                       </v-card-subtitle>
                       <template #append>
-                        <v-btn icon="mdi-content-copy" size="small" variant="text" @click="copyColorClickHandler(getHexFor(`surface`))" />
+                        <v-btn icon="mdi-content-copy" size="small" variant="plain" @click="copyColorClickHandler(getHexFor(`surface`))" />
                       </template>
                     </v-card-item>
                     <v-card-text class="font-weight-light">
@@ -182,7 +182,7 @@
                               icon="mdi-content-copy"
                               v-bind="props"
                               size="small"
-                              variant="text"
+                              variant="plain"
                               @click="copyColorClickHandler(getHexFor(`primary`))"
                             />
                           </template>
@@ -215,7 +215,7 @@
                               icon="mdi-content-copy"
                               v-bind="props"
                               size="small"
-                              variant="text"
+                              variant="plain"
                               @click="copyColorClickHandler(getHexFor(`secondary`))"
                             />
                             <!-- <v-btn icon="mdi-tools" v-bind="props" size="small" variant="text" aria-label="Random color"></v-btn> -->
@@ -249,7 +249,7 @@
                               icon="mdi-content-copy"
                               v-bind="props"
                               size="small"
-                              variant="text"
+                              variant="plain"
                               @click="copyColorClickHandler(getHexFor(`tertiary`))"
                             />
                             <!-- <v-btn icon="mdi-tools" v-bind="props" size="small" variant="text" aria-label="Random color"></v-btn> -->
