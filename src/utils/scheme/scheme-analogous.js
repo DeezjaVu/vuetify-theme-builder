@@ -25,8 +25,9 @@ import * as math from "@material/material-color-utilities";
  * Analogous produces a harmonious effect with colors adjacent to each other.
  *
  * The source color is used as the primary palette.
- * The secondary and tertiary palettes are equally distributed from the source color by 30 degrees in each direction.
- * Primary, secondary, and tertiary palettes use the same chroma as the source color.
+ * The secondary and tertiary palettes are equally distributed from the source color by 45 degrees in each direction.
+ * Primary, secondary, and tertiary palettes use the same chroma as the source color,
+ * but the tone is normalized to 50.
  *
  * @see https://www.figma.com/dictionary/analogous-colors/
  */
@@ -42,16 +43,16 @@ export class SchemeAnalogous extends DynamicScheme {
       primaryPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, sourceColorHct.chroma),
       secondaryPalette: TonalPalette.fromHueAndChroma(secondaryHct.hue, secondaryHct.chroma),
       tertiaryPalette: TonalPalette.fromHueAndChroma(tertiaryHct.hue, tertiaryHct.chroma),
-      neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 4.0),
-      neutralVariantPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0)
+      neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 6.0),
+      neutralVariantPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 12.0)
     });
   }
 }
 
 /**
  * Returns an object with two HCT colors: secondaryHct, and tertiaryHct.
- * Ssecondary is the higher analogous color (source Hue+30),
- * and tertiary is the lower analogous color (source Hue-30).
+ * Ssecondary is the higher analogous color (source Hue + 45),
+ * and tertiary is the lower analogous color (source Hue - 45).
  *
  * @param {Hct} sourceHct
  * @returns {Object} An object with two properties: secondaryHct, tertiaryHct.
@@ -62,10 +63,10 @@ SchemeAnalogous.analogous = (sourceHct) => {
   console.log("SchemeAnalogous ::: analogous");
   let sourceTempCache = new TemperatureCache(sourceHct);
   // 3 HCT colors:
-  // - first index = lower analogous (source Hue-30)
+  // - first index = lower analogous (source Hue - 45)
   // - second index = source
-  // - third index = higher analogous (source Hue+30)
-  let analogousHcts = sourceTempCache.analogous(3);
+  // - third index = higher analogous (source Hue + 45)
+  let analogousHcts = sourceTempCache.analogous(3, 12);
   // let analogousHcts = sourceTempCache.analogous();
   let secondaryHct = analogousHcts[0];
   let tertiaryHct = analogousHcts[2];

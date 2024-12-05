@@ -9,12 +9,12 @@
         <v-row>
           <v-col>
             <!-- [*] Location Search -->
-            <v-autocomplete v-model="location" :items="locations" label="Location" variant="outlined" density="compact" hide-details>
+            <v-autocomplete v-model="location" :items="locations" label="Location" density="compact" variant="outlined" hide-details>
               <template #prepend-inner>
                 <v-icon>mdi-map-marker</v-icon>
               </template>
               <template #append>
-                <v-icon>mdi-magnify</v-icon>
+                <v-btn icon="mdi-magnify" size="small" variant="tonal"> </v-btn>
               </template>
             </v-autocomplete>
           </v-col>
@@ -47,7 +47,7 @@
         <v-col>
           <!-- [*] 5-day forecast list -->
           <v-card-title class="bg-primary text-subtitle-1 font-weight-regular rounded-t-xl">5-day forecast</v-card-title>
-          <v-list class="bg-background" base-color="on-secondary" lines="false">
+          <v-list class="bg-transparent" base-color="on-secondary" lines="false">
             <template v-for="(item, index) in forecast" :key="`forecast-${item.day}-${index}`">
               <v-list-item class="bg-secondary" :title="item.title" :subtitle="item.subtitle"></v-list-item>
               <v-spacer v-if="index !== forecast.length - 1" class="my-2"></v-spacer>
@@ -56,8 +56,17 @@
         </v-col>
       </v-row>
       <v-row dense>
-        <v-col cols="6" v-for="n in 4" :key="`weather-col-${n}`">
-          <v-sheet class="pa-4 rounded" color="primary" height="100">Lorem ipsum dolor sit amet.</v-sheet>
+        <v-col cols="6" v-for="(item, n) in todayDetails" :key="`weather-col-${n}`">
+          <v-card color="primary" rounded="lg">
+            <!-- <v-card-item class="bg-primary"> -->
+            <v-card-item>
+              <v-card-title class="text-subtitle-1 font-weight-regular">{{ item.title }}</v-card-title>
+              <template #prepend>
+                <v-icon>{{ item.icon }}</v-icon>
+              </template>
+            </v-card-item>
+            <v-card-text class="pa-4" height="100">Lorem ipsum dolor sit amet.</v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-card-text>
@@ -65,10 +74,6 @@
 </template>
 <script setup>
   import weather01 from "@/assets/images/weather/blue-sky-with-clouds-462x260.jpg";
-  import weather02 from "@/assets/images/weather/road-green-brown-fields-462x260.jpg";
-  import weather03 from "@/assets/images/weather/weather-bg-462x260.jpg";
-  import weather04 from "@/assets/images/weather/yellow-blooming-flowering-plant-462x260.jpg";
-  import weather05 from "@/assets/images/weather/yellow-cloth-lying-fields-462x260.jpg";
   import weather06 from "@/assets/images/weather/yellow-flowers-macro-shot-462x260.jpg";
 
   import { onMounted, ref, computed } from "vue";
@@ -81,7 +86,9 @@
    * COMPUTED PROPERTIES
    */
 
-  const weatherImage = computed(() => (props.themeName === "hct-dark" ? weatherImages.value[5].url : weatherImages.value[0].url));
+  const weatherImages = ref({ "hct-light": weather01, "hct-dark": weather06 });
+
+  const weatherImage = computed(() => weatherImages.value[props.themeName]);
 
   const weatherGradient = computed(
     () =>
@@ -91,8 +98,6 @@
     // : "to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.70)"
   );
 
-  const location = ref("New York");
-
   const locations = ref([
     { title: "New York", value: "New York" },
     { title: "Brussels", value: "Brussels" },
@@ -100,15 +105,7 @@
     { title: "Paris", value: "Paris" },
     { title: "Tokyo", value: "Tokyo" }
   ]);
-
-  const weatherImages = ref([
-    { title: "weatherblue-sky-with-clouds", url: weather01 },
-    { title: "road-green-brown-fields", url: weather02 },
-    { title: "weather-bg", url: weather03 },
-    { title: "yellow-blooming-flowering-plant", url: weather04 },
-    { title: "yellow-cloth-lying-fields", url: weather05 },
-    { title: "yellow-flowers-macro-shot", url: weather06 }
-  ]);
+  const location = ref("Paris");
 
   const forecast = ref([
     { title: "Today", subtitle: "Sunny", icon: "", temp: "16°/12°" },
@@ -116,6 +113,13 @@
     { title: "Saturday", subtitle: "Mostly Cloudy", icon: "", temp: "16°/12°" },
     { title: "Sunday", subtitle: "Mild Rain", icon: "", temp: "16°/12°" },
     { title: "Monday", subtitle: "Cloudy", icon: "", temp: "16°/12°" }
+  ]);
+
+  const todayDetails = ref([
+    { title: "Wind", subtitle: "15km/h", icon: "mdi-weather-windy" },
+    { title: "Humidity", subtitle: "75%", icon: "mdi-water-percent" },
+    { title: "Pressure", subtitle: "1013hPa", icon: "mdi-gauge" },
+    { title: "UV Index", subtitle: "10km", icon: "mdi-sun-thermometer" }
   ]);
 
   /**

@@ -3,7 +3,6 @@
   <ThemePreviewDialog
     v-model="previewThemeOpen"
     v-model:themeName="previewThemeName"
-    :previewTheme="previewTheme"
     @click:close="previewThemeOpen = false"
     @click:copy="copyColorClickHandler"
     @update:themeName="themeNameUpdateHandler"
@@ -365,8 +364,9 @@
     </v-row>
     <!-- [*] THIS ROW IS BELOW THE TWO COLUMNS -->
     <v-row class="flex-1-1-100">
-      <v-col cols="3">
+      <v-col cols="12">
         <!-- [*] EMPTY COLUMN  -->
+        <!-- <TemperatureCacheCard :sourceColor="sourceColor" /> -->
       </v-col>
       <v-col cols="3">
         <!-- [*] EMPTY COLUMN  -->
@@ -438,7 +438,6 @@
 
   const schemeVariants = materialThemeStore.schemeVariants;
 
-  const previewTheme = ref(null);
   const previewThemeName = ref("");
   const previewThemeOpen = ref(false);
 
@@ -741,7 +740,6 @@
   function showThemePreview(value) {
     console.log("UtilitiesView ::: showThemePreview");
     console.log(" - value: ", value);
-    previewTheme.value = value === "light" ? currentScheme.value.light : currentScheme.value.dark;
     previewThemeName.value = value === "light" ? "hct-light" : "hct-dark";
     previewThemeOpen.value = true;
   }

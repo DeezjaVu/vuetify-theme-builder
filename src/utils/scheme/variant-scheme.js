@@ -10,18 +10,13 @@ import {
   SchemeRainbow,
   SchemeTonalSpot,
   SchemeVibrant,
-  DynamicScheme,
-  TonalPalette,
-  DislikeAnalyzer,
-  TemperatureCache
+  DynamicScheme
 } from "@material/material-color-utilities";
-import * as math from "@material/material-color-utilities";
-
-import { Variant } from "@/utils/dynamiccolor/variant.js";
 import { SchemeAnalogous } from "@/utils/scheme/scheme-analogous.js";
 import { SchemeSplit } from "@/utils/scheme/scheme-split.js";
 import { SchemeSplitReverse } from "@/utils/scheme/scheme-split-reverse.js";
 import { SchemeTriadic } from "@/utils/scheme/scheme-triadic.js";
+import { Variant } from "@/utils/dynamiccolor/variant.js";
 import PaletteCore from "@/utils/palettes/palette-core.js";
 import PaletteCustom from "@/utils/palettes/palette-custom.js";
 import ThemeColor from "@/utils/theme/theme-color.js";
@@ -87,33 +82,13 @@ export class VariantScheme {
    */
   static createScheme(argb, variant, contrast = 0.0) {
     console.log("VariantScheme ::: createScheme");
-    // console.log("- argb:", argb);
-    // console.log("- variant:", variant);
-    // console.log("- custom:", custom);
 
     let sourceHct = Hct.fromInt(argb);
-
-    let sourceTempCache = new TemperatureCache(sourceHct);
-    let complementTempCacheHct = sourceTempCache.complement;
-    let analogousTempCacheHcts = sourceTempCache.analogous(3);
-    let complementHct = Hct.from(math.sanitizeDegreesDouble(sourceHct.hue + 180.0), sourceHct.chroma, 50.0);
-    console.log(" - sourceHct: ", sourceHct);
-    console.log(" - sourceTempCache: ", sourceTempCache);
-    console.log(" - complement tempCacheHct: ", complementTempCacheHct);
-    console.log(" - analogousTempCacheHcts: ", analogousTempCacheHcts);
-    console.log(" - complementHct (hue+180): ", complementHct);
-
-    let tempCachePalette = TonalPalette.fromInt(DislikeAnalyzer.fixIfDisliked(complementTempCacheHct).toInt());
-    let complementFixedPalette = TonalPalette.fromInt(DislikeAnalyzer.fixIfDisliked(complementHct.toInt()));
-    let complement180Palette = TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceHct.hue + 180.0), sourceHct.chroma);
-    console.log(" - tempCachePalette: ", tempCachePalette);
-    console.log(" - complementFixedPalette: ", complementFixedPalette);
-    console.log(" - complement180Palette: ", complement180Palette);
 
     // Material Utilities Dynamic Color Schemes creates only 1 flavor (light or dark).
     // So to get the theme colors for both light and dark, we need to generate two schemes, using the same variant.
     // Both generated schemes will have identical palettes, so we grab the Palette objects from one of the schemes
-    // to create a single palette object and map the light and dark theme colors to two ThemeColor objects, ´light` and `dark`.
+    // to create a single palette object and map the light and dark theme colors to two separate arrays of {ThemeColor} objects.
 
     const { lightScheme, darkScheme } = VariantScheme.getSchemesForVariant(sourceHct, variant, contrast);
     console.log(" - lightScheme: ", lightScheme);
@@ -121,11 +96,11 @@ export class VariantScheme {
 
     // NOTE: The dark and light schemes have identical TonalPalettes, regardless of variant.
 
-    const palettes = this.createPalettesFromScheme(lightScheme);
+    const palettes = VariantScheme.createPalettesFromScheme(lightScheme);
     console.log(" - palettes: ", palettes);
 
-    let lightTheme = VariantScheme.createThemeFromScheme(lightScheme);
-    let darkTheme = VariantScheme.createThemeFromScheme(darkScheme);
+    const lightTheme = VariantScheme.createThemeFromScheme(lightScheme);
+    const darkTheme = VariantScheme.createThemeFromScheme(darkScheme);
 
     // INFO: For the light theme:
     // `background` is created from the `neutralPalette`, with a tone of `98` (N-98).
@@ -139,13 +114,13 @@ export class VariantScheme {
     const customPalettes = [];
     VariantScheme.customPaletteColors.forEach((entry) => {
       // args: title, name, hex, source argb, blend
-      let pc = new PaletteCustom(entry.title, entry.name, entry.hex, argb, entry.blend);
+      const pc = new PaletteCustom(entry.title, entry.name, entry.hex, argb, entry.blend);
       customPalettes.push(pc);
 
       // args: title, name, palette, tone, dark, custom
       // CustomColor needs the palette from PaletteCustom, in case it is harmonized (blend = true).
-      let lightColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 90, false, true);
-      let darkColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 30, true, true);
+      const lightColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 90, false, true);
+      const darkColor = new ThemeColor(entry.title, entry.name, pc.tonalPalette, 30, true, true);
       lightTheme.push(lightColor);
       darkTheme.push(darkColor);
     });

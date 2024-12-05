@@ -39,8 +39,8 @@ export class SchemeTriadic extends DynamicScheme {
       primaryPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, sourceColorHct.chroma),
       secondaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue + 90.0), sourceColorHct.chroma),
       tertiaryPalette: TonalPalette.fromHueAndChroma(math.sanitizeDegreesDouble(sourceColorHct.hue - 90.0), sourceColorHct.chroma),
-      neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 4.0),
-      neutralVariantPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0)
+      neutralPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 6.0),
+      neutralVariantPalette: TonalPalette.fromHueAndChroma(sourceColorHct.hue, 12.0)
     });
   }
 }

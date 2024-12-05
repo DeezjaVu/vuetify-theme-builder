@@ -1,7 +1,7 @@
 <template>
   <!-- COLOR DIALOG MODAL -->
+  <!-- id="palette-item-color-dialog" -->
   <ColorDialog
-    id="palette-item-color-dialog"
     v-model="paletteModalOpen"
     :color-name="palette.name"
     v-model:picker-color="inputHex"
@@ -9,7 +9,6 @@
     @update:picker-color="paletteModalChangeHandler"
     @update="paletteModalUpdateHandler"
     @cancel="paletteModalCancelHandler"
-    @update:model-value="paletteModalUpdateModelHandler"
   />
   <!-- PALETTE COLOR CARD -->
   <v-card
@@ -217,6 +216,7 @@
 <script setup>
   import { ref, onMounted, computed, toRefs, watch, warn } from "vue";
   import { Hct, hexFromArgb, TonalPalette } from "@material/material-color-utilities";
+  import { hctForHue, hexForHue } from "@/utils/hct/hct-utils.js";
   import tinycolor from "tinycolor2";
   import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
@@ -384,13 +384,14 @@
     //   [*] For some unknown reason it then gets stuck at 209, which then lead to the background gradient no longer updating.
     // new HCT color with the slider hue, full chroma (100), and full tone (50)
     let h = colorHue.value;
-    let tp = TonalPalette.fromHueAndChroma(h, 100);
-    let argb = tp.tone(50);
-    let bgHex = hexFromArgb(argb);
+    // let cacheHct = hctForHue(h);
+    // let argb = cacheHct.toInt();
+    // let bgHex = hexFromArgb(argb);
+    let bgHex = hexForHue(h);
 
     if (chromaSliderTrack && chromaSliderTrack.value !== null) {
       let chromaStyle = chromaSliderTrack.value.style;
-      let chromaBgStyle = "linear-gradient(to right, #777777 0%, #555555 100%)".replace("#555555", bgHex);
+      let chromaBgStyle = `linear-gradient(to right, #777777 0%, ${bgHex} 100%)`;
       chromaStyle.setProperty("background", chromaBgStyle, "important");
     } else {
       console.warn("[PaletteItemCard] chromaSliderTrack.value is null");
@@ -399,7 +400,8 @@
     // console.log(" - toneSliderTrack: ", toneSliderTrack.value);
     if (toneSliderTrack && toneSliderTrack.value !== null) {
       let toneStyle = toneSliderTrack.value.style;
-      let toneBgStyle = "linear-gradient(to right, #000000 0%, #555555 50%, #FFFFFF 100%)".replace("#555555", bgHex);
+      // let toneBgStyle = `linear-gradient(to right, #000000 0%, ${bgHex} 45%, ${bgHex} 55%, #FFFFFF 100%)`;
+      let toneBgStyle = `linear-gradient(to right, #000000 0%, ${bgHex} 50%, #FFFFFF 100%)`;
       toneStyle.setProperty("background", toneBgStyle, "important");
     } else {
       console.warn("[PaletteItemCard] toneSliderTrack.value is null");
@@ -528,8 +530,8 @@
    */
   function paletteModalChangeHandler(newHex) {
     console.log("PaletteItemCard ::: paletteModalChangeHandler");
-    console.log(" - newHex: ", newHex);
-    console.log(" - inputHex: ", inputHex.value);
+    // console.log(" - newHex: ", newHex);
+    // console.log(" - inputHex: ", inputHex.value);
 
     isDirty.value = true;
 
@@ -539,7 +541,7 @@
   }
 
   function paletteModalUpdateHandler() {
-    console.log("PaletteItemCard ::: paletteModalUpdateHandler");
+    // console.log("PaletteItemCard ::: paletteModalUpdateHandler");
     // Normally everything should already be set, because of the modal's `paletteModalChangeHandler`
     // So just clean up what needs cleaning up.
     inputHex.value = "";
@@ -560,10 +562,6 @@
     setSliderValues();
     updateSliderBackgrounds();
     paletteModalOpen.value = false;
-  }
-
-  function paletteModalUpdateModelHandler() {
-    console.log("PaletteItemCard ::: paletteModalUpdateModelHandler");
   }
 
   /**

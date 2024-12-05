@@ -17,7 +17,7 @@
               Offset button bottom-margin by 24px (mb-6) when density="comfortable" 
               and 20px (mb-5) when density="compact" to place it in line with the card title. 
             -->
-            <v-btn icon="mdi-palette" variant="text" density="compact" class="mb-5" />
+            <!-- <v-btn icon="mdi-palette" variant="text" density="compact" class="mb-5" /> -->
           </template>
         </v-card-item>
       </drag-modal>
@@ -25,12 +25,17 @@
       <!-- V-CARD TEXT -->
       <!-- :swatches="flatColorsHex" -->
       <v-card-text class="d-flex pb-2 ga-2">
+        <!-- :model-value="pickerColor" -->
+        <!-- 
+        When using v-model instead of :model-value, 
+        the color picker will automatically update pickerColor 
+        -->
         <v-color-picker
           class="my-0"
           dot-size="16"
           mode="hex"
+          v-model="pickerColor"
           :modes="cpModes"
-          :model-value="pickerColor"
           swatches-max-height="300"
           hide-sliders
           show-swatches
@@ -72,8 +77,8 @@
   });
 
   function dialogUpdateHandler(value) {
-    console.log("ColorDialog ::: dialogUpdateHandler");
-    console.log(" - dialogUpdate: ", value);
+    // console.log("ColorDialog ::: dialogUpdateHandler");
+    // console.log(" - dialogUpdate: ", value);
     // TODO: ColorDialog ::: implement outside click and esc key --> allow the (color) change or cancel it (reset to old color).
     // When value = false, the dialog is being closed (via ouside click or esc key)
     // For now it is considered an OK and not a Cancel action.
@@ -96,20 +101,21 @@
   }
 
   function pickerUpdateHandler(color) {
-    console.log("ColorDialog ::: pickerUpdateHandler");
-    console.log(" - color picker:", color);
+    // console.log("ColorDialog ::: pickerUpdateHandler");
+    // console.log(" - color picker:", color);
     // Setting the pickerColor value will trigger the `@update:picker-color` event on the component.
-    pickerColor.value = color;
+    // This is currently not used, as the color picker v-model is used instead, which automatically updates the model.
+    // pickerColor.value = color;
   }
 
   function cancelClickHandler() {
-    console.log("ColorDialog ::: cancelClickHandler");
-    console.log(" - pickerColor: ", pickerColor.value);
+    // console.log("ColorDialog ::: cancelClickHandler");
+    // console.log(" - pickerColor: ", pickerColor.value);
     emit("cancel");
   }
 
   function okClickHandler() {
-    console.log("ColorDialog ::: okClickHandler");
+    // console.log("ColorDialog ::: okClickHandler");
     emit("update", pickerColor.value);
   }
 </script>

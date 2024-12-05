@@ -115,6 +115,9 @@
 </template>
 
 <script setup>
+  // Vuetify Theme Variables:
+  // @see https://vuetifyjs.com/en/features/theme/#javascript
+
   import { onMounted, ref } from "vue";
   import { useBuilderColorsStore } from "@/stores/builder-colors";
 
