@@ -5,6 +5,76 @@
  *
  */
 
+export const red = {
+  lighten5: "#FFEBEE",
+  lighten4: "#FFCDD2",
+  lighten3: "#EF9A9A",
+  lighten2: "#E57373",
+  lighten1: "#EF5350",
+  base: "#F44336",
+  darken1: "#E53935",
+  darken2: "#D32F2F",
+  darken3: "#C62828",
+  darken4: "#B71C1C"
+  // darken5: "#8B0A0A"
+};
+
+export const pink = {
+  lighten5: "#FFF0F4",
+  lighten4: "#FFD7E6",
+  lighten3: "#FFC5C5",
+  lighten2: "#FFA9B5",
+  lighten1: "#FF80AB",
+  base: "#FF69B4",
+  darken1: "#FF33CC",
+  darken2: "#FF00CC",
+  darken3: "#E600CC",
+  darken4: "#CC00CC"
+  // darken5: "#B300CC"
+};
+
+export const purple = {
+  lighten5: "#F7F2FA",
+  lighten4: "#E4D6F5",
+  lighten3: "#D1C4FA",
+  lighten2: "#B3A2F6",
+  lighten1: "#A377F5",
+  base: "#7A288A",
+  darken1: "#6c2e8c",
+  darken2: "#5c1a8c",
+  darken3: "#4c1680",
+  darken4: "#3c1462"
+  // darken5: "#2c0a4d"
+};
+
+export const violet = {
+  lighten5: "#F3F0FF",
+  lighten4: "#E6D8F7",
+  lighten3: "#D7B9F7",
+  lighten2: "#C7B8EA",
+  lighten1: "#B3A5F5",
+  base: "#9C66D9",
+  darken1: "#8E44AD",
+  darken2: "#7B1FA2",
+  darken3: "#6c1a8e",
+  darken4: "#5c1680"
+  // darken5: "#4c1462"
+};
+
+export const fuchsia = {
+  lighten5: "#FDF4FF",
+  lighten4: "#F7C9F7",
+  lighten3: "#F4B8F4",
+  lighten2: "#F0A6F0",
+  lighten1: "#E91E63",
+  base: "#C2185B",
+  darken1: "#A61C4C",
+  darken2: "#8B0A1A",
+  darken3: "#6F0039",
+  darken4: "#4C0026"
+  // darken5: "#2C001F"
+};
+
 export const emerald = {
   lighten5: "#E8F6F1",
   lighten4: "#C5EBE1",
@@ -45,20 +115,6 @@ export const lime = {
   darken3: "#9E9D24",
   darken4: "#827717"
   // darken5: "#413C0C"
-};
-
-export const red = {
-  lighten5: "#FFEBEE",
-  lighten4: "#FFCDD2",
-  lighten3: "#EF9A9A",
-  lighten2: "#E57373",
-  lighten1: "#EF5350",
-  base: "#F44336",
-  darken1: "#E53935",
-  darken2: "#D32F2F",
-  darken3: "#C62828",
-  darken4: "#B71C1C"
-  // darken5: "#8B0A0A"
 };
 
 export const orange = {
@@ -173,62 +229,6 @@ export const indigo = {
   // darken5: "#1A237E"
 };
 
-export const violet = {
-  lighten5: "#F3F0FF",
-  lighten4: "#E6D8F7",
-  lighten3: "#D7B9F7",
-  lighten2: "#C7B8EA",
-  lighten1: "#B3A5F5",
-  base: "#9C66D9",
-  darken1: "#8E44AD",
-  darken2: "#7B1FA2",
-  darken3: "#6c1a8e",
-  darken4: "#5c1680"
-  // darken5: "#4c1462"
-};
-
-export const purple = {
-  lighten5: "#F7F2FA",
-  lighten4: "#E4D6F5",
-  lighten3: "#D1C4FA",
-  lighten2: "#B3A2F6",
-  lighten1: "#A377F5",
-  base: "#7A288A",
-  darken1: "#6c2e8c",
-  darken2: "#5c1a8c",
-  darken3: "#4c1680",
-  darken4: "#3c1462"
-  // darken5: "#2c0a4d"
-};
-
-export const fuchsia = {
-  lighten5: "#FDF4FF",
-  lighten4: "#F7C9F7",
-  lighten3: "#F4B8F4",
-  lighten2: "#F0A6F0",
-  lighten1: "#E91E63",
-  base: "#C2185B",
-  darken1: "#A61C4C",
-  darken2: "#8B0A1A",
-  darken3: "#6F0039",
-  darken4: "#4C0026"
-  // darken5: "#2C001F"
-};
-
-export const pink = {
-  lighten5: "#FFF0F4",
-  lighten4: "#FFD7E6",
-  lighten3: "#FFC5C5",
-  lighten2: "#FFA9B5",
-  lighten1: "#FF80AB",
-  base: "#FF69B4",
-  darken1: "#FF33CC",
-  darken2: "#FF00CC",
-  darken3: "#E600CC",
-  darken4: "#CC00CC"
-  // darken5: "#B300CC"
-};
-
 export const rose = {
   lighten5: "#FFF2F7",
   lighten4: "#FFD9E2",
@@ -321,28 +321,28 @@ export const stone = {
  * - name: name of the color in camel case.
  * - base: base color of the color in hex.
  *
- * @returns {array} An array of objects.
+ * @returns {array<Object>} An array of objects.
  *
  * @see https://tailwindcss.com/docs/customizing-colors
  */
 export const baseColors = [
-  { title: "Emerald", name: "emerald", base: emerald.base },
-  { title: "Green", name: "green", base: green.base },
-  { title: "Lime", name: "lime", base: lime.base },
   { title: "Red", name: "red", base: red.base },
-  { title: "Orange", name: "orange", base: orange.base },
-  { title: "Amber", name: "amber", base: amber.base },
-  { title: "Yellow", name: "yellow", base: yellow.base },
-  { title: "Teal", name: "teal", base: teal.base },
-  { title: "Cyan", name: "cyan", base: cyan.base },
-  { title: "Sky", name: "sky", base: sky.base },
-  { title: "Blue", name: "blue", base: blue.base },
-  { title: "Indigo", name: "indigo", base: indigo.base },
-  { title: "Violet", name: "violet", base: violet.base },
-  { title: "Purple", name: "purple", base: purple.base },
-  { title: "Fuchsia", name: "fuchsia", base: fuchsia.base },
-  { title: "Pink", name: "pink", base: pink.base },
   { title: "Rose", name: "rose", base: rose.base },
+  { title: "Pink", name: "pink", base: pink.base },
+  { title: "Fuchsia", name: "fuchsia", base: fuchsia.base },
+  { title: "Purple", name: "purple", base: purple.base },
+  { title: "Violet", name: "violet", base: violet.base },
+  { title: "Indigo", name: "indigo", base: indigo.base },
+  { title: "Blue", name: "blue", base: blue.base },
+  { title: "Sky", name: "sky", base: sky.base },
+  { title: "Cyan", name: "cyan", base: cyan.base },
+  { title: "Teal", name: "teal", base: teal.base },
+  { title: "Green", name: "green", base: green.base },
+  { title: "Emerald", name: "emerald", base: emerald.base },
+  { title: "Lime", name: "lime", base: lime.base },
+  { title: "Yellow", name: "yellow", base: yellow.base },
+  { title: "Amber", name: "amber", base: amber.base },
+  { title: "Orange", name: "orange", base: orange.base },
   { title: "Slate", name: "slate", base: slate.base },
   { title: "Gray", name: "gray", base: gray.base },
   { title: "Zinc", name: "zinc", base: zinc.base },
@@ -350,50 +350,50 @@ export const baseColors = [
   { title: "Stone", name: "stone", base: stone.base }
 ];
 
-export const emeraldHex = Object.values(emerald).reverse();
-export const greenHex = Object.values(green).reverse();
-export const limeHex = Object.values(lime).reverse();
 export const redHex = Object.values(red).reverse();
-export const orangeHex = Object.values(orange).reverse();
-export const amberHex = Object.values(amber).reverse();
-export const yellowHex = Object.values(yellow).reverse();
-export const tealHex = Object.values(teal).reverse();
-export const cyanHex = Object.values(cyan).reverse();
-export const skyHex = Object.values(sky).reverse();
-export const blueHex = Object.values(blue).reverse();
-export const indigoHex = Object.values(indigo).reverse();
-export const violetHex = Object.values(violet).reverse();
-export const purpleHex = Object.values(purple).reverse();
-export const fuchsiaHex = Object.values(fuchsia).reverse();
-export const pinkHex = Object.values(pink).reverse();
 export const roseHex = Object.values(rose).reverse();
+export const pinkHex = Object.values(pink).reverse();
+export const fuchsiaHex = Object.values(fuchsia).reverse();
+export const purpleHex = Object.values(purple).reverse();
+export const violetHex = Object.values(violet).reverse();
+export const indigoHex = Object.values(indigo).reverse();
+export const blueHex = Object.values(blue).reverse();
+export const skyHex = Object.values(sky).reverse();
+export const cyanHex = Object.values(cyan).reverse();
+export const tealHex = Object.values(teal).reverse();
+export const greenHex = Object.values(green).reverse();
+export const emeraldHex = Object.values(emerald).reverse();
+export const limeHex = Object.values(lime).reverse();
+export const yellowHex = Object.values(yellow).reverse();
+export const amberHex = Object.values(amber).reverse();
+export const orangeHex = Object.values(orange).reverse();
+export const zincHex = Object.values(zinc).reverse();
 export const slateHex = Object.values(slate).reverse();
 export const grayHex = Object.values(gray).reverse();
-export const zincHex = Object.values(zinc).reverse();
 export const neutralHex = Object.values(neutral).reverse();
 export const stoneHex = Object.values(stone).reverse();
 
 export const swatches = [
-  emeraldHex,
-  greenHex,
-  limeHex,
   redHex,
-  orangeHex,
+  roseHex,
+  pinkHex,
+  fuchsiaHex,
+  purpleHex,
+  violetHex,
+  indigoHex,
+  blueHex,
+  skyHex,
+  cyanHex,
+  tealHex,
+  greenHex,
+  emeraldHex,
+  limeHex,
   yellowHex,
   amberHex,
-  tealHex,
-  cyanHex,
-  skyHex,
-  blueHex,
-  indigoHex,
-  violetHex,
-  purpleHex,
-  fuchsiaHex,
-  pinkHex,
-  roseHex,
+  orangeHex,
+  zincHex
   // slateHex,
   // grayHex,
-  zincHex
   // neutralHex,
   // stoneHex
 ];

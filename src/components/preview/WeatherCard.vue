@@ -46,13 +46,24 @@
       <v-row>
         <v-col>
           <!-- [*] 5-day forecast list -->
-          <v-card-title class="bg-primary text-subtitle-1 font-weight-regular rounded-t-xl">5-day forecast</v-card-title>
+          <!-- <v-card-title class="bg-primary text-subtitle-1 font-weight-regular rounded-t-xl">5-day forecast</v-card-title> -->
+          <v-card-title class="text-subtitle-1 font-weight-regular py-0">5-day forecast</v-card-title>
           <v-list class="bg-transparent" base-color="on-secondary" lines="false">
             <template v-for="(item, index) in forecast" :key="`forecast-${item.day}-${index}`">
-              <v-list-item class="bg-secondary" :title="item.title" :subtitle="item.subtitle"></v-list-item>
+              <v-list-item
+                class="bg-secondary"
+                :class="{ 'rounded-t-xl': index === 0, 'rounded-b-xl': index === forecast.length - 1 }"
+                :title="item.title"
+                :subtitle="item.subtitle"
+              ></v-list-item>
               <v-spacer v-if="index !== forecast.length - 1" class="my-2"></v-spacer>
             </template>
           </v-list>
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-col>
+          <v-card-title class="text-subtitle-1 font-weight-regular py-0">Current conditions</v-card-title>
         </v-col>
       </v-row>
       <v-row dense>

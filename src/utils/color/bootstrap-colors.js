@@ -42,8 +42,6 @@ export const blue = {
   darken4: darkMix(blueBase, 80)
 };
 
-export const blueHex = Object.values(blue).reverse();
-
 const indigoBase = "#6610F2";
 export const indigo = {
   lighten5: lightMix(indigoBase, 90),
@@ -57,8 +55,6 @@ export const indigo = {
   darken3: darkMix(indigoBase, 60),
   darken4: darkMix(indigoBase, 80)
 };
-
-export const indigoHex = Object.values(indigo).reverse();
 
 const purpleBase = "#6F42C1";
 export const purple = {
@@ -74,8 +70,6 @@ export const purple = {
   darken4: darkMix(purpleBase, 80)
 };
 
-export const purpleHex = Object.values(purple).reverse();
-
 const pinkBase = "#D63384";
 export const pink = {
   lighten5: lightMix(pinkBase, 90),
@@ -89,8 +83,6 @@ export const pink = {
   darken3: darkMix(pinkBase, 60),
   darken4: darkMix(pinkBase, 80)
 };
-
-export const pinkHex = Object.values(pink).reverse();
 
 const redBase = "#DC3545";
 export const red = {
@@ -106,8 +98,6 @@ export const red = {
   darken4: darkMix(redBase, 80)
 };
 
-export const redHex = Object.values(red).reverse();
-
 const orangeBase = "#FD7E14";
 export const orange = {
   lighten5: lightMix(orangeBase, 90),
@@ -121,8 +111,6 @@ export const orange = {
   darken3: darkMix(orangeBase, 60),
   darken4: darkMix(orangeBase, 80)
 };
-
-export const orangeHex = Object.values(orange).reverse();
 
 const yellowBase = "#FFC107";
 export const yellow = {
@@ -138,8 +126,6 @@ export const yellow = {
   darken4: darkMix(yellowBase, 80)
 };
 
-export const yellowHex = Object.values(yellow).reverse();
-
 const greenBase = "#198754";
 export const green = {
   lighten5: lightMix(greenBase, 90),
@@ -153,8 +139,6 @@ export const green = {
   darken3: darkMix(greenBase, 60),
   darken4: darkMix(greenBase, 80)
 };
-
-export const greenHex = Object.values(green).reverse();
 
 const tealBase = "#20C997";
 export const teal = {
@@ -170,8 +154,6 @@ export const teal = {
   darken4: darkMix(tealBase, 80)
 };
 
-export const tealHex = Object.values(teal).reverse();
-
 const cyanBase = "#0DCAF0";
 export const cyan = {
   lighten5: lightMix(cyanBase, 90),
@@ -185,8 +167,6 @@ export const cyan = {
   darken3: darkMix(cyanBase, 60),
   darken4: darkMix(cyanBase, 80)
 };
-
-export const cyanHex = Object.values(cyan).reverse();
 
 const grayBase = "#ADB5BD";
 export const gray = {
@@ -202,15 +182,24 @@ export const gray = {
   darken4: darkMix(grayBase, 80)
 };
 
-export const grayHex = Object.values(gray).reverse();
-
 export const shades = {
   black: "#000000",
   white: "#FFFFFF",
   transparent: "#FFFFFF00"
 };
 
-export const shadesHex = Object.values(shades);
+const redHex = Object.values(red).reverse();
+const pinkHex = Object.values(pink).reverse();
+const purpleHex = Object.values(purple).reverse();
+const indigoHex = Object.values(indigo).reverse();
+const blueHex = Object.values(blue).reverse();
+const cyanHex = Object.values(cyan).reverse();
+const tealHex = Object.values(teal).reverse();
+const greenHex = Object.values(green).reverse();
+const yellowHex = Object.values(yellow).reverse();
+const orangeHex = Object.values(orange).reverse();
+const grayHex = Object.values(gray).reverse();
+const shadesHex = Object.values(shades);
 
 /**
  * Bootstrap base color list.
@@ -225,32 +214,32 @@ export const shadesHex = Object.values(shades);
  * @see https://getbootstrap.com/docs/5.0/customize/color/
  */
 export const baseColors = [
-  { title: "Blue", name: "blue", base: blue.base },
-  { title: "Indigo", name: "indigo", base: indigo.base },
-  { title: "Purple", name: "purple", base: purple.base },
-  { title: "Pink", name: "pink", base: pink.base },
   { title: "Red", name: "red", base: red.base },
-  { title: "Orange", name: "orange", base: orange.base },
-  { title: "Yellow", name: "yellow", base: yellow.base },
-  { title: "Green", name: "green", base: green.base },
-  { title: "Teal", name: "teal", base: teal.base },
+  { title: "Pink", name: "pink", base: pink.base },
+  { title: "Purple", name: "purple", base: purple.base },
+  { title: "Indigo", name: "indigo", base: indigo.base },
+  { title: "Blue", name: "blue", base: blue.base },
   { title: "Cyan", name: "cyan", base: cyan.base },
+  { title: "Teal", name: "teal", base: teal.base },
+  { title: "Green", name: "green", base: green.base },
+  { title: "Yellow", name: "yellow", base: yellow.base },
+  { title: "Orange", name: "orange", base: orange.base },
   { title: "Gray", name: "gray", base: gray.base },
   { title: "Black", name: "black", base: shades.black },
   { title: "White", name: "white", base: shades.white }
 ];
 
 export const swatches = [
-  blueHex,
-  indigoHex,
-  purpleHex,
-  pinkHex,
   redHex,
-  orangeHex,
-  yellowHex,
-  greenHex,
-  tealHex,
+  pinkHex,
+  purpleHex,
+  indigoHex,
+  blueHex,
   cyanHex,
+  tealHex,
+  greenHex,
+  yellowHex,
+  orangeHex,
   grayHex,
   shadesHex
 ];
@@ -258,40 +247,28 @@ export const swatches = [
 // TODO: @bootstrap-colors ::: match the theme names to the vuetify names?
 export const theme = {
   primary: blueBase,
-  secondary: "#6C757D",
-  success: "#198754",
-  info: "#0DCAF0",
-  warning: "#FFC107",
-  danger: "#DC3545",
+  secondary: gray.darken1, //"#6C757D",
+  success: greenBase, //"#198754",
+  info: cyanBase, //"#0DCAF0",
+  warning: yellowBase, //"#FFC107",
+  danger: redBase, //"#DC3545",
   light: "#F8F9FA",
   dark: "#212529"
 };
 
 export default {
   blue,
-  blueHex,
   indigo,
-  indigoHex,
   purple,
-  purpleHex,
   pink,
-  pinkHex,
   red,
-  redHex,
   orange,
-  orangeHex,
   yellow,
-  yellowHex,
   green,
-  greenHex,
   teal,
-  tealHex,
   cyan,
-  cyanHex,
   gray,
-  grayHex,
   shades,
-  shadesHex,
   baseColors,
   swatches,
   theme

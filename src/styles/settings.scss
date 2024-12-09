@@ -6,8 +6,19 @@
 
 // https://vuetifyjs.com/features/sass-variables/`
 @use "vuetify/settings" with (
-  // $color-pack: false
-  $body-font-family: ("Work Sans", sans-serif),
-  $heading-font-family: ("Work Sans", sans-serif) // $body-font-family: ("Inter", sans-serif),
-// $heading-font-family: ("Inter", sans-serif)
+  $heading-font-family: (
+    "Work Sans",
+    sans-serif
+  ),
+  $body-font-family: (
+    "Work Sans",
+    sans-serif
+  ),
+  $field-border-width: 1px,
+  $field-focused-border-width: 1px
 );
+
+// $field-outline-opacity: 0.25
+// $color-pack: false
+// $body-font-family: ("Inter", sans-serif),
+// $heading-font-family: ("Inter", sans-serif)

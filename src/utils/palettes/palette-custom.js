@@ -76,6 +76,16 @@ export default class PaletteCustom {
   }
 
   /**
+   * Indicates if the palette is the source color palette.
+   * For a `PaletteCustom`, this will always return `false`.
+   *
+   * @type {boolean} Always `false` for a `PaletteCustom` instance.
+   */
+  get isSource() {
+    return false;
+  }
+
+  /**
    * The ARGB representation of the hex color, after applying the
    * blend mode if enabled.
    *

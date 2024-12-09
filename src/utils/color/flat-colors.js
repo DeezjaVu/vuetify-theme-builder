@@ -18,8 +18,6 @@ export const turquoise = {
   darken4: "#0E6251"
 };
 
-export const turquoiseHex = Object.values(turquoise).reverse();
-
 export const greenSea = {
   lighten5: "#E8F6F3",
   lighten4: "#D0ECE7",
@@ -32,8 +30,6 @@ export const greenSea = {
   darken3: "#0E6655",
   darken4: "#0B5345"
 };
-
-export const greenSeaHex = Object.values(greenSea).reverse();
 
 export const emerald = {
   lighten5: "#EAF9F1",
@@ -48,8 +44,6 @@ export const emerald = {
   darken4: "#186B3B"
 };
 
-export const emeraldHex = Object.values(emerald).reverse();
-
 export const nephritis = {
   lighten5: "#E9F7EF",
   lighten4: "#D4EFDF",
@@ -62,8 +56,6 @@ export const nephritis = {
   darken3: "#196F3D",
   darken4: "#145A32"
 };
-
-export const nephritisHex = Object.values(nephritis).reverse();
 
 export const peterRiver = {
   lighten5: "#EBF5FB",
@@ -78,8 +70,6 @@ export const peterRiver = {
   darken4: "#1B4F72"
 };
 
-export const peterRiverHex = Object.values(peterRiver).reverse();
-
 export const belizeHole = {
   lighten5: "#EAF2F8",
   lighten4: "#D4E6F1",
@@ -92,8 +82,6 @@ export const belizeHole = {
   darken3: "#1A5276",
   darken4: "#154360"
 };
-
-export const belizeHoleHex = Object.values(belizeHole).reverse();
 
 export const amethyst = {
   lighten5: "#F5EEF8",
@@ -108,8 +96,6 @@ export const amethyst = {
   darken4: "#512E5F"
 };
 
-export const amethystHex = Object.values(amethyst).reverse();
-
 export const wisteria = {
   lighten5: "#F4ECF7",
   lighten4: "#E8DAEF",
@@ -122,8 +108,6 @@ export const wisteria = {
   darken3: "#5B2C6F",
   darken4: "#4A235A"
 };
-
-export const wisteriaHex = Object.values(wisteria).reverse();
 
 export const wetAsphalt = {
   lighten5: "#EBEDEF",
@@ -138,8 +122,6 @@ export const wetAsphalt = {
   darken4: "#1B2631"
 };
 
-export const wetAsphaltHex = Object.values(wetAsphalt).reverse();
-
 export const midnightBlue = {
   lighten5: "#EAECEE",
   lighten4: "#D5D8DC",
@@ -152,8 +134,6 @@ export const midnightBlue = {
   darken3: "#1C2833",
   darken4: "#17202A"
 };
-
-export const midnightBlueHex = Object.values(midnightBlue).reverse();
 
 export const sunflower = {
   lighten5: "#FEF9E7",
@@ -168,8 +148,6 @@ export const sunflower = {
   darken4: "#7D6608"
 };
 
-export const sunflowerHex = Object.values(sunflower).reverse();
-
 export const orange = {
   lighten5: "#FEF5E7",
   lighten4: "#FDEBD0",
@@ -182,8 +160,6 @@ export const orange = {
   darken3: "#9C640C",
   darken4: "#7E5109"
 };
-
-export const orangeHex = Object.values(orange).reverse();
 
 export const carrot = {
   lighten5: "#FDF2E9",
@@ -198,8 +174,6 @@ export const carrot = {
   darken4: "#784212"
 };
 
-export const carrotHex = Object.values(carrot).reverse();
-
 export const pumpkin = {
   lighten5: "#FBEEEE",
   lighten4: "#F6DDCC",
@@ -212,8 +186,6 @@ export const pumpkin = {
   darken3: "#873600",
   darken4: "#6E2C00"
 };
-
-export const pumpkinHex = Object.values(pumpkin).reverse();
 
 export const alizarin = {
   lighten5: "#FDEDCC",
@@ -228,8 +200,6 @@ export const alizarin = {
   darken4: "#78281F"
 };
 
-export const alizarinHex = Object.values(alizarin).reverse();
-
 export const pomegranate = {
   lighten5: "#F9EBEA",
   lighten4: "#F2D7D5",
@@ -242,8 +212,6 @@ export const pomegranate = {
   darken3: "#7B241C",
   darken4: "#641E16"
 };
-
-export const pomegranateHex = Object.values(pomegranate).reverse();
 
 export const clouds = {
   lighten5: "#FDFEFE",
@@ -258,8 +226,6 @@ export const clouds = {
   darken4: "#7B7D7D"
 };
 
-export const cloudsHex = Object.values(clouds).reverse();
-
 export const silver = {
   lighten5: "#F8F9F9",
   lighten4: "#F2F3F4",
@@ -272,8 +238,6 @@ export const silver = {
   darken3: "#797D7F",
   darken4: "#626567"
 };
-
-export const silverHex = Object.values(silver).reverse();
 
 export const concrete = {
   lighten5: "#F4F6F6",
@@ -288,8 +252,6 @@ export const concrete = {
   darken4: "#4D5656"
 };
 
-export const concreteHex = Object.values(concrete).reverse();
-
 export const asbestos = {
   lighten5: "#F2F4F4",
   lighten4: "#E5E8E8",
@@ -303,14 +265,33 @@ export const asbestos = {
   darken4: "#424949"
 };
 
-export const asbestosHex = Object.values(asbestos).reverse();
-
 export const shades = {
   black: "#000000",
   white: "#FFFFFF",
   transparent: "#FFFFFF00"
 };
-export const shadesHex = Object.values(shades).reverse();
+
+const turquoiseHex = Object.values(turquoise).reverse();
+const greenSeaHex = Object.values(greenSea).reverse();
+const emeraldHex = Object.values(emerald).reverse();
+const nephritisHex = Object.values(nephritis).reverse();
+const peterRiverHex = Object.values(peterRiver).reverse();
+const belizeHoleHex = Object.values(belizeHole).reverse();
+const amethystHex = Object.values(amethyst).reverse();
+const wisteriaHex = Object.values(wisteria).reverse();
+const wetAsphaltHex = Object.values(wetAsphalt).reverse();
+const midnightBlueHex = Object.values(midnightBlue).reverse();
+const sunflowerHex = Object.values(sunflower).reverse();
+const orangeHex = Object.values(orange).reverse();
+const carrotHex = Object.values(carrot).reverse();
+const pumpkinHex = Object.values(pumpkin).reverse();
+const alizarinHex = Object.values(alizarin).reverse();
+const pomegranateHex = Object.values(pomegranate).reverse();
+const cloudsHex = Object.values(clouds).reverse();
+const silverHex = Object.values(silver).reverse();
+const concreteHex = Object.values(concrete).reverse();
+const asbestosHex = Object.values(asbestos).reverse();
+const shadesHex = Object.values(shades).reverse();
 
 export const baseColors = [
   { title: "Turquoise", name: "turquoise", base: turquoise.base },
@@ -335,30 +316,30 @@ export const baseColors = [
 ];
 
 export const swatches = [
-  [turquoiseHex],
-  [greenSeaHex],
-  [emeraldHex],
-  [nephritisHex],
-  [peterRiverHex],
-  [belizeHoleHex],
-  [amethystHex],
-  [wisteriaHex],
-  [midnightBlueHex],
-  [sunflowerHex],
-  [orangeHex],
-  [carrotHex],
-  [pumpkinHex],
-  [alizarinHex],
-  [pomegranateHex],
-  [cloudsHex],
-  [silverHex],
-  [concreteHex],
-  [asbestosHex],
-  [shadesHex]
+  alizarinHex,
+  pomegranateHex,
+  wisteriaHex,
+  amethystHex,
+  belizeHoleHex,
+  peterRiverHex,
+  turquoiseHex,
+  greenSeaHex,
+  nephritisHex,
+  emeraldHex,
+  sunflowerHex,
+  orangeHex,
+  carrotHex,
+  pumpkinHex,
+  cloudsHex,
+  silverHex,
+  concreteHex,
+  asbestosHex,
+  midnightBlueHex,
+  shadesHex
 ];
 
 // TODO: flat-colors.js ::: Set proper theme colors. This is just for testing.
-export const theme = {
+export const theme = Object.freeze({
   primary: midnightBlue.base,
   secondary: concrete.base,
   success: amethyst.base,
@@ -367,50 +348,31 @@ export const theme = {
   danger: pomegranate.base,
   light: silver.base,
   dark: asbestos.base
-};
+});
 
 export default {
   turquoise,
-  turquoiseHex,
   greenSea,
-  greenSeaHex,
   emerald,
-  emeraldHex,
   nephritis,
-  nephritisHex,
   peterRiver,
-  peterRiverHex,
   belizeHole,
-  belizeHoleHex,
   amethyst,
-  amethystHex,
   wisteria,
-  wisteriaHex,
   wetAsphalt,
-  wetAsphaltHex,
   midnightBlue,
-  midnightBlueHex,
   sunflower,
-  sunflowerHex,
   orange,
-  orangeHex,
   carrot,
-  carrotHex,
   pumpkin,
-  pumpkinHex,
   alizarin,
-  alizarinHex,
   pomegranate,
-  pomegranateHex,
   clouds,
-  cloudsHex,
   silver,
-  silverHex,
   concrete,
-  concreteHex,
   asbestos,
-  asbestosHex,
   shades,
   baseColors,
+  swatches,
   theme
 };

@@ -9,17 +9,13 @@
   />
 
   <v-container class="fill-height px-12 mx-auto">
-    <!-- [*] ===================== -->
     <!-- [*] TOP ROW - IMAGE CARDS -->
-    <!-- [*] ===================== -->
     <v-expand-transition>
       <template v-if="showImageCards">
         <v-window class="v-container pa-0 mt-2 mb-6 mx-auto" show-arrows>
           <v-window-item v-for="(i, idx1) in Math.ceil(picsum.length / rowNumItems)" :key="`row-${idx1}`">
             <v-row class="flex-1-1-100 align-sm-stretch">
-              <!-- [*] =================== -->
               <!-- [*] IMAGE CARDS -->
-              <!-- [*] =================== -->
               <v-col cols="3" v-for="(k, idx2) in rowNumItems" :key="`util-card-${idx1}-${idx2}`">
                 <SourceImageCard
                   v-if="idx1 * rowNumItems + idx2 < picsum.length"
@@ -42,15 +38,12 @@
     <!-- flex-1-1-100 is required to maintain a 100% width when the dark and light cards are collapsed -->
     <v-row class="flex-1-1-100">
       <!-- [*] PALETTE MENU - LEFT SIDE COLUMN -->
-      <!-- <v-col cols="12" sm="12" md="6" lg="4" xl="3" mobile-break-point="700" class="d-flex flex-column"> -->
       <v-col cols="12" sm="6" md="6" lg="4" xl="3" mobile-break-point="760">
         <!-- [*] SOURCE COLOR ROW -->
         <v-row class="flex-grow-0">
           <v-col>
             <!-- [*] SOURCE COLOR CARD -->
             <v-card class="d-flex flex-column" :color="sourceColor" density="compact" max-height="230">
-              <!-- :height="showVariantInfo ? 230 : auto" -->
-              <!-- :min-height="showVariantInfo ? 200 : auto" -->
               <v-card-item>
                 <v-card-title class="text-subtitle-1">Tonal Palettes</v-card-title>
                 <v-card-subtitle class="text-subtitle-2">Source</v-card-subtitle>
@@ -60,10 +53,8 @@
               </v-card-item>
 
               <v-expand-transition>
-                <!-- <v-card-text style="flex-grow: 1; overflow-y: auto" v-if="showVariantInfo"> -->
                 <v-card-text class="flex-grow-1 overflow-y-auto" v-if="showVariantInfo">
                   <div v-html="selectedVariantDesc()"></div>
-                  <!-- <v-spacer vertical></v-spacer> -->
                 </v-card-text>
               </v-expand-transition>
 
@@ -75,14 +66,11 @@
                   :items="schemeVariants"
                   auto-select-first="exact"
                   variant="outlined"
-                  hide-details
                   density="compact"
+                  hide-details
                   @update:model-value="schemeVariantChangeHandler"
                 >
-                  <!-- NOTE: slot is required to be able to style the v-select menu items (awesome feature!!) -->
-                  <template v-slot:item="{ props, item }">
-                    <v-list-item class="variant-menu-item" v-bind="props" density="compact"></v-list-item>
-                  </template>
+                  <!-- NOTE: v-select menu items (v-list-item) are styled in main.scss -->
                 </v-select>
                 <v-btn icon="mdi-cog" size="small" @click="showSettingsClickHandler"></v-btn>
               </v-card-actions>
@@ -94,9 +82,9 @@
 
         <v-expand-transition>
           <template v-if="showSettings">
+            <!-- NOTE: Adding padding or margin makes the transition jumpy when closing the settings dialog. -->
             <v-row no-gutters>
               <v-col>
-                <!-- NOTE: Adding padding or margin makes the transition jumpy when closing (JS/CSS still 20 years behind Flash/Flex - what a joke) -->
                 <!-- [*] UI SETTINGS CARD -->
                 <v-card variant="tonal">
                   <v-card-item>
@@ -203,14 +191,14 @@
             -->
 
             <!-- [*] PALETTE COLOR ROWS -->
-            <template v-for="(item, idx) in currentScheme.palettes" :key="`palette-color-card-${item.name}-${idx}`">
+            <template v-for="(item, idx) in currentScheme.palettes" :key="`palette-core-card-${item.name}-${idx}`">
               <v-row>
                 <v-col class="py-1">
                   <!-- [*] PALETTE COLOR MENU CARD -->
                   <PaletteItemCard
                     :palette="item"
                     :paletteIndex="idx"
-                    :show-random="item.isSource"
+                    v-model:swatch-preset="swatchPreset"
                     v-model:expanded-index="expandedPaletteIndex"
                     @update:expanded-index="paletteExpandedUpdateHandler($event, idx)"
                     @click:random="randomButtonClickHandler"
@@ -228,7 +216,7 @@
                   <PaletteItemCard
                     :palette="item"
                     :paletteIndex="currentScheme.palettes.length + idx"
-                    :show-random="false"
+                    v-model:swatch-preset="swatchPreset"
                     v-model:expanded-index="expandedPaletteIndex"
                     @update:expanded-index="paletteExpandedUpdateHandler($event, idx)"
                     @update:blend="paletteBlendUpdateHandler(item.name, item.blend)"
@@ -414,6 +402,7 @@
     showVariantInfo,
     showPaletteCards,
     expandThemeCards,
+    swatchPreset,
     showDarkThemeCard,
     showLightThemeCard,
     currentVariant,
@@ -584,6 +573,12 @@
     console.log(" - expandedPaletteIndex: ", expandedPaletteIndex.value);
   }
 
+  // function paletteSwatchPresetChangeHandler(value) {
+  //   console.log("UtilitiesView ::: paletteSwatchPresetChangeHandler");
+  //   console.log(" - value: ", value);
+  //   console.log(" - store swatchPreset value: ", swatchPreset.value);
+  // }
+
   function paletteBlendUpdateHandler(name, blend) {
     console.log("UtilitiesView ::: paletteBlendUpdateHandler");
     console.log(" - name: ", name);
@@ -746,18 +741,6 @@
 </script>
 
 <style lang="scss">
-  /**
-   * Styles for the `Scheme Variant` dropdown menu items (v-select).
-   */
-  .variant-menu-item {
-    font-size: 0.9rem !important;
-    font-weight: normal !important;
-    .v-list-item-title {
-      font-size: 0.9rem !important;
-      font-weight: normal !important;
-    }
-  }
-
   .settings-label {
     label {
       font-size: 0.9rem !important;

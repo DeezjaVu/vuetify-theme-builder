@@ -8,13 +8,13 @@
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 
+// Custom styles
+import "@/styles/main.scss";
+
 // Composables
 import { createVuetify } from "vuetify";
 import { VNumberInput } from "vuetify/labs/components";
 import VuetifyTheme from "./vuetify-theme";
-
-// Custom styles
-import "@/styles/main.scss";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({

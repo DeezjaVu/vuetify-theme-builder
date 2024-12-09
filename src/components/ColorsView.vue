@@ -1,10 +1,10 @@
 <template>
-  <v-container class="fill-height px-12 mx-auto">
+  <v-container class="fill-height align-baseline px-12 mx-auto">
     <!-- TODO: look into using the v-row component styles from vuetify docs -->
     <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">
       <!-- LEFT SIDE COLUMN - COLOR MENU -->
-      <v-col cols="3" class="d-flex flex-column">
+      <v-col cols="12" sm="6" md="6" lg="4" xl="3" class="d-flex flex-column">
         <!-- COLOR DIALOG -->
         <!-- :modal-color-open="modalColorOpen" -->
         <ColorDialog
@@ -12,62 +12,111 @@
           v-model="modalColorOpen"
           :color-name="selectedColorName"
           v-model:picker-color="selectedColor"
+          v-model:swatch-preset="selectedSwatches"
           @update:picker-color="editColorChangeHandler"
+          @update:swatch-preset="swatchPresetChangeHandler"
           @update="editColorUpdateHandler"
           @cancel="editColorCancelHandler"
         />
         <!-- THEME COLORS LIST MENU -->
         <!-- <v-card title="Theme Colors" subtitle="Material Design" variant="outlined"> -->
-        <v-card class="bg-surface">
+        <v-card class="bg-surface" density="compact">
           <!-- V-CARD HEADER -->
           <v-card-item>
             <v-card-title> Theme Colors </v-card-title>
             <v-card-subtitle> Material Design </v-card-subtitle>
             <template v-slot:append>
-              <!-- Offset button bottom-margin by 24px (mb-6) to place it in line with the card title -->
-              <!-- <v-btn icon="mdi-palette" variant="tonal" density="comfortable" class="mb-6" /> -->
-              <v-btn icon density="compact" class="mb-6">
-                <v-icon>mdi-dots-vertical</v-icon>
-                <v-menu activator="parent" location="end" open-on-hover>
-                  <v-list density="comfortable" @update:selected="presetSwatchesUpdateHandler">
-                    <v-list-item
-                      v-for="(item, index) in presetSwatches"
-                      :key="index"
-                      :value="item.value"
-                      @click="presetSwatchesClickHandler(item.value)"
-                    >
-                      <v-list-item-title>{{ item.title }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-btn>
+              <!-- <v-btn icon="mdi-palette" variant="tonal" density="comfortable" /> -->
+              <v-btn icon="mdi-cog" size="small" variant="plain" @click="showSettings = !showSettings"> </v-btn>
             </template>
           </v-card-item>
-
-          <!-- V-CARD TEXT -->
-          <v-card-text class="my-2">
-            <template v-for="item in paletteColors" :key="item.name">
-              <v-row>
-                <v-col class="py-1">
-                  <!-- PALETTE COLOR CARD -->
-                  <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
-                    <v-card-item class="px-3">
-                      <template #prepend>
-                        <v-btn class="mr-4" :color="themeColors[item.name]" icon @click="editColorClickHandler(item.name)"></v-btn>
-                      </template>
-                      <v-card-title class="text-body-1 font-weight-light d-sm-none d-md-none d-lg-flex">
-                        {{ item.title }}
-                      </v-card-title>
-                      <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light d-sm-none d-md-none d-lg-flex">
-                        {{ themeColors[item.name] }}
-                      </v-card-subtitle>
+          <!-- SETTINGS -->
+          <v-expand-transition>
+            <template v-if="showSettings">
+              <v-row no-gutters>
+                <v-col>
+                  <v-card variant="tonal">
+                    <v-card-item>
+                      <v-card-title class="text-subtitle-1"> Settings </v-card-title>
                     </v-card-item>
+
+                    <v-card-text class="">
+                      <v-select
+                        label="Theme Preset"
+                        v-model="selectedThemePreset"
+                        :items="presetThemes"
+                        auto-select-first="exact"
+                        variant="outlined"
+                        hide-details
+                        density="compact"
+                        @update:model-value="themePresetChangeHandler"
+                      >
+                        <!-- NOTE: v-select menu items (v-list-item) are styled in main.scss -->
+                        <template v-slot:append>
+                          <v-btn icon="mdi-reload" size="small" variant="plain" @click="themePresetResetHandler"></v-btn>
+                        </template>
+                      </v-select>
+                    </v-card-text>
+                  </v-card>
+                  <v-card variant="tonal">
+                    <v-card-item>
+                      <v-card-title class="text-subtitle-1"> Color Picker </v-card-title>
+                    </v-card-item>
+
+                    <v-card-text class="">
+                      <v-select
+                        label="Swatch Colors"
+                        v-model="selectedSwatches"
+                        :items="presetSwatches"
+                        auto-select-first="exact"
+                        variant="outlined"
+                        hide-details
+                        density="compact"
+                        @update:model-value="swatchPresetChangeHandler"
+                      >
+                        <!-- NOTE: v-select menu items (v-list-item) are styled in main.scss -->
+                        <template v-slot:append>
+                          <v-btn
+                            icon="mdi-information-slab-circle-outline"
+                            size="small"
+                            variant="plain"
+                            @click="swatchPresetInfoHandler"
+                          ></v-btn>
+                        </template>
+                      </v-select>
+                    </v-card-text>
                   </v-card>
                 </v-col>
               </v-row>
             </template>
-            <!-- </v-responsive> -->
-          </v-card-text>
+          </v-expand-transition>
+          <v-row no-gutters>
+            <v-col>
+              <!-- PALETTE COLORS -->
+              <v-card-text class="my-2">
+                <template v-for="item in paletteColors" :key="item.name">
+                  <v-row>
+                    <v-col class="py-1">
+                      <!-- PALETTE COLOR CARD -->
+                      <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                        <v-card-item class="px-3">
+                          <template #prepend>
+                            <v-btn class="mr-4" :color="themeColors[item.name]" icon @click="editColorClickHandler(item.name)"></v-btn>
+                          </template>
+                          <v-card-title class="text-body-1 font-weight-light">
+                            {{ item.title }}
+                          </v-card-title>
+                          <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
+                            {{ themeColors[item.name] }}
+                          </v-card-subtitle>
+                        </v-card-item>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </template>
+              </v-card-text>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
 
@@ -100,17 +149,11 @@
 
   import { useBuilderThemeStore } from "@/stores/builder-theme";
 
-  import { blue, blueHex } from "@/utils/color/bootstrap-colors";
-
   console.log("=========================");
   console.log("ColorsView ::: setup");
   console.log("=========================");
 
-  const bsBlue = blue;
-  console.log("ColorsView ::: bsBlue: ", bsBlue);
-
-  const bsBlueHex = blueHex;
-  console.log("ColorsView ::: bsBlueHex: ", bsBlueHex);
+  const showSettings = ref(false);
 
   const themeStore = useBuilderThemeStore();
 
@@ -129,28 +172,23 @@
   const selectedColorName = ref("");
 
   const presetThemes = [
-    { title: "Material Design (default)" },
-    { title: "Bootswatch Darkly" },
-    { title: "Bootstrap 5 Dark" },
-    { title: "Bootstrap 5 Light" }
-  ];
-
-  const presetSwatches = [
     { title: "Material Design (default)", value: "material" },
-    { title: "Flat Colors", value: "flat" },
-    { title: "Bootstrap Colors", value: "bootstrap" }
+    { title: "Bootswatch Darkly", value: "bsDarkly" },
+    { title: "Bootstrap 5 Dark", value: "bsDark" },
+    { title: "Bootstrap 5 Light", value: "bsLight" }
   ];
+  const selectedThemePreset = ref("material");
 
-  const menuItems = [
-    { title: "Primary Color", value: "primary" },
-    { title: "Secondary Color", value: "secondary" },
-    { title: "Surface Color", value: "surface" },
-    { title: "Background Color", value: "background" },
-    { title: "Success Color", value: "success" },
-    { title: "Info Color", value: "info" },
-    { title: "Warning Color", value: "warning" },
-    { title: "Error Color", value: "error" }
-  ];
+  const presetSwatches = ref([
+    { title: "Material Design (default)", value: "material" },
+    { title: "Bootstrap", value: "bootstrap" },
+    { title: "PrimeView", value: "primeview" },
+    { title: "Tailwind", value: "tailwind" },
+    { title: "Flat", value: "flat" },
+    { title: "Metro UI", value: "metro" }
+  ]);
+
+  const selectedSwatches = ref("material");
 
   const paletteColors = reactive([
     { title: "Primary", name: "primary", hex: "#2196F3" },
@@ -179,8 +217,18 @@
     console.log(" - themeStore - currentThemeName: ", themeStore.currentThemeName);
   });
 
-  function presetSwatchesUpdateHandler(value) {
-    console.log("ColorsView ::: presetSwatchesUpdateHandler");
+  function themePresetChangeHandler(value) {
+    console.log("ColorsView ::: themePresetChangeHandler");
+    console.log(" - value: ", value);
+  }
+
+  function themePresetResetHandler() {
+    console.log("ColorsView ::: themePresetResetHandler");
+    console.log(" - selectedThemePreset: ", selectedThemePreset.value);
+  }
+
+  function swatchPresetChangeHandler(value) {
+    console.log("ColorsView ::: swatchPresetChangeHandler");
     console.log(" - value: ", value);
     if (value === "material") {
       //
@@ -191,16 +239,9 @@
     }
   }
 
-  function presetSwatchesClickHandler(value) {
-    console.log("ColorsView ::: presetSwatchesClickHandler");
-    console.log(" - value: ", value);
-    if (value === "material") {
-      //
-    } else if (value === "flat") {
-      //
-    } else if (value === "bootstrap") {
-      //
-    }
+  function swatchPresetInfoHandler() {
+    console.log("ColorsView ::: swatchPresetInfoHandler");
+    console.log(" - selectedSwatches: ", selectedSwatches.value);
   }
 
   /**
@@ -241,7 +282,6 @@
    * Closes the modal and does not update the theme color,
    * as the color was already changed in the `editColorChangeHandler` event handler.
    *
-   * @since 0.0.1
    * @param {string} color - The color entered in the modal.
    */
   function editColorUpdateHandler(color) {
@@ -257,7 +297,6 @@
    *
    * Sets the theme color back to its original value before the modal was opened.
    *
-   * @since 0.0.1
    */
   function editColorCancelHandler() {
     console.log("ColorsView ::: editColorCancelHandler");

@@ -117,7 +117,8 @@ class MaterialTheme {
       "#01638d",
       "#8bb29c",
       "#CB4994",
-      "#A7637A"
+      "#A7637A",
+      "#7C8255"
     ];
   }
 }
@@ -356,6 +357,11 @@ export const useMaterialThemeStore = defineStore(
     const showLightThemeCard = ref(true);
 
     /**
+     * The current swatch colors preset.
+     */
+    const swatchPreset = ref("material");
+
+    /**
      * Whether or not to include "on-" colors in the generated theme.
      *
      * When set to false, the final theme will not include on-colors and
@@ -588,6 +594,7 @@ export const useMaterialThemeStore = defineStore(
       showVariantInfo,
       showPaletteCards,
       expandThemeCards,
+      swatchPreset,
       showDarkThemeCard,
       showLightThemeCard,
       schemeVariants,

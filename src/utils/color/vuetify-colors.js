@@ -1,4 +1,16 @@
-import colors from "vuetify/lib/util/colors";
+// import colors from "vuetify/lib/util/colors";
+
+/**
+ * Vuetify Material Colors
+ *
+ * This is a copy of the built-in Vuetify colors (vuetify/lib/util/colors).
+ * The color objects have been re-arranged, with the `base` color property
+ * sitting between the `lighten1` and `darken1` property instead of having it at the top.
+ *
+ * The `accent` properties have also been removed.
+ *
+ * @see https://vuetifyjs.com/en/styles/colors
+ */
 
 export const red = {
   lighten5: "#ffebee",
@@ -11,10 +23,10 @@ export const red = {
   darken2: "#d32f2f",
   darken3: "#c62828",
   darken4: "#b71c1c"
-  // accent1: '#ff8a80',
-  // accent2: '#ff5252',
-  // accent3: '#ff1744',
-  // accent4: '#d50000'
+  // accent1: "#ff8a80",
+  // accent2: "#ff5252",
+  // accent3: "#ff1744",
+  // accent4: "#d50000",
 };
 
 export const pink = {
@@ -28,10 +40,10 @@ export const pink = {
   darken2: "#c2185b",
   darken3: "#ad1457",
   darken4: "#880e4f"
-  // accent1: '#ff80ab',
-  // accent2: '#ff4081',
-  // accent3: '#f50057',
-  // accent4: '#c51162'
+  // accent1: "#ff80ab",
+  // accent2: "#ff4081",
+  // accent3: "#f50057",
+  // accent4: "#c51162",
 };
 
 export const purple = {
@@ -45,10 +57,10 @@ export const purple = {
   darken2: "#7b1fa2",
   darken3: "#6a1b9a",
   darken4: "#4a148c"
-  // accent1: '#ea80fc',
-  // accent2: '#e040fb',
-  // accent3: '#d500f9',
-  // accent4: '#aa00ff'
+  // accent1: "#ea80fc",
+  // accent2: "#e040fb",
+  // accent3: "#d500f9",
+  // accent4: "#aa00ff",
 };
 
 export const deepPurple = {
@@ -62,10 +74,10 @@ export const deepPurple = {
   darken2: "#512da8",
   darken3: "#4527a0",
   darken4: "#311b92"
-  // accent1: '#b388ff',
-  // accent2: '#7c4dff',
-  // accent3: '#651fff',
-  // accent4: '#6200ea'
+  // accent1: "#b388ff",
+  // accent2: "#7c4dff",
+  // accent3: "#651fff",
+  // accent4: "#6200ea",
 };
 
 export const indigo = {
@@ -317,10 +329,58 @@ export const grey = {
 //   transparent: "#ffffff00"
 // };
 
-export const redHex = Object.values(red).reverse();
-export const greenHex = Object.values(green).reverse();
+const redHex = Object.values(red).reverse();
+const pinkHex = Object.values(pink).reverse();
+const purpleHex = Object.values(purple).reverse();
+const deepPurpleHex = Object.values(deepPurple).reverse();
+const indigoHex = Object.values(indigo).reverse();
+const blueHex = Object.values(blue).reverse();
+const lightBlueHex = Object.values(lightBlue).reverse();
+const cyanHex = Object.values(cyan).reverse();
+const tealHex = Object.values(teal).reverse();
+const greenHex = Object.values(green).reverse();
+const lightGreenHex = Object.values(lightGreen).reverse();
+const limeHex = Object.values(lime).reverse();
+const yellowHex = Object.values(yellow).reverse();
+const amberHex = Object.values(amber).reverse();
+const orangeHex = Object.values(orange).reverse();
+const deepOrangeHex = Object.values(deepOrange).reverse();
+const brownHex = Object.values(brown).reverse();
+const blueGreyHex = Object.values(blueGrey).reverse();
+const greyHex = Object.values(grey).reverse();
 
-export const swatches = [redHex, greenHex];
+export const swatches = [
+  redHex,
+  pinkHex,
+  purpleHex,
+  deepPurpleHex,
+  indigoHex,
+  blueHex,
+  lightBlueHex,
+  cyanHex,
+  tealHex,
+  greenHex,
+  lightGreenHex,
+  limeHex,
+  yellowHex,
+  amberHex,
+  orangeHex,
+  deepOrangeHex,
+  brownHex,
+  blueGreyHex,
+  greyHex
+];
 
-export default { red, redHex, greenHex, swatches };
-// export { shades } from "vuetify/lib/util/colors";
+// TODO: @vuetify-colors ::: set proper theme colors. This is just for testing.
+export const theme = {
+  primary: blue.base,
+  secondary: grey.darken1, //"#6C757D",
+  success: green.base, //"#198754",
+  info: cyan.base, //"#0DCAF0",
+  warning: yellow.base, //"#FFC107",
+  danger: red.base, //"#DC3545",
+  light: "#F8F9FA",
+  dark: "#212529"
+};
+
+export default { swatches, theme };

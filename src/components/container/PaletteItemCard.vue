@@ -2,14 +2,16 @@
   <!-- COLOR DIALOG MODAL -->
   <!-- id="palette-item-color-dialog" -->
   <ColorDialog
-    v-model="paletteModalOpen"
     :color-name="palette.name"
+    v-model="paletteModalOpen"
     v-model:picker-color="inputHex"
+    v-model:swatch-preset="swatchPreset"
     persistent
     @update:picker-color="paletteModalChangeHandler"
     @update="paletteModalUpdateHandler"
     @cancel="paletteModalCancelHandler"
   />
+  <!-- @update:swatch-preset="swatchPresetChangeHandler" -->
   <!-- PALETTE COLOR CARD -->
   <v-card
     :class="{
@@ -62,8 +64,8 @@
           ></v-text-field>
         </template>
       </v-card-subtitle>
-      <!-- [*] RANDOM COLOR BUTTON -->
-      <template #append v-if="showRandom">
+      <!-- [*] RANDOM COLOR BUTTON (only for source palette) -->
+      <template #append v-if="palette.isSource">
         <v-tooltip text="Random color." close-on-content-click v-model="randomTooltipOpen" @update:model-value="randomTooltipUpdateHandler">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -216,18 +218,18 @@
 <script setup>
   import { ref, onMounted, computed, toRefs, watch, warn } from "vue";
   import { Hct, hexFromArgb, TonalPalette } from "@material/material-color-utilities";
-  import { hctForHue, hexForHue } from "@/utils/hct/hct-utils.js";
+  import { hexForHue } from "@/utils/hct/hct-utils.js";
   import tinycolor from "tinycolor2";
   import PaletteCore from "@/utils/palettes/palette-core";
   import PaletteCustom from "@/utils/palettes/palette-custom";
 
   const props = defineProps({
     palette: PaletteCore | PaletteCustom,
-    paletteIndex: Number,
-    showRandom: Boolean
+    paletteIndex: Number
   });
 
   const expandedIndex = defineModel("expandedIndex");
+  const swatchPreset = defineModel("swatchPreset", { default: "material" });
 
   const emit = defineEmits(["click:random", "click:reset", "click:apply", "update:blend"]);
 
@@ -240,6 +242,8 @@
   const tempHex = ref("");
 
   const paletteRef = toRefs(props).palette;
+
+  // const swatchPresetRef = toRefs(props).swatchPreset;
 
   const currentHct = ref(null);
 
@@ -313,6 +317,9 @@
 
   onMounted(() => {
     // console.log("PaletteItemCard ::: onMounted");
+
+    // console.log(" - props.palette.isSource: ", props.palette.isSource);
+    // console.log(" - swatchPreset: ", swatchPreset.value);
 
     // Get references to slider DOM elements via their ref attribute.
 
@@ -539,6 +546,12 @@
     setSliderValues();
     updateSliderBackgrounds();
   }
+
+  // function swatchPresetChangeHandler(value) {
+  //   console.log("PaletteItemCard ::: swatchPresetChangeHandler");
+  //   console.log(" - value: ", value);
+  //   console.log(" - swatchPreset value: ", swatchPreset.value);
+  // }
 
   function paletteModalUpdateHandler() {
     // console.log("PaletteItemCard ::: paletteModalUpdateHandler");

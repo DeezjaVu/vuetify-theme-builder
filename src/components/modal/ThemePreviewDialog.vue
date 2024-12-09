@@ -14,6 +14,7 @@
             density="compact"
             variant="outlined"
             max-width="120"
+            size="slim"
             hide-details
           ></v-select>
           <v-toolbar-items>
@@ -91,8 +92,8 @@
                         :items="cardVariants"
                         auto-select-first="exact"
                         variant="outlined"
-                        hide-details
                         density="compact"
+                        hide-details
                       ></v-select>
                       <v-spacer></v-spacer>
                       <v-btn>Cancel</v-btn>
