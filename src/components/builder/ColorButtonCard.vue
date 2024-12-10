@@ -23,21 +23,6 @@
 <script setup>
   import { ref, onMounted } from "vue";
 
-  const props = defineProps({
-    /**
-     * @type {string}
-     * @values elevated, flat, outlined, plain, tonal, text
-     */
-    "btn-variant": {
-      type: String,
-      default: "elevated",
-      validator(value, props) {
-        // The value must match one of these strings
-        return ["elevated", "flat", "outlined", "plain", "tonal", "text"].includes(value);
-      }
-    }
-  });
-
   const btnsList = [
     {
       text: "Primary",

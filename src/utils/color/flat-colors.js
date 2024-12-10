@@ -294,25 +294,26 @@ const asbestosHex = Object.values(asbestos).reverse();
 const shadesHex = Object.values(shades).reverse();
 
 export const baseColors = [
+  { title: "Alizarin", name: "alizarin", base: alizarin.base },
+  { title: "Pomegranate", name: "pomegranate", base: pomegranate.base },
+  { title: "Wisteria", name: "wisteria", base: wisteria.base },
+  { title: "Amethyst", name: "amethyst", base: amethyst.base },
+  { title: "Belize Hole", name: "belizeHole", base: belizeHole.base },
+  { title: "Peter River", name: "peterRiver", base: peterRiver.base },
   { title: "Turquoise", name: "turquoise", base: turquoise.base },
   { title: "Green Sea", name: "greenSea", base: greenSea.base },
-  { title: "Emerald", name: "emerald", base: emerald.base },
   { title: "Nephritis", name: "nephritis", base: nephritis.base },
-  { title: "Peter River", name: "peterRiver", base: peterRiver.base },
-  { title: "Belize Hole", name: "belizeHole", base: belizeHole.base },
-  { title: "Amethyst", name: "amethyst", base: amethyst.base },
-  { title: "Wisteria", name: "wisteria", base: wisteria.base },
-  { title: "Midnight Blue", name: "midnightBlue", base: midnightBlue.base },
+  { title: "Emerald", name: "emerald", base: emerald.base },
   { title: "Sunflower", name: "sunflower", base: sunflower.base },
   { title: "Orange", name: "orange", base: orange.base },
   { title: "Carrot", name: "carrot", base: carrot.base },
   { title: "Pumpkin", name: "pumpkin", base: pumpkin.base },
-  { title: "Alizarin", name: "alizarin", base: alizarin.base },
-  { title: "Pomegranate", name: "pomegranate", base: pomegranate.base },
-  { title: "Clouds", name: "clouds", base: clouds.base },
-  { title: "Silver", name: "silver", base: silver.base },
+  { title: "Midnight Blue", name: "midnightBlue", base: midnightBlue.base },
+  { title: "Wet Asphalt", name: "wetAsphalt", base: wetAsphalt.base },
+  { title: "Asbestos", name: "asbestos", base: asbestos.base },
   { title: "Concrete", name: "concrete", base: concrete.base },
-  { title: "Asbestos", name: "asbestos", base: asbestos.base }
+  { title: "Silver", name: "silver", base: silver.base },
+  { title: "Clouds", name: "clouds", base: clouds.base }
 ];
 
 export const swatches = [
@@ -330,11 +331,12 @@ export const swatches = [
   orangeHex,
   carrotHex,
   pumpkinHex,
-  cloudsHex,
-  silverHex,
-  concreteHex,
-  asbestosHex,
   midnightBlueHex,
+  wetAsphaltHex,
+  asbestosHex,
+  concreteHex,
+  silverHex,
+  cloudsHex,
   shadesHex
 ];
 

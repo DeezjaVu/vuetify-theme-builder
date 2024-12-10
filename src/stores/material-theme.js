@@ -252,7 +252,7 @@ const useMaterialStore = defineStore("materialStore", () => {
 
 // Pinia: https://pinia.esm.dev/
 export const useMaterialThemeStore = defineStore(
-  "materialTheme",
+  "materialThemeStore",
   () => {
     //[-]============================
     //[-] STATE (PROPERTIES)

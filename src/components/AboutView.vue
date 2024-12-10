@@ -128,10 +128,10 @@
   import { onMounted, ref } from "vue";
   import * as bootstrap from "@/utils/color/bootstrap-colors";
   import { mix, darken, lighten, parseColor, RGBtoHex } from "@/utils/colorUtils.js";
-  import { useAppStore } from "@/stores/app";
+  import { useBuilderAppStore } from "@/stores/builder-app";
   import { useBuilderColorsStore } from "@/stores/builder-colors";
 
-  const appStore = useAppStore();
+  const appStore = useBuilderAppStore();
   const colorsStore = useBuilderColorsStore();
 
   const flatColorsHex = appStore.flatColorsHex;

@@ -1,19 +1,36 @@
 <template>
   <!-- MODAL COLOR DIALOG -->
-  <v-dialog class="position-modal-picker" absolute scrim="false" opacity="0.1" max-width="348" @update:model-value="dialogUpdateHandler">
-    <v-card flat>
+  <v-dialog
+    class="position-modal-picker"
+    :max-width="smAndUp ? 348 : `100%`"
+    opacity="0.10"
+    absolute
+    :fullscreen="!smAndUp"
+    @update:model-value="dialogUpdateHandler"
+  >
+    <v-card density="compact">
       <!-- V-CARD HEADER -->
-      <drag-modal
-        modal-id="color-dialog-item"
-        @modal:drag-start="headerDragStartHandler"
-        @modal:drag-move="headerDragMoveHandler"
-        @modal:drag-end="headerDragEndHandler"
-      >
-        <v-card-item v-bind="props">
-          <v-card-title> Select Color </v-card-title>
+      <template v-if="smAndUp">
+        <!-- FIXME: Fix DragModal for mobile (disable dragging) -->
+        <drag-modal modal-id="color-dialog-item">
+          <!-- 
+            @modal:drag-start="headerDragStartHandler"
+            @modal:drag-move="headerDragMoveHandler"
+            @modal:drag-end="headerDragEndHandler" 
+            -->
+          <v-card-item>
+            <v-card-title class="text-title-1"> Select Color </v-card-title>
+            <v-card-subtitle> {{ props.colorName }} </v-card-subtitle>
+          </v-card-item>
+        </drag-modal>
+      </template>
+      <!-- NOTE: For mobile -->
+      <template v-else>
+        <v-card-item>
+          <v-card-title class="text-title-1"> Select Color </v-card-title>
           <v-card-subtitle> {{ props.colorName }} </v-card-subtitle>
         </v-card-item>
-      </drag-modal>
+      </template>
 
       <!-- V-CARD TEXT -->
       <v-card-text class="pb-2">
@@ -36,6 +53,8 @@
           v-model="pickerColor"
           :modes="cpModes"
           :swatches="cpSwatches"
+          :width="smAndUp ? 300 : `100%`"
+          :max-width="smAndUp ? 300 : `100%`"
           swatches-max-height="300"
           hide-sliders
           show-swatches
@@ -54,6 +73,8 @@
 
 <script setup>
   import { ref, onMounted, computed } from "vue";
+  import { useDisplay } from "vuetify";
+
   import vuetifyColors from "@/utils/color/vuetify-colors";
   import bootstrapColors from "@/utils/color/bootstrap-colors";
   import tailwindColors from "@/utils/color/tailwind-colors";
@@ -75,6 +96,8 @@
   const pickerColor = defineModel("pickerColor");
   const swatchPreset = defineModel("swatchPreset", { default: "material" });
 
+  const { mobile, smAndUp } = useDisplay();
+
   const cpModes = ["hex"];
 
   const presetSwatches = ref([
@@ -85,7 +108,6 @@
     { title: "Flat", value: "flat", swatches: flatColors.swatches },
     { title: "Metro UI", value: "metro", swatches: metroColors.swatches }
   ]);
-  // const selectedSwatches = ref("material");
 
   // const cpSwatches = ref(vuetifyColors.swatches);
   const cpSwatches = computed(() => {
@@ -114,19 +136,19 @@
     // emit("change", value);
   }
 
-  function headerDragStartHandler() {
-    // console.log("ColorDialog ::: headerDragStartHandler");
-  }
+  // function headerDragStartHandler() {
+  // console.log("ColorDialog ::: headerDragStartHandler");
+  // }
 
-  function headerDragMoveHandler(pos) {
-    // console.log("ColorDialog ::: headerDragMoveHandler");
-    // console.log(" - pos: ", pos);
-  }
+  // function headerDragMoveHandler(pos) {
+  // console.log("ColorDialog ::: headerDragMoveHandler");
+  // console.log(" - pos: ", pos);
+  // }
 
-  function headerDragEndHandler(pos) {
-    // console.log("ColorDialog ::: headerDragEndHandler");
-    // console.log(" - pos: ", pos);
-  }
+  // function headerDragEndHandler(pos) {
+  // console.log("ColorDialog ::: headerDragEndHandler");
+  // console.log(" - pos: ", pos);
+  // }
 
   // function pickerUpdateHandler(color) {
   // console.log("ColorDialog ::: pickerUpdateHandler");
@@ -150,8 +172,15 @@
 
 <style lang="scss">
   .position-modal-picker > .v-overlay__content {
-    left: 20px;
-    top: 80px;
+    left: 0px;
+    top: 0px;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .position-modal-picker > .v-overlay__content {
+      left: 20px;
+      top: 80px;
+    }
   }
 
   .modal-color-picker {

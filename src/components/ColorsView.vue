@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height align-baseline px-12 mx-auto">
+  <v-container class="fill-height align-baseline px-2 px-sm-12 mx-auto">
     <!-- TODO: look into using the v-row component styles from vuetify docs -->
     <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">
@@ -41,6 +41,19 @@
                     </v-card-item>
 
                     <v-card-text class="">
+                      <v-radio-group
+                        label="Theme"
+                        class="text-label-1"
+                        v-model="selectedTheme"
+                        color="warning"
+                        density="comfortable"
+                        inline
+                        :ripple="false"
+                      >
+                        <v-radio class="text-label-2 mr-2" label="Builder Light" value="builder-light"></v-radio>
+                        <v-radio class="text-label-2 mr-2" label="Builder Dark" value="builder-dark"></v-radio>
+                      </v-radio-group>
+
                       <v-select
                         label="Theme Preset"
                         v-model="selectedThemePreset"
@@ -57,8 +70,7 @@
                         </template>
                       </v-select>
                     </v-card-text>
-                  </v-card>
-                  <v-card variant="tonal">
+
                     <v-card-item>
                       <v-card-title class="text-subtitle-1"> Color Picker </v-card-title>
                     </v-card-item>
@@ -130,7 +142,7 @@
               <v-row class="d-flex flex-wrap">
                 <!-- COLOR BUTTON CARDS LOOP -->
                 <v-col v-for="item in variantCards" :key="item" lg="4" xl="2">
-                  <ColorButtonCard :subtitle="item.title" :btn-variant="item.variant" />
+                  <ColorButtonCard :subtitle="item.title" />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -153,14 +165,16 @@
   console.log("ColorsView ::: setup");
   console.log("=========================");
 
-  const showSettings = ref(false);
-
   const themeStore = useBuilderThemeStore();
-
   const themeInstance = themeStore.themeInstance;
   console.log("ColorsView ::: themeInstance: ", themeInstance);
 
+  const showSettings = ref(false);
+
   const modalColorOpen = ref(false);
+
+  const darkTheme = ref(true);
+  const selectedTheme = ref("builder-dark");
 
   const builderThemeDark = themeStore.builderDark;
   const builderThemeLight = themeStore.builderLight;
@@ -216,6 +230,11 @@
     let colors = builderThemeDark.colors;
     console.log(" - themeStore - currentThemeName: ", themeStore.currentThemeName);
   });
+
+  function darkThemeChangeHandler(value) {
+    console.log("ColorsView ::: darkThemeChangeHandler");
+    console.log(" - value: ", value);
+  }
 
   function themePresetChangeHandler(value) {
     console.log("ColorsView ::: themePresetChangeHandler");
@@ -319,10 +338,38 @@
     opacity: 0 !important;
   }
 
+  .text-label-1 {
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    :deep(.v-label) {
+      font-size: 0.9rem !important;
+      font-weight: 400 !important;
+      color: #ffffff;
+      opacity: 1 !important;
+    }
+  }
+
+  .text-label-2 {
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    :deep(.v-label) {
+      font-size: 0.875rem !important;
+      font-weight: 400 !important;
+      color: #ffffff !important;
+      opacity: 1 !important;
+    }
+  }
+
+  // Remove margin between radio group label and radio controls
+  .v-radio-group > :deep(.v-input__control) > .v-label + .v-selection-control-group {
+    margin-top: 0 !important;
+  }
+
   // sets border color of outlined v-card
   .v-card--variant-outlined {
     border: thin solid #37474f !important;
   }
+
   .col-grow-2 {
     flex-grow: 2;
   }

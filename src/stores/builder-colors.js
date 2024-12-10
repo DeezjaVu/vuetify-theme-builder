@@ -1,5 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 
 // Vuetify material colors.
 import colors from "vuetify/lib/util/colors";
@@ -32,22 +33,22 @@ import greyscale from "@/utils/color/greyscale";
 const materialColors = colors;
 
 // Pinia: https://pinia.esm.dev/
-export const useBuilderColorsStore = defineStore("builderColors", {
-  /**
-   * The state of the application.
-   * This is the store's primary data source.
-   *
-   */
-  state: () => ({
+export const useBuilderColorsStore = defineStore(
+  "builderColorsStore",
+  () => {
+    //[-]============================
+    //[-] STATE (PROPERTIES)
+    //[-]============================
+
     /**
      * Vuetify Material colors.
      */
-    colors: materialColors,
+    // const colors = ref(materialColors);
 
     /**
      * Bootswatch Darkly colors.
      */
-    bsDarkly: {
+    const bsDarkly = ref({
       "bs-blue": "#375a7f",
       "bs-indigo": "#6610f2",
       "bs-purple": "#6f42c1",
@@ -79,9 +80,9 @@ export const useBuilderColorsStore = defineStore("builderColors", {
       "bs-danger": "#e74c3c",
       "bs-light": "#adb5bd",
       "bs-dark": "#303030"
-    },
+    });
 
-    bsDarklyHex: [
+    const bsDarklyHex = ref([
       [
         "#375A7F",
         "#6610F2",
@@ -99,29 +100,16 @@ export const useBuilderColorsStore = defineStore("builderColors", {
       ],
       ["#303030", "#F8F9FA", "#EBEBEB", "#DEE2E6", "#CED4DA", "#ADB5BD", "#888888", "#444444", "#303030", "#222222"],
       ["#375A7F", "#444444", "#00BC8C", "#3498DB", "#F39C12", "#E74C3C", "#ADB5BD", "#303030"]
-    ],
+    ]);
 
-    materialRedHex: [
+    const materialRedHex = ref([
       [colors.red.base, colors.red.lighten5, colors.red.lighten4, colors.red.lighten3, colors.red.lighten2, colors.red.lighten1],
       [colors.red.darken1, colors.red.darken2, colors.red.darken3, colors.red.darken4],
       [colors.red.accent1, colors.red.accent2, colors.red.accent3, colors.red.accent4]
-    ],
-
-    // ColorPicker default color order (columns)
-    // materialBaseHex: [
-    //   [colors.red.base, colors.pink.base],
-    //   [colors.purple.base, colors.deepPurple.base],
-    //   [colors.indigo.base, colors.blue.base],
-    //   [colors.lightBlue.base, colors.cyan.base],
-    //   [colors.teal.base, colors.green.base],
-    //   [colors.lightGreen.base, colors.lime.base],
-    //   [colors.yellow.base, colors.amber.base],
-    //   [colors.orange.base, colors.deepOrange.base],
-    //   [colors.brown.base, colors.blueGrey.base, colors.grey.base]
-    // ],
+    ]);
 
     // ColorPicker color order (rows)
-    materialBaseHex: [
+    const materialBaseHex = ref([
       [
         colors.red.base,
         colors.pink.base,
@@ -164,124 +152,100 @@ export const useBuilderColorsStore = defineStore("builderColors", {
         // colors.blueGrey.base,
         // colors.grey.base
       ]
-    ]
-  }),
+    ]);
 
-  /**
-   * The getters of the application.
-   * These are functions that can be used to compute derived state.
-   */
-  getters: {
+    //[-]================================
+    //[-] GETTERS (COMPUTED PROPERTIES)
+    //[-]================================
+
     /**
      * Vuetify Material Colors
      *
      * @param {*} state
      * @returns
      */
-    materialColors: (state) => {
+    const materialColors = computed(() => {
       console.log("AppStore ::: materialColors");
-      return state.colors;
-    },
+      return colors;
+    });
 
     /**
      * Get the Darkly theme colors as an array of hex strings.
      * @returns {string[]} An array of hex strings, each representing a color in the Darkly theme.
      */
-    darklyColors(state) {
+    const darklyColors = computed(() => {
       console.log("AppStore ::: darklyColors");
       // let hex = Object.values(this.bsDarkly);
       // Object.values(this.bsDarklyHex).flat()
-      let hex = state.bsDarklyHex;
+      let hex = bsDarklyHex;
       console.log(" - hex: ", hex);
       return hex;
-    },
+    });
 
     /**
      * The Vuetify theme colors (material colors) as an array of hex strings.
      *
      * @returns {string[]} An array of hex strings, each representing a color in the Vuetify theme.
      */
-    vuetifyColors(state) {
+    const vuetifyColors = computed(() => {
       console.log("AppStore ::: vuetifyColors");
-      let hex = Object.values(state.materialColors);
+      let hex = Object.values(materialColors);
       console.log(" - hex: ", hex);
       return hex;
-    },
+    });
 
     /**
      * All the colors in the state as an array of hex strings.
      *
-     * @param {*} state
      * @returns {string[]} An array of hex strings.
      */
-    colorsHex(state) {
+    const colorsHex = computed(() => {
       console.log("AppStore ::: colorsHex");
-      // let hex = [state.materialBaseHex[0], [flatColors.turquoiseHex]];
-      let hex = [state.materialBaseHex[0], Object.values(state.bsDarkly), flatColors.turquoiseHex];
+      let hex = [materialBaseHex.value[0], Object.values(bsDarkly.value), flatColors.swatches[0]];
       console.log(" - colorsHex - hex: ", hex);
       return hex;
-    },
+    });
 
     /**
      * All the flat colors as a nested array of hex strings.
      *
-     * @param {*} state
-     * @returns {string[]} A nested array of hex strings.
+     * @returns {string[][]} A nested array of hex strings.
      */
-    flatColorsHex() {
-      console.log("AppStore ::: flatColorsHex");
-      let hex = [
-        flatColors.turquoiseHex,
-        flatColors.greenSeaHex,
-        flatColors.emeraldHex,
-        flatColors.nephritisHex,
-        flatColors.peterRiverHex,
-        flatColors.belizeHoleHex,
-        flatColors.amethystHex,
-        flatColors.wisteriaHex,
-        flatColors.wetAsphaltHex,
-        flatColors.midnightBlueHex,
-        flatColors.sunflowerHex,
-        flatColors.orangeHex,
-        flatColors.carrotHex,
-        flatColors.pumpkinHex,
-        flatColors.alizarinHex,
-        flatColors.concreteHex,
-        flatColors.asbestosHex
-      ];
-      console.log(" - flatColorsHex - hex: ", hex);
-      return hex;
-    },
 
-    flatBaseColors() {
+    const flatColorsHex = computed(() => {
+      console.log("AppStore ::: flatColorsHex");
+      return flatColors.swatches;
+    });
+
+    const flatBaseColors = computed(() => {
       console.log("AppStore ::: flatBaseColors");
       let base = flatColors.baseColors;
       console.log(" - flat baseColors: ", base);
       return base;
-    },
+    });
 
     /**
      * Get the greyscale colors as an object with string keys and hex values.
      * @returns {Object<string, string>} An object with string keys and hex values.
      */
-    greyscaleColors() {
+    const greyscaleColors = computed(() => {
       console.log("AppStore ::: greyscaleColors");
       let hex = greyscale.greyscaleColors;
       console.log(" - greyscale colors: ", hex);
       return hex;
-    },
+    });
 
     /**
      * The greyscale colors as an array of hex strings.
      *
      * @returns {string[]} An array of hex strings, each representing a color gradient from white to black.
      */
-    greyscaleColorsHex() {
+    const greyscaleColorsHex = computed(() => {
       console.log("AppStore ::: greyscaleColorsHex");
       let hex = greyscale.greyscaleColorsHex;
       console.log(" - greyscale hex: ", hex);
       return hex;
-    }
+    });
 
     // metroHex() {
     //   console.log("AppStore ::: metroHex");
@@ -296,20 +260,33 @@ export const useBuilderColorsStore = defineStore("builderColors", {
     //     console.log(" - green: ", clr);
     //     return clr;
     //   }
-  },
 
-  /**
-   * The actions of the application.
-   * These are functions that can be used to modify the state.
-   */
-  actions: {
+    //[-]================================
+    //[-] ACTIONS (METHODS)
+    //[-]================================
+
     /**
      * Example of an action.
      * This is a placeholder for a real action.
      */
-    exampleAction() {
+    function exampleAction() {
       console.log("AppStore ::: exampleAction");
       console.log(" - store state: ", `${JSON.stringify(this.$state)}`);
     }
-  }
-});
+    return {
+      bsDarkly,
+      bsDarklyHex,
+      materialRedHex,
+      materialColors,
+      darklyColors,
+      vuetifyColors,
+      colorsHex,
+      flatBaseColors,
+      flatColorsHex,
+      greyscaleColors,
+      greyscaleColorsHex,
+      exampleAction
+    };
+  },
+  { persist: true }
+);

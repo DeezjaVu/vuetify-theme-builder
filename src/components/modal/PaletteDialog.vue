@@ -4,13 +4,11 @@
     <!-- <v-card prepend-icon="mdi-palette" title="Select Theme"> -->
     <v-card>
       <drag-modal modal-id="palette-dialog-header">
-        <template v-slot:default>
-          <v-toolbar color="primary">
-            <v-toolbar-title prepend-icon="mdi-palette" class="text-uppercase">Select Theme</v-toolbar-title>
-          </v-toolbar>
-        </template>
+        <v-toolbar color="primary" density="compact">
+          <v-toolbar-title class="text-uppercase text-subtitle-2">Select Theme</v-toolbar-title>
+        </v-toolbar>
       </drag-modal>
-      <!-- <v-divider></v-divider> -->
+
       <v-card-text class="px-4">
         <!-- Available Theme options -->
         <v-radio-group v-model="selectedTheme" color="deep-orange" density="comfortable" column>
@@ -24,13 +22,12 @@
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary-lighten-2" @click="cancelClickHandler">Cancel</v-btn>
-        <v-btn color="primary-lighten-2" @click="applyClickHandler">Apply</v-btn>
+        <!-- <v-spacer></v-spacer> -->
+        <v-btn color="primary-lighten-2" size="small" variant="text" @click="cancelClickHandler">Cancel</v-btn>
+        <v-btn color="primary-lighten-2" size="small" variant="tonal" @click="applyClickHandler">Apply</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <!-- </v-layout> -->
 </template>
 
 <script setup>
@@ -65,6 +62,6 @@
   function applyClickHandler() {
     console.log("PaletteDialog ::: applyClickHandler");
     console.log(" - selectedTheme: ", selectedTheme.value);
-    emit("update", selectedTheme.value);
+    emit("submit", selectedTheme.value);
   }
 </script>

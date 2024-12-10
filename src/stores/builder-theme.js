@@ -54,9 +54,8 @@ const useThemeStore = defineStore("themeStore", () => {
    *
    * @return {InternalThemeDefinition} The builder light theme.
    */
-  const builderLight = computed((state) => {
+  const builderLight = computed(() => {
     console.log("ThemeStore ::: builderLight");
-    console.log(" - themes: ", themeInstance.themes);
     return themeInstance.value.themes["builder-light"];
   });
 
@@ -68,9 +67,8 @@ const useThemeStore = defineStore("themeStore", () => {
    *
    * @return {Record<string, InternalThemeDefinition>} The themes object.
    */
-  const themes = computed((state) => {
+  const themes = computed(() => {
     console.log("ThemeStore ::: themes");
-    // console.log(" - themes: ", state.themeInstance.themes);
     return themeInstance.value.themes;
   });
 
@@ -91,9 +89,8 @@ const useThemeStore = defineStore("themeStore", () => {
    *
    * @returns {Record<string, InternalThemeDefinition>} The computed themes.
    */
-  const computedThemes = computed((state) => {
+  const computedThemes = computed(() => {
     console.log("ThemeStore ::: computedThemes");
-    console.log(" - computedThemes: ", themeInstance.computedThemes);
     return themeInstance.value.computedThemes;
   });
 
@@ -104,9 +101,9 @@ const useThemeStore = defineStore("themeStore", () => {
  * The Builder theme store
  */
 export const useBuilderThemeStore = defineStore(
-  "builderTheme",
+  "builderThemeStore",
   () => {
-    persist: true;
+    const persist = true;
 
     //[-]============================
     //[-] STATE (PROPERTIES)
@@ -246,18 +243,6 @@ export const useBuilderThemeStore = defineStore(
     //[-]============================
 
     /**
-     * Returns the Vuetify theme instance.
-     *
-     * @return {ThemeInstance} The Vuetify theme instance.
-     */
-    // const themeInstance = computed((state) => {
-    //   console.log("BuilderThemeStore ::: getTheme");
-    //   let store = state.themeStore;
-    //   let theme = store.themeInstance;
-    //   return theme;
-    // });
-
-    /**
      * Returns the name of the current theme,
      * meaning the theme currently being modified by the user.
      *
@@ -335,9 +320,9 @@ export const useBuilderThemeStore = defineStore(
       console.log(" - colorName: ", colorName);
       console.log(" - colorValue: ", colorValue);
 
-      let themeStore = themeStore.value;
+      let store = themeStore.value;
       // console.log(" - themeStore: ", themeStore);
-      let builderDark = themeStore.builderDark;
+      let builderDark = store.builderDark;
       console.log(" - builder dark: ", builderDark);
       // modify the theme primary color
       builderDark.colors[colorName] = colorValue;

@@ -7,7 +7,6 @@
             <v-col cols="4">
               <v-color-picker
                 v-model="selectedColor"
-                :swatches="pvLaraColorsHex"
                 mode="hex"
                 hide-sliders
                 show-swatches
@@ -67,9 +66,9 @@
         <!-- COLOR PRESET TAB WINDOWS -->
         <v-card-text>
           <v-tabs-window v-model="currentTab">
-            <!-- PRIMEVUE LARA COLORS TABS WINDOW ITEM -->
+            <!-- TABS WINDOW ITEM -->
             <v-tabs-window-item :value="currentTab">
-              <!-- PRIMEVUE LARA COLORS -->
+              <!-- PRESET BASE COLORS -->
               <v-container
                 v-for="base in colorSets[currentTab].baseColors"
                 :key="base"
@@ -98,9 +97,9 @@
                       >
                         {{ clr }}
                       </v-btn>
-                      <div class="v-card-subtitle text-body-2 font-mono pt-1 pb-2">
+                      <v-card-subtitle class="text-body-2 font-mono pt-1 pb-2">
                         {{ key }}
-                      </div>
+                      </v-card-subtitle>
                     </v-col>
                   </v-row>
                   <v-divider></v-divider>
@@ -121,23 +120,12 @@
   import { onMounted, ref } from "vue";
   import { useBuilderColorsStore } from "@/stores/builder-colors";
 
-  import pvLaraColors from "@/utils/color/pv-lara-colors.js";
-  import pvMaterialColors from "@/utils/color/pv-material-colors";
   import tailwindColors from "@/utils/color/tailwind-colors.js";
   import bootstrapColors from "@/utils/color/bootstrap-colors";
   import flatColors from "@/utils/color/flat-colors";
   import metroColors from "@/utils/color/metro-colors";
 
   const colorsStore = useBuilderColorsStore();
-
-  const pvLaraBaseColors = pvLaraColors.baseColors;
-  console.log("VariablesView ::: pvLaraBaseColors: ", pvLaraBaseColors);
-  const pvLaraColorsHex = pvLaraColors.swatches;
-
-  const pvMaterialBaseColors = pvMaterialColors.baseColors;
-  console.log("VariablesView ::: pvMaterialColors: ", pvMaterialBaseColors);
-
-  const pvMaterialColorsHex = pvMaterialColors.swatches;
 
   const twBaseColors = tailwindColors.baseColors;
   console.log("VariablesView ::: twBaseColors: ", twBaseColors);
@@ -173,16 +161,12 @@
 
   const presetMenuItems = [
     { title: "Tailwind", value: "tailwind" },
-    // { title: "PrimeView Lara", value: "lara" },
-    { title: "PrimeView Material", value: "material" },
     { title: "Bootstrap", value: "bootstrap" },
     { title: "Flat Colors", value: "flat" },
     { title: "Metro UI", value: "metro" }
   ];
 
   const colorSets = {
-    // lara: pvLaraColors,
-    material: pvMaterialColors,
     tailwind: tailwindColors,
     bootstrap: bootstrapColors,
     flat: flatColors,

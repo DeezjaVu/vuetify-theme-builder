@@ -8,11 +8,11 @@
     @update:themeName="themeNameUpdateHandler"
   />
 
-  <v-container class="fill-height px-12 mx-auto">
+  <v-container class="fill-height px-2 px-sm-12 mx-auto">
     <!-- [*] TOP ROW - IMAGE CARDS -->
     <v-expand-transition>
       <template v-if="showImageCards">
-        <v-window class="v-container pa-0 mt-2 mb-6 mx-auto" show-arrows>
+        <v-window class="v-container pa-0 mt-0 mb-6 mx-auto" show-arrows>
           <v-window-item v-for="(i, idx1) in Math.ceil(picsum.length / rowNumItems)" :key="`row-${idx1}`">
             <v-row class="flex-1-1-100 align-sm-stretch">
               <!-- [*] IMAGE CARDS -->
