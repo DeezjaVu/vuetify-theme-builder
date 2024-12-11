@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height px-2 px-sm-12 mx-auto">
     <v-responsive class="align-centerfill-height mx-auto" style="max-width: 75vw">
       <v-card>
         <v-card-text>

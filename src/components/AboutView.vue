@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height px-12 mx-auto">
+  <v-container class="fill-height px-2 px-sm-12 mx-auto">
     <v-responsive class="align-centerfill-height mx-auto">
       <!-- <div class="text-center"> -->
       <!-- <v-icon icon="mdi-account-box"></v-icon> -->

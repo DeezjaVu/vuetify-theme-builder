@@ -1,7 +1,5 @@
 <template>
   <v-container class="fill-height align-baseline px-2 px-sm-12 mx-auto">
-    <!-- TODO: look into using the v-row component styles from vuetify docs -->
-    <!-- <v-row align="center" class="fill-height" justify="center"> -->
     <v-row class="align-sm-stretch">
       <!-- LEFT SIDE COLUMN - COLOR MENU -->
       <v-col cols="12" sm="6" md="6" lg="4" xl="3" class="d-flex flex-column">
@@ -335,7 +333,7 @@
   // Disables the active state of list items.
   // @see https://github.com/vuetifyjs/vuetify/issues/11149#issuecomment-1030649721
   .active-disabled :deep(.v-list-item__overlay) {
-    opacity: 0 !important;
+    // opacity: 0 !important;
   }
 
   .text-label-1 {

@@ -3,35 +3,39 @@
   <PaletteDialog v-model="modalPaletteOpen" :selected-theme="currentTheme" @cancel="paletteCancelHandler" @submit="paletteSubmitHandler" />
   <v-app>
     <!-- APP TOOLBAR -->
-    <!-- <v-app-bar class="flex-grow-0" color="primary"> -->
     <v-app-bar class="px-2 px-sm-12 mx-auto" color="primary">
+      <template v-slot:prepend>
+        <!-- -->
+        <v-app-bar-nav-icon
+          class="hidden-md-and-up"
+          density="comfortable"
+          @click.stop="navDrawerOpen = !navDrawerOpen"
+        ></v-app-bar-nav-icon>
+      </template>
       <v-toolbar-title class="text-uppercase pr-8"> Vuetify Theme Builder </v-toolbar-title>
 
-      <v-tabs align-tabs="start" @update:model-value="tabUpdateHandler">
+      <v-tabs class="hidden-sm-and-down" align-tabs="start" @update:model-value="tabUpdateHandler">
         <v-tab
           class="font-weight-light"
           v-for="item in menuItems"
-          :key="item"
+          :key="item.value"
           :text="item.title"
           :value="item.value"
           :to="item.href"
         ></v-tab>
       </v-tabs>
       <v-spacer></v-spacer>
-      <!-- 
-        <v-toolbar-items>
-          <v-btn icon @click="modalPaletteOpen = true">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-        -->
+
       <template v-slot:append>
-        <v-btn icon size="small" @click="modalPaletteOpen = true">
-          <v-icon size="x-large">mdi-dots-vertical</v-icon>
+        <v-btn icon density="comfortable" @click="modalPaletteOpen = true">
+          <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </template>
     </v-app-bar>
-
+    <!-- -->
+    <v-navigation-drawer class="hidden-md-and-up" v-model="navDrawerOpen" location="top" temporary>
+      <v-list :items="menuItems" :item-props="true" v-model:selected="selectedNavItem" :selected="selectedNavItem" nav> </v-list>
+    </v-navigation-drawer>
     <!-- <AppFooter /> -->
 
     <v-main class="mt-2">
@@ -44,10 +48,14 @@
   import PaletteDialog from "./components/modal/PaletteDialog.vue";
 
   import { ref, onMounted } from "vue";
+  import { useDisplay } from "vuetify";
 
   import colors from "vuetify/lib/util/colors";
 
   const modalPaletteOpen = ref(false);
+  const navDrawerOpen = ref(false);
+
+  const { mobile } = useDisplay();
 
   const currentTheme = ref("builder-dark");
 
@@ -68,14 +76,15 @@
    */
 
   // const tab = "about";
-  const menuItems = [
-    { title: "Home", value: "home", href: "/" },
-    { title: "About", value: "about", href: "/about" },
+  const menuItems = ref([
+    { title: "Home", value: "app-view", href: "/" },
+    { title: "About", value: "about-view", href: "/about" },
     { title: "Colors", value: "colors-view", href: "/builder/colors" },
     { title: "Variables", value: "variables-view", href: "/builder/variables" },
     { title: "Utilities", value: "utilities-view", href: "/builder/utilities" }
     // { title: "Carousel", value: "carousel-view", href: "/builder/carousel" }
-  ];
+  ]);
+  const selectedNavItem = ref(["app-view"]);
 
   /**
    * Called when the app is mounted.
@@ -91,14 +100,16 @@
   function tabUpdateHandler(tabValue) {
     console.log("App ::: tabUpdateHandler");
     console.log(" - param tabValue: ", tabValue);
+    console.log(" - selectedNavItem: ", selectedNavItem.value);
+    selectedNavItem.value = [tabValue];
   }
 
   /**
    * Handles menu item clicks.
    * @param {string} item - The title of the menu item clicked.
    */
-  function menuItemClickHandler(item) {
-    console.log("APP ::: menuItemClickHandler");
+  function navUpdateHandler(item) {
+    console.log("APP ::: navUpdateHandler");
     console.log(" - item", item);
   }
 

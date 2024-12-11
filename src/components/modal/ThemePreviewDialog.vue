@@ -37,14 +37,14 @@
               <v-row class="ga-4">
                 <!-- [*] WEATHER CARD -->
                 <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" width="460">
+                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
                     <WeatherCard :themeName="themeName"></WeatherCard>
                   </v-container>
                 </v-col>
 
                 <!-- [*] KEEP CARD -->
                 <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" width="460">
+                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
                     <KeepCard :themeName="themeName"> </KeepCard>
                   </v-container>
                 </v-col>
@@ -52,7 +52,7 @@
                 <!-- [*] FALLOUT TV SHOW CARD -->
                 <!-- 
                 <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" width="460">
+                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
                     <FalloutCard :themeName="themeName"></FalloutCard>
                   </v-container>
                 </v-col> 
@@ -60,7 +60,7 @@
 
                 <!-- [*] RECIPE CARD -->
                 <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" width="460">
+                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
                     <RecipeCard :themeName="themeName"></RecipeCard>
                   </v-container>
                 </v-col>
@@ -269,7 +269,7 @@
                     <v-card-actions>
                       <v-select
                         label="Color"
-                        max-width="35%"
+                        :max-width="smAndUp ? `35%` : `100%`"
                         v-model="selectedToggleColor"
                         :items="toggleButtonColors"
                         auto-select-first="exact"
@@ -318,7 +318,7 @@
                     <v-card-actions>
                       <v-select
                         label="Variant"
-                        max-width="35%"
+                        :max-width="smAndUp ? `35%` : `100%`"
                         v-model="selectedXpanelVariant"
                         :items="xPanelVariants"
                         auto-select-first="exact"
@@ -327,7 +327,6 @@
                         density="compact"
                       >
                       </v-select>
-                      <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
                 </v-col>
@@ -354,7 +353,7 @@
 <script setup>
   import ColorButtonCard from "@/components/builder/ColorButtonCard.vue";
   import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-  import { useTheme } from "vuetify";
+  import { useTheme, useDisplay } from "vuetify";
 
   const props = defineProps({
     // previewTheme: Object
@@ -368,6 +367,8 @@
   const navDrawerOpen = ref(false);
 
   const themeInstance = useTheme();
+
+  const { mobile, smAndUp, mdAndUp, lgAndUp } = useDisplay();
 
   const themeNames = ref([
     { title: "Light", value: "hct-light" },
@@ -454,6 +455,19 @@
     const theme = themeInstance.themes.value[themeName.value];
     const colors = theme.colors;
     return colors;
+  });
+
+  const cardWidth = computed(() => {
+    // console.log("ThemePreviewDialog ::: computed cardWidth");
+    if (lgAndUp.value) {
+      return "460px";
+    } else if (mdAndUp.value) {
+      return "440px";
+    } else if (smAndUp.value) {
+      return "420px";
+    } else {
+      return "100%";
+    }
   });
 
   /**
