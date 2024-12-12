@@ -21,7 +21,7 @@
           :key="item.value"
           :text="item.title"
           :value="item.value"
-          :to="item.href"
+          :to="item.to"
         ></v-tab>
       </v-tabs>
       <v-spacer></v-spacer>
@@ -77,12 +77,12 @@
 
   // const tab = "about";
   const menuItems = ref([
-    { title: "Home", value: "app-view", href: "/" },
-    { title: "About", value: "about-view", href: "/about" },
-    { title: "Colors", value: "colors-view", href: "/builder/colors" },
-    { title: "Variables", value: "variables-view", href: "/builder/variables" },
-    { title: "Utilities", value: "utilities-view", href: "/builder/utilities" }
-    // { title: "Carousel", value: "carousel-view", href: "/builder/carousel" }
+    { title: "Home", value: "app-view", to: "/" },
+    { title: "About", value: "about-view", to: "/about" },
+    { title: "Colors", value: "colors-view", to: "/builder/colors" },
+    { title: "Variables", value: "variables-view", to: "/builder/variables" },
+    { title: "Utilities", value: "utilities-view", to: "/builder/utilities" }
+    // { title: "Carousel", value: "carousel-view", to: "/builder/carousel" }
   ]);
   const selectedNavItem = ref(["app-view"]);
 

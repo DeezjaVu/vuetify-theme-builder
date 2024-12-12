@@ -4,7 +4,13 @@
       <v-card color="background" variant="flat">
         <v-toolbar color="primary">
           <v-app-bar-nav-icon @click="navDrawerOpen = !navDrawerOpen"></v-app-bar-nav-icon>
-          <v-toolbar-title>Theme Preview &mdash; <code>[kitchen sink]</code></v-toolbar-title>
+          <v-toolbar-title>
+            <span>Theme Preview </span>
+            <span class="hidden-sm-and-down">
+              &mdash;
+              <code>[kitchen sink]</code>
+            </span>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-select
             label="Theme"
@@ -13,11 +19,10 @@
             auto-select-first="exact"
             density="compact"
             variant="outlined"
-            max-width="120"
-            size="slim"
+            max-width="100"
             hide-details
           ></v-select>
-          <v-toolbar-items>
+          <v-toolbar-items class="hidden-sm-and-down">
             <v-btn class="ml-4" variant="tonal" @click="closeClickHandler">
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -25,7 +30,25 @@
         </v-toolbar>
 
         <v-navigation-drawer v-model="navDrawerOpen" width="250" temporary>
-          <v-list :items="navItems"></v-list>
+          <!-- label="Theme" -->
+          <v-radio-group
+            class="text-label-2 my-2"
+            v-model="themeName"
+            :color="themeName === `hct-light` ? `tertiary-darken-2` : `tertiary-lighten-2`"
+            density="comfortable"
+            :ripple="false"
+            hide-details
+          >
+            <v-radio class="text-label-2 mr-2" label="Light Preview" value="hct-light"></v-radio>
+            <v-radio class="text-label-2 mr-2" label="Dark Preview" value="hct-dark"></v-radio>
+          </v-radio-group>
+          <v-divider></v-divider>
+          <v-list nav>
+            <v-list-item title="Exit Preview" @click="closeClickHandler"></v-list-item>
+          </v-list>
+          <v-divider></v-divider>
+          <v-list :items="navFakeItems" nav></v-list>
+          <v-divider></v-divider>
         </v-navigation-drawer>
 
         <!-- [*] PAGE CONTENT -->
@@ -377,12 +400,11 @@
 
   watch(themeName, (newValue, oldValue) => {
     console.log("ThemePreviewDialog ::: watch themeName");
-    console.log("- newValue: ", newValue);
     console.log("- oldValue: ", oldValue);
-    console.log(" - themeInstance current: ", themeInstance.current.value);
+    console.log("- newValue: ", newValue);
   });
 
-  const navItems = ref([
+  const navFakeItems = ref([
     { title: "Foo", value: "foo" },
     { title: "Bar", value: "bar" },
     { title: "Fizz", value: "fizz" },
@@ -499,6 +521,11 @@
     emit("click:copy", hex);
   }
 
+  function navSelectedUpdateHandler(item) {
+    console.log("ThemePreviewDialog ::: navSelectedUpdateHandler");
+    console.log(" - item: ", item);
+  }
+
   /**
    * Handles the close button click event.
    *
@@ -507,6 +534,7 @@
    */
   function closeClickHandler() {
     console.log("ThemePreviewDialog ::: closeClickHandler");
+    navDrawerOpen.value = false;
     emit("click:close");
   }
 </script>
@@ -515,5 +543,25 @@
   code {
     background-color: rgb(var(--v-theme-code));
     color: rgb(var(--v-theme-on-code));
+  }
+
+  .text-label-1 {
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    :deep(.v-label) {
+      font-size: 0.9rem !important;
+      font-weight: 400 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  .text-label-2 {
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    :deep(.v-label) {
+      font-size: 0.875rem !important;
+      font-weight: 400 !important;
+      opacity: 1 !important;
+    }
   }
 </style>
