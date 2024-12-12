@@ -26,11 +26,14 @@
       </v-tabs>
       <v-spacer></v-spacer>
 
+      <!-- MODAL PALETTE (HIDDEN FOR NOW) -->
+      <!-- 
       <template v-slot:append>
         <v-btn icon density="comfortable" @click="modalPaletteOpen = true">
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </template>
+      -->
     </v-app-bar>
     <!-- -->
     <v-navigation-drawer class="hidden-md-and-up" v-model="navDrawerOpen" location="top" temporary>
@@ -100,7 +103,7 @@
   function tabUpdateHandler(tabValue) {
     console.log("App ::: tabUpdateHandler");
     console.log(" - param tabValue: ", tabValue);
-    console.log(" - selectedNavItem: ", selectedNavItem.value);
+    // console.log(" - selectedNavItem: ", selectedNavItem.value);
     selectedNavItem.value = [tabValue];
   }
 

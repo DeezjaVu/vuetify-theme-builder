@@ -81,6 +81,7 @@
   import flatColors from "@/utils/color/flat-colors";
   // import primeviewColors from "@/utils/color/pv-lara-colors";
   import metroColors from "@/utils/color/metro-colors";
+  import salesforceColors from "@/utils/color/salesforce-colors";
 
   const props = defineProps({
     colorName: {
@@ -106,7 +107,8 @@
     { title: "Tailwind", value: "tailwind", swatches: tailwindColors.swatches },
     // { title: "PrimeView", value: "primeview", swatches: primeviewColors.swatches },
     { title: "Flat", value: "flat", swatches: flatColors.swatches },
-    { title: "Metro UI", value: "metro", swatches: metroColors.swatches }
+    { title: "Metro UI", value: "metro", swatches: metroColors.swatches },
+    { title: "Salesforce Lighting Design", value: "salesforce", swatches: salesforceColors.swatches }
   ]);
 
   // const cpSwatches = ref(vuetifyColors.swatches);

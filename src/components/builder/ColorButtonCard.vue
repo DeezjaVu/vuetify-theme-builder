@@ -2,7 +2,7 @@
   <v-card title="Buttons" class="elevation-2" min-width="170">
     <v-card-text class="d-flex flex-column ga-2">
       <template v-for="item in btnsList">
-        <v-btn :text="item.text" :color="item.color" :variant="btnVariant" />
+        <v-btn v-if="item.color !== 'tertiary' || !hasTertiary" :text="item.text" :color="item.color" :variant="btnVariant" />
       </template>
     </v-card-text>
     <v-card-actions>
@@ -22,6 +22,8 @@
 
 <script setup>
   import { ref, onMounted } from "vue";
+
+  const props = defineProps({ hasTertiary: { type: Boolean, default: false } });
 
   const btnsList = [
     {

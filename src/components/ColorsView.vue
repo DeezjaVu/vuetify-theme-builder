@@ -25,7 +25,7 @@
             <v-card-subtitle> Material Design </v-card-subtitle>
             <template v-slot:append>
               <!-- <v-btn icon="mdi-palette" variant="tonal" density="comfortable" /> -->
-              <v-btn icon="mdi-cog" size="small" variant="plain" @click="showSettings = !showSettings"> </v-btn>
+              <v-btn icon="mdi-cog" density="comfortable" size="small" variant="plain" @click="showSettings = !showSettings"> </v-btn>
             </template>
           </v-card-item>
           <!-- SETTINGS -->
@@ -36,20 +36,24 @@
                   <v-card variant="tonal">
                     <v-card-item>
                       <v-card-title class="text-subtitle-1"> Settings </v-card-title>
+                      <template #append>
+                        <v-btn icon="mdi-help" density="comfortable" size="small" variant="plain" @click="modalHelpOpen = !modalHelpOpen">
+                        </v-btn>
+                      </template>
                     </v-card-item>
 
-                    <v-card-text class="">
+                    <v-card-text>
                       <v-radio-group
                         label="Theme"
                         class="text-label-1"
                         v-model="selectedTheme"
-                        color="warning"
-                        density="comfortable"
+                        color="primary-lighten-2"
+                        density="compact"
                         inline
                         :ripple="false"
                       >
-                        <v-radio class="text-label-2 mr-2" label="Builder Light" value="builder-light"></v-radio>
-                        <v-radio class="text-label-2 mr-2" label="Builder Dark" value="builder-dark"></v-radio>
+                        <v-radio class="text-label-2 mr-2" label="Builder Light" value="light"></v-radio>
+                        <v-radio class="text-label-2 mr-2" label="Builder Dark" value="dark"></v-radio>
                       </v-radio-group>
 
                       <v-select
@@ -64,16 +68,44 @@
                       >
                         <!-- NOTE: v-select menu items (v-list-item) are styled in main.scss -->
                         <template v-slot:append>
-                          <v-btn icon="mdi-reload" size="small" variant="plain" @click="themePresetResetHandler"></v-btn>
+                          <v-btn
+                            icon="mdi-reload"
+                            density="comfortable"
+                            size="small"
+                            variant="plain"
+                            @click="themePresetResetHandler"
+                          ></v-btn>
                         </template>
                       </v-select>
+
+                      <v-checkbox
+                        class="text-label-2"
+                        v-model="showSurfaceColors"
+                        label="Show surface colors"
+                        color="primary-lighten-2"
+                        density="compact"
+                        hide-details
+                        @update:model-value="showSurfaceColorsUpdateHandler"
+                      ></v-checkbox>
+
+                      <v-checkbox
+                        class="text-label-2"
+                        v-model="showMessageColors"
+                        label="Show message colors"
+                        color="primary-lighten-2"
+                        density="compact"
+                        hide-details
+                        @update:model-value="showMessageColorsUpdateHandler"
+                      ></v-checkbox>
                     </v-card-text>
+
+                    <v-divider></v-divider>
 
                     <v-card-item>
                       <v-card-title class="text-subtitle-1"> Color Picker </v-card-title>
                     </v-card-item>
 
-                    <v-card-text class="">
+                    <v-card-text class="pt-2">
                       <v-select
                         label="Swatch Colors"
                         v-model="selectedSwatches"
@@ -88,6 +120,7 @@
                         <template v-slot:append>
                           <v-btn
                             icon="mdi-information-slab-circle-outline"
+                            density="comfortable"
                             size="small"
                             variant="plain"
                             @click="swatchPresetInfoHandler"
@@ -105,7 +138,7 @@
               <!-- PALETTE COLORS -->
               <v-card-text class="my-2">
                 <template v-for="item in paletteColors" :key="item.name">
-                  <v-row>
+                  <v-row v-if="item.enabled">
                     <v-col class="py-1">
                       <!-- PALETTE COLOR CARD -->
                       <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
@@ -169,10 +202,14 @@
 
   const showSettings = ref(false);
 
+  const showSurfaceColors = ref(false);
+  const showMessageColors = ref(true);
+
   const modalColorOpen = ref(false);
+  const modalHelpOpen = ref(false);
 
   const darkTheme = ref(true);
-  const selectedTheme = ref("builder-dark");
+  const selectedTheme = ref("dark");
 
   const builderThemeDark = themeStore.builderDark;
   const builderThemeLight = themeStore.builderLight;
@@ -197,20 +234,25 @@
     { title: "PrimeView", value: "primeview" },
     { title: "Tailwind", value: "tailwind" },
     { title: "Flat", value: "flat" },
-    { title: "Metro UI", value: "metro" }
+    { title: "Metro UI", value: "metro" },
+    { title: "Salesfoce Lightning Design", value: "salesforce" }
   ]);
 
   const selectedSwatches = ref("material");
 
+  // Hex properties are not used (they're defined in the themeColors object, which is the active theme in the store).
+  // This will eventually be moved to the store.
   const paletteColors = reactive([
-    { title: "Primary", name: "primary", hex: "#2196F3" },
-    { title: "Secondary", name: "secondary", hex: "#54B6B2" },
-    { title: "Surface", name: "surface", hex: "#212121" },
-    { title: "Background", name: "background", hex: "#121212" },
-    { title: "Success", name: "success", hex: "#4CAF50" },
-    { title: "Info", name: "info", hex: "#2196F3" },
-    { title: "Warning", name: "warning", hex: "#FB8C00" },
-    { title: "Error", name: "error", hex: "#CF6679" }
+    { title: "Primary", name: "primary", hex: "#2196F3", enabled: true },
+    { title: "Secondary", name: "secondary", hex: "#54B6B2", enabled: true },
+    { title: "Surface", name: "surface", hex: "#212121", enabled: true },
+    { title: "Surface Light", name: "surface-light", hex: "#424242", enabled: false },
+    { title: "Surface Variant", name: "surface-variant", hex: "#A3A3A3", enabled: false },
+    { title: "Background", name: "background", hex: "#121212", enabled: true },
+    { title: "Success", name: "success", hex: "#4CAF50", enabled: true },
+    { title: "Info", name: "info", hex: "#2196F3", enabled: true },
+    { title: "Warning", name: "warning", hex: "#FB8C00", enabled: true },
+    { title: "Error", name: "error", hex: "#CF6679", enabled: true }
   ]);
 
   const variantCards = [
@@ -232,6 +274,18 @@
   function darkThemeChangeHandler(value) {
     console.log("ColorsView ::: darkThemeChangeHandler");
     console.log(" - value: ", value);
+  }
+
+  function showSurfaceColorsUpdateHandler(value) {
+    console.log("ColorsView ::: showSurfaceColorsUpdateHandler");
+    console.log(" - value: ", value);
+    ["surface-light", "surface-variant"].forEach((name) => (paletteColors.find((item) => item.name === name).enabled = value));
+  }
+
+  function showMessageColorsUpdateHandler(value) {
+    console.log("ColorsView ::: showMessageColorsUpdateHandler");
+    console.log(" - value: ", value);
+    ["success", "info", "warning", "error"].forEach((name) => (paletteColors.find((item) => item.name === name).enabled = value));
   }
 
   function themePresetChangeHandler(value) {
@@ -332,9 +386,9 @@
 <style scoped lang="scss">
   // Disables the active state of list items.
   // @see https://github.com/vuetifyjs/vuetify/issues/11149#issuecomment-1030649721
-  .active-disabled :deep(.v-list-item__overlay) {
-    // opacity: 0 !important;
-  }
+  // .active-disabled :deep(.v-list-item__overlay) {
+  // opacity: 0 !important;
+  // }
 
   .text-label-1 {
     font-size: 0.9rem !important;
@@ -342,7 +396,7 @@
     :deep(.v-label) {
       font-size: 0.9rem !important;
       font-weight: 400 !important;
-      color: #ffffff;
+      // color: #ffffff;
       opacity: 1 !important;
     }
   }
@@ -353,7 +407,7 @@
     :deep(.v-label) {
       font-size: 0.875rem !important;
       font-weight: 400 !important;
-      color: #ffffff !important;
+      // color: #ffffff !important;
       opacity: 1 !important;
     }
   }

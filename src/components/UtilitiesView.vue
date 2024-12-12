@@ -283,24 +283,30 @@
                   <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`dark`)"> </v-btn>
                 </template>
               </v-card-item>
+
               <v-expand-transition>
-                <v-card-text class="d-flex flex-column pt-4" v-if="showDarkThemeCard">
-                  <v-row>
-                    <!-- [*] DARK THEME COLOR CARDS -->
-                    <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
-                      <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
-                        <!-- :isDark="true" -->
-                        <ThemeColorCard
-                          :theme-color="item"
-                          :cardIndex="idx"
-                          :includeOnColors="includeOnColors"
-                          @update:tone="themeToneSliderUpdateHandler($event, true)"
-                          @click:copy="copyColorClickHandler($event)"
-                        />
-                      </v-col>
-                    </template>
-                  </v-row>
-                </v-card-text>
+                <!-- [-] row with `no-gutters` fixes transition stutter -->
+                <v-row no-gutters v-if="showDarkThemeCard">
+                  <v-col>
+                    <v-card-text class="d-flex flex-column pt-4">
+                      <v-row>
+                        <!-- [*] DARK THEME COLOR CARDS -->
+                        <template v-for="(item, idx) in currentScheme.dark" :key="`card-dark-${item.name}-${idx}`">
+                          <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
+                            <!-- :isDark="true" -->
+                            <ThemeColorCard
+                              :theme-color="item"
+                              :cardIndex="idx"
+                              :includeOnColors="includeOnColors"
+                              @update:tone="themeToneSliderUpdateHandler($event, true)"
+                              @click:copy="copyColorClickHandler($event)"
+                            />
+                          </v-col>
+                        </template>
+                      </v-row>
+                    </v-card-text>
+                  </v-col>
+                </v-row>
               </v-expand-transition>
             </v-card>
           </v-col>
@@ -326,24 +332,30 @@
                   <v-btn icon="mdi-fullscreen" variant="text" size="small" @click="showThemePreview(`light`)"> </v-btn>
                 </template>
               </v-card-item>
+
               <v-expand-transition>
-                <v-card-text class="d-flex flex-column pt-4" v-if="showLightThemeCard">
-                  <v-row>
-                    <!-- [*] LIGHT THEME COLOR CARDS -->
-                    <template v-for="(item, idx) in currentScheme.light" :key="`card-light-${item.name}-${idx}`">
-                      <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
-                        <!-- :isDark="false" -->
-                        <ThemeColorCard
-                          :theme-color="item"
-                          :cardIndex="idx"
-                          :includeOnColors="includeOnColors"
-                          @update:tone="themeToneSliderUpdateHandler($event, false)"
-                          @click:copy="copyColorClickHandler($event)"
-                        />
-                      </v-col>
-                    </template>
-                  </v-row>
-                </v-card-text>
+                <!-- [-] row with `no-gutters` fixes transition stutter -->
+                <v-row no-gutters v-if="showLightThemeCard">
+                  <v-col>
+                    <v-card-text class="d-flex flex-column pt-4">
+                      <v-row>
+                        <!-- [*] LIGHT THEME COLOR CARDS -->
+                        <template v-for="(item, idx) in currentScheme.light" :key="`card-light-${item.name}-${idx}`">
+                          <v-col cols="12" sm="12" md="12" lg="6" xl="3" class="py-0">
+                            <!-- :isDark="false" -->
+                            <ThemeColorCard
+                              :theme-color="item"
+                              :cardIndex="idx"
+                              :includeOnColors="includeOnColors"
+                              @update:tone="themeToneSliderUpdateHandler($event, false)"
+                              @click:copy="copyColorClickHandler($event)"
+                            />
+                          </v-col>
+                        </template>
+                      </v-row>
+                    </v-card-text>
+                  </v-col>
+                </v-row>
               </v-expand-transition>
             </v-card>
           </v-col>
@@ -740,10 +752,4 @@
   }
 </script>
 
-<style lang="scss">
-  .settings-label {
-    label {
-      font-size: 0.9rem !important;
-    }
-  }
-</style>
+<style lang="scss"></style>

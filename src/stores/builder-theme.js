@@ -273,10 +273,6 @@ export const useBuilderThemeStore = defineStore(
       return themeStore.value.builderLight;
     });
 
-    const getDefaultColors = computed(() => {
-      return defaultColors;
-    });
-
     //[-]============================
     //[-] ACTIONS (METHODS)
     //[-]============================
@@ -329,7 +325,7 @@ export const useBuilderThemeStore = defineStore(
       // console.log(" - builder dark after: ", builderDark);
     }
 
-    return { currentThemeName, builderDark, builderLight, defaultThemes, getDefaultColors, setTheme, setColors, updateThemeColor };
+    return { currentThemeName, builderDark, builderLight, defaultThemes, defaultColors, setTheme, setColors, updateThemeColor };
   },
   { persist: true }
 );
