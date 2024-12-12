@@ -360,7 +360,7 @@
               <v-row>
                 <!-- <v-col cols="4" class="d-flex flex-wrap justify-space-around ga-4"> -->
                 <v-col cols="2">
-                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined"></ColorButtonCard>
+                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined" :has-tertiary="true"></ColorButtonCard>
                 </v-col>
                 <v-col cols="2"> </v-col>
                 <v-col cols="4"> </v-col>
