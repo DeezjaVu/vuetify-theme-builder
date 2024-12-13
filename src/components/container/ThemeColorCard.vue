@@ -53,9 +53,7 @@
   const props = defineProps({
     themeColor: ThemeColor,
     cardIndex: Number,
-    // isDark: Boolean,
     includeOnColors: Boolean
-    // alwaysExpanded: Boolean
   });
 
   const emit = defineEmits(["click:copy", "update:tone"]);

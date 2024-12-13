@@ -260,7 +260,7 @@
               <v-row dense>
                 <!-- [*] BUTTONS -->
                 <v-col>
-                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined"></ColorButtonCard>
+                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined" has-tertiary></ColorButtonCard>
                 </v-col>
                 <!-- [*] TOGGLE BUTTONS -->
                 <v-col cols="12" lg="6" xl="4" class="d-flex flex-column ga-4">
@@ -360,7 +360,7 @@
               <v-row>
                 <!-- <v-col cols="4" class="d-flex flex-wrap justify-space-around ga-4"> -->
                 <v-col cols="2">
-                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined" :has-tertiary="true"></ColorButtonCard>
+                  <ColorButtonCard title="Buttons" color="surface-variant" variant="outlined" has-tertiary></ColorButtonCard>
                 </v-col>
                 <v-col cols="2"> </v-col>
                 <v-col cols="4"> </v-col>
