@@ -395,12 +395,12 @@
   import ThemePreviewDialog from "@/components/modal/ThemePreviewDialog.vue";
 
   import { ref, onMounted, computed } from "vue";
+  import { storeToRefs } from "pinia";
   import { argbFromHex, hexFromArgb, Hct, TonalPalette, Contrast, sourceColorFromImage } from "@material/material-color-utilities";
+  // import { Variant } from "/node_modules/@material/material-color-utilities/dynamiccolor/variant.js";
   import tinycolor from "tinycolor2";
   import { imgAssets } from "@/utils/images/image-assets.js";
-  import { Variant } from "/node_modules/@material/material-color-utilities/dynamiccolor/variant.js";
   import { useMaterialThemeStore } from "@/stores/material-theme";
-  import { storeToRefs } from "pinia";
   import ThemeColor from "@/utils/theme/theme-color";
   import ToneDetails from "@/utils/palettes/tone-details";
 
@@ -425,10 +425,6 @@
   const clipboardColor = ref("");
 
   const showSettings = ref(false);
-  // const showImageCards = ref(true);
-  // const showVariantInfo = ref(true);
-  // const showPaletteCards = ref(true);
-  // const expandThemeCards = ref(false);
 
   const expandedPaletteIndex = ref(-1);
 
@@ -458,6 +454,10 @@
   const surfaceLight = computed(() => {
     return currentScheme.value.light.find((item) => item.name === `surface`).hex;
   });
+
+  /**
+   * LIFECYCLE HOOKS
+   */
 
   onMounted(() => {
     console.log("UtilitiesView ::: onMounted");

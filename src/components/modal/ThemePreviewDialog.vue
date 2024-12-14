@@ -434,6 +434,7 @@
   const toggleButtonColors = ref([
     { title: "Surface (default)", value: "" },
     { title: "Surface Light", value: "surface-light" },
+    // { title: "Surface Variant", value: "surface-variant" },
     { title: "Primary", value: "primary" },
     { title: "Secondary", value: "secondary" },
     { title: "Tertiary", value: "tertiary" },

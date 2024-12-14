@@ -75,6 +75,8 @@
   import { ref, onMounted, computed } from "vue";
   import { useDisplay } from "vuetify";
 
+  import ColorSwatches from "@/utils/color/color-swatches";
+
   import vuetifyColors from "@/utils/color/vuetify-colors";
   import bootstrapColors from "@/utils/color/bootstrap-colors";
   import tailwindColors from "@/utils/color/tailwind-colors";
@@ -91,34 +93,37 @@
     }
   });
 
-  const emit = defineEmits(["change", "update", "cancel"]);
+  const emit = defineEmits(["change", "update", "cancel", "update:swatch-preset"]);
   // defineModel() will automatically update the model when the value changes.
   // It also creates an @update event that is emitted when the value changes: `@update:picker-color`
   const pickerColor = defineModel("pickerColor");
-  const swatchPreset = defineModel("swatchPreset", { default: "material" });
+
+  const swatchPreset = defineModel("swatchPreset", {
+    default: "material",
+    get: (value) => {
+      let swatch = presetSwatches.value.find((swatch) => swatch.value === value);
+      if (!swatch) emit("update:swatch-preset", "material");
+      return swatch ? value : "material";
+    }
+  });
 
   const { mobile, smAndUp } = useDisplay();
 
   const cpModes = ["hex"];
 
-  const presetSwatches = ref([
-    { title: "Material Design (default)", value: "material", swatches: vuetifyColors.swatches },
-    { title: "Bootstrap", value: "bootstrap", swatches: bootstrapColors.swatches },
-    { title: "Tailwind", value: "tailwind", swatches: tailwindColors.swatches },
-    // { title: "PrimeView", value: "primeview", swatches: primeviewColors.swatches },
-    { title: "Flat", value: "flat", swatches: flatColors.swatches },
-    { title: "Metro UI", value: "metro", swatches: metroColors.swatches },
-    { title: "Salesforce Lighting Design", value: "salesforce", swatches: salesforceColors.swatches }
-  ]);
+  const presetSwatches = ref(ColorSwatches.presets);
 
   // const cpSwatches = ref(vuetifyColors.swatches);
   const cpSwatches = computed(() => {
-    let swatches = presetSwatches.value.find((item) => item.value === swatchPreset.value).swatches;
+    let swatches = ColorSwatches.getSwatchesFor(swatchPreset.value);
     return swatches;
   });
 
   onMounted(() => {
-    // console.log("ColorDialog ::: onMounted");
+    console.log("ColorDialog ::: onMounted");
+    const presets = ColorSwatches.presets;
+    console.log(" - presets: ", presets);
+
     // console.log(" - pickerColor: ", pickerColor.value);
     // console.log(" - swatchPreset.value: ", swatchPreset.value);
   });

@@ -42,28 +42,30 @@
                       </template>
                     </v-card-item>
 
+                    <!-- label="Theme" -->
                     <v-card-text>
                       <v-radio-group
-                        label="Theme"
                         class="text-label-1"
-                        v-model="selectedTheme"
+                        v-model="themeName"
                         color="primary-lighten-2"
                         density="compact"
                         inline
                         :ripple="false"
+                        hide-details
                       >
-                        <v-radio class="text-label-2 mr-2" label="Builder Light" value="light"></v-radio>
-                        <v-radio class="text-label-2 mr-2" label="Builder Dark" value="dark"></v-radio>
+                        <v-radio class="text-label-2 mr-2" label="Builder Light" value="builder-light"></v-radio>
+                        <v-radio class="text-label-2 mr-2" label="Builder Dark" value="builder-dark"></v-radio>
                       </v-radio-group>
 
                       <v-select
                         label="Theme Preset"
+                        class="mt-4 mb-2"
                         v-model="selectedThemePreset"
                         :items="presetThemes"
                         auto-select-first="exact"
                         variant="outlined"
-                        hide-details
                         density="compact"
+                        hide-details
                         @update:model-value="themePresetChangeHandler"
                       >
                         <!-- NOTE: v-select menu items (v-list-item) are styled in main.scss -->
@@ -81,22 +83,28 @@
                       <v-checkbox
                         class="text-label-2"
                         v-model="showSurfaceColors"
-                        label="Show surface colors"
                         color="primary-lighten-2"
                         density="compact"
                         hide-details
                         @update:model-value="showSurfaceColorsUpdateHandler"
-                      ></v-checkbox>
+                      >
+                        <template v-slot:label>
+                          <span>Show all <code>`surface`</code> colors</span>
+                        </template>
+                      </v-checkbox>
 
                       <v-checkbox
                         class="text-label-2"
                         v-model="showMessageColors"
-                        label="Show message colors"
                         color="primary-lighten-2"
                         density="compact"
                         hide-details
                         @update:model-value="showMessageColorsUpdateHandler"
-                      ></v-checkbox>
+                      >
+                        <template v-slot:label>
+                          <span>Show <code>`message`</code> colors</span>
+                        </template>
+                      </v-checkbox>
                     </v-card-text>
 
                     <v-divider></v-divider>
@@ -138,24 +146,26 @@
               <!-- PALETTE COLORS -->
               <v-card-text class="my-2">
                 <template v-for="item in paletteColors" :key="item.name">
-                  <v-row v-if="item.enabled">
-                    <v-col class="py-1">
-                      <!-- PALETTE COLOR CARD -->
-                      <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
-                        <v-card-item class="px-3">
-                          <template #prepend>
-                            <v-btn class="mr-4" :color="themeColors[item.name]" icon @click="editColorClickHandler(item.name)"></v-btn>
-                          </template>
-                          <v-card-title class="text-body-1 font-weight-light">
-                            {{ item.title }}
-                          </v-card-title>
-                          <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
-                            {{ themeColors[item.name] }}
-                          </v-card-subtitle>
-                        </v-card-item>
-                      </v-card>
-                    </v-col>
-                  </v-row>
+                  <v-expand-transition>
+                    <v-row v-if="item.enabled">
+                      <v-col class="py-1">
+                        <!-- PALETTE COLOR CARD -->
+                        <v-card class="rounded-e-pill rounded-s-pill" variant="flat" color="secondary" density="compact">
+                          <v-card-item class="px-3">
+                            <template #prepend>
+                              <v-btn class="mr-4" :color="themeColors[item.name]" icon @click="editColorClickHandler(item.name)"></v-btn>
+                            </template>
+                            <v-card-title class="text-body-1 font-weight-light">
+                              {{ item.title }}
+                            </v-card-title>
+                            <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
+                              {{ themeColors[item.name] }}
+                            </v-card-subtitle>
+                          </v-card-item>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-expand-transition>
                 </template>
               </v-card-text>
             </v-col>
@@ -165,7 +175,7 @@
 
       <!-- RIGHT SIDE COLUMN - CONTENT -->
       <v-col class="flex-shrink-1 col-content">
-        <v-theme-provider theme="builder-dark" with-background>
+        <v-theme-provider :theme="themeName" with-background>
           <!-- V-CARD -->
           <v-card title="Button Components" subtitle="Dark Theme" variant="outlined">
             <!-- V-CARD TEXT -->
@@ -188,33 +198,32 @@
 
 <script setup>
   import { onMounted, ref, reactive } from "vue";
-  // import { useTheme } from "vuetify";
+
+  import { storeToRefs } from "pinia";
 
   import { useBuilderThemeStore } from "@/stores/builder-theme";
+
+  import ColorSwatches from "@/utils/color/color-swatches";
 
   console.log("=========================");
   console.log("ColorsView ::: setup");
   console.log("=========================");
 
-  const themeStore = useBuilderThemeStore();
-  const themeInstance = themeStore.themeInstance;
-  console.log("ColorsView ::: themeInstance: ", themeInstance);
+  const builderThemeStore = useBuilderThemeStore();
 
   const showSettings = ref(false);
 
-  const showSurfaceColors = ref(false);
-  const showMessageColors = ref(true);
+  const { themeName, showSurfaceColors, showMessageColors, paletteColors, themeColors } = storeToRefs(builderThemeStore);
 
   const modalColorOpen = ref(false);
   const modalHelpOpen = ref(false);
 
-  const darkTheme = ref(true);
-  const selectedTheme = ref("dark");
+  // const selectedTheme = ref("builder-dark");
 
-  const builderThemeDark = themeStore.builderDark;
-  const builderThemeLight = themeStore.builderLight;
+  // const builderThemeDark = builderThemeStore.builderDark;
+  // const builderThemeLight = builderThemeStore.builderLight;
 
-  const themeColors = builderThemeDark.colors;
+  // const themeColors = builderThemeDark.colors;
 
   const selectedColor = ref("");
   const tempColor = ref("");
@@ -228,32 +237,9 @@
   ];
   const selectedThemePreset = ref("material");
 
-  const presetSwatches = ref([
-    { title: "Material Design (default)", value: "material" },
-    { title: "Bootstrap", value: "bootstrap" },
-    { title: "PrimeView", value: "primeview" },
-    { title: "Tailwind", value: "tailwind" },
-    { title: "Flat", value: "flat" },
-    { title: "Metro UI", value: "metro" },
-    { title: "Salesfoce Lightning Design", value: "salesforce" }
-  ]);
-
+  const presetSwatches = ref(ColorSwatches.presets);
+  // TODO: move selectedSwatches to the store to maintain its setting across pages.
   const selectedSwatches = ref("material");
-
-  // Hex properties are not used (they're defined in the themeColors object, which is the active theme in the store).
-  // This will eventually be moved to the store.
-  const paletteColors = reactive([
-    { title: "Primary", name: "primary", hex: "#2196F3", enabled: true },
-    { title: "Secondary", name: "secondary", hex: "#54B6B2", enabled: true },
-    { title: "Surface", name: "surface", hex: "#212121", enabled: true },
-    { title: "Surface Light", name: "surface-light", hex: "#424242", enabled: false },
-    { title: "Surface Variant", name: "surface-variant", hex: "#A3A3A3", enabled: false },
-    { title: "Background", name: "background", hex: "#121212", enabled: true },
-    { title: "Success", name: "success", hex: "#4CAF50", enabled: true },
-    { title: "Info", name: "info", hex: "#2196F3", enabled: true },
-    { title: "Warning", name: "warning", hex: "#FB8C00", enabled: true },
-    { title: "Error", name: "error", hex: "#CF6679", enabled: true }
-  ]);
 
   const variantCards = [
     { title: "Elevated Variant", variant: "elevated" },
@@ -264,28 +250,49 @@
     { title: "Text Variant", variant: "text" }
   ];
 
+  /**
+   * LIFECYCLE HOOKS
+   */
+
   onMounted(() => {
     console.log("ColorsView onMounted");
-    // set default colors
-    let colors = builderThemeDark.colors;
-    console.log(" - themeStore - currentThemeName: ", themeStore.currentThemeName);
+    console.log(" - themeStore - themeName: ", builderThemeStore.themeName);
+    console.log(" - themeStore - themeColors: ", builderThemeStore.themeColors);
   });
+
+  /**
+   * METHODS
+   */
 
   function darkThemeChangeHandler(value) {
     console.log("ColorsView ::: darkThemeChangeHandler");
     console.log(" - value: ", value);
   }
 
+  /**
+   * Updates the visibility of `surface` colors in the Theme Colors menu.
+   *
+   * This function is triggered when the "show surface colors" setting is changed.
+   *
+   * @param {boolean} value - Indicates whether surface colors should be displayed.
+   */
   function showSurfaceColorsUpdateHandler(value) {
     console.log("ColorsView ::: showSurfaceColorsUpdateHandler");
     console.log(" - value: ", value);
-    ["surface-light", "surface-variant"].forEach((name) => (paletteColors.find((item) => item.name === name).enabled = value));
+    // store automatically updates `message` colors, so no need to do anything here.
   }
 
+  /**
+   * Updates the visibility of `message` colors in the Theme Colors menu.
+   *
+   * This function is triggered when the "show message colors" setting is changed.
+   *
+   * @param {boolean} value - Indicates whether message colors should be displayed.
+   */
   function showMessageColorsUpdateHandler(value) {
     console.log("ColorsView ::: showMessageColorsUpdateHandler");
     console.log(" - value: ", value);
-    ["success", "info", "warning", "error"].forEach((name) => (paletteColors.find((item) => item.name === name).enabled = value));
+    // store automatically updates `message` colors, so no need to do anything here.
   }
 
   function themePresetChangeHandler(value) {
@@ -301,13 +308,6 @@
   function swatchPresetChangeHandler(value) {
     console.log("ColorsView ::: swatchPresetChangeHandler");
     console.log(" - value: ", value);
-    if (value === "material") {
-      //
-    } else if (value === "flat") {
-      //
-    } else if (value === "bootstrap") {
-      //
-    }
   }
 
   function swatchPresetInfoHandler() {
@@ -328,10 +328,10 @@
    */
   function editColorClickHandler(propName) {
     console.log("ColorsView ::: editColorClickHandler");
-    console.log(" - editing color: ", propName, themeColors[propName]);
+    console.log(" - editing color: ", propName, themeColors.value[propName]);
     selectedColorName.value = propName;
     // Set the selected color to the current theme color.
-    selectedColor.value = themeColors[propName];
+    selectedColor.value = themeColors.value[propName];
     // Will be used to cancel the update
     tempColor.value = selectedColor.value;
     modalColorOpen.value = true;
@@ -342,9 +342,9 @@
     console.log(" - modal color: ", color);
     console.log(" - selected color: ", selectedColor.value);
     let colorName = selectedColorName.value;
-    // assigning the color to the themeColors object
-    // will automatically update the theme store.
-    themeColors[colorName] = color;
+    // Assigning the color to the store's `themeColors` object ref
+    // will automatically update the actual Vuetify theme.
+    themeColors.value[colorName] = color;
   }
 
   /**
@@ -371,14 +371,12 @@
    */
   function editColorCancelHandler() {
     console.log("ColorsView ::: editColorCancelHandler");
-
     console.log(" - selectedColor: ", selectedColor.value);
     console.log(" - tempColor: ", tempColor.value);
-
     let colorName = selectedColorName.value;
-    console.log(" - builderThemeDark.colors: ", colorName, themeColors[colorName]);
+    console.log(" - builderThemeDark.colors: ", colorName, themeColors.value[colorName]);
     // set the theme color back to its original value
-    themeColors[colorName] = tempColor.value;
+    themeColors.value[colorName] = tempColor.value;
     modalColorOpen.value = false;
   }
 </script>

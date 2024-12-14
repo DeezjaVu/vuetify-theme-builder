@@ -70,14 +70,18 @@
     let overlay = (dragElement.value = spanElement.parentElement.parentElement);
     console.log(" - dragElement: ", overlay);
 
-    // Get the margin value of the v-dialog-overlay (dragged) element.
-    let compStyle = window.getComputedStyle(overlay);
-    // console.log(" - compStyle: ", compStyle);
+    if (overlay !== null || overlay !== undefined) {
+      // Get the margin value of the v-dialog-overlay (dragged) element.
+      let compStyle = window.getComputedStyle(overlay);
+      // console.log(" - compStyle: ", compStyle);
 
-    let mx = (marginX.value = Number(compStyle.marginLeft.split("px")[0]));
-    let my = (marginY.value = Number(compStyle.marginTop.split("px")[0]));
-    // console.log(" - marginX: ", mx);
-    // console.log(" - marginY: ", my);
+      let mx = (marginX.value = Number(compStyle.marginLeft.split("px")[0]));
+      let my = (marginY.value = Number(compStyle.marginTop.split("px")[0]));
+      console.log(" - marginX: ", mx);
+      console.log(" - marginY: ", my);
+    } else {
+      console.warn("[DragModal] overlay is null or undefined");
+    }
 
     try {
       let ls = localStorage.getItem("modalLocation");
@@ -95,8 +99,10 @@
         // console.log(" - modalX: ", modalX);
         // console.log(" - modalY: ", modalY);
         // position the modal dialog using the stored values.
-        dragElement.value.style.left = modalX;
-        dragElement.value.style.top = modalY;
+        if (dragElement.value) {
+          dragElement.value.style.left = modalX;
+          dragElement.value.style.top = modalY;
+        }
       }
     } catch (err) {
       // console.warn(error);
