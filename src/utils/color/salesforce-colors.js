@@ -1,3 +1,5 @@
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
+
 /**
  * Salesforce Lightning Design System colors
  *
@@ -135,7 +137,6 @@ export const yellow = {
   darken4: "#2e2204"
 };
 
-// done
 export const orange = {
   lighten5: "#fedfd0",
   lighten4: "#ffba90",
@@ -149,7 +150,6 @@ export const orange = {
   darken4: "#371e03"
 };
 
-// done
 export const hotOrange = {
   lighten5: "#ffded5",
   lighten4: "#feb9a5",
@@ -227,16 +227,4 @@ export const swatches = [
   neutralHex
 ];
 
-// TODO: @vuetify-colors ::: set proper theme colors. This is just for testing.
-export const theme = {
-  primary: blue.base,
-  secondary: grey.darken1,
-  success: green.base,
-  info: cloudBlue.base,
-  warning: yellow.base,
-  danger: red.base,
-  light: "#F8F9FA",
-  dark: "#212529"
-};
-
-export default { swatches, theme };
+export default { swatches };

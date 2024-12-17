@@ -1,3 +1,5 @@
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
+
 /**
  * Tailwind Preset Colors
  *
@@ -376,16 +378,6 @@ export const swatches = [
   // stoneHex
 ];
 
-// TODO: @tailwind-colors ::: fix theme colors.
-export const theme = {
-  primary: "#2196F3",
-  secondary: "#8BC34A",
-  success: "#2ECC71",
-  info: "#2196F3",
-  warning: "#FFC107",
-  danger: "#FFC080"
-};
-
 export default {
   red,
   rose,
@@ -410,6 +402,5 @@ export default {
   neutral,
   stone,
   baseColors,
-  swatches,
-  theme
+  swatches
 };

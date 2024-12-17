@@ -1,3 +1,5 @@
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
+
 /**
  * Metro is the nickname of Microsoft Design Language (MDL).
  * Metro is focused on flat design and modern colors.
@@ -5,7 +7,8 @@
  * Each color in the Metro palette has a base color of which lighten and darken variants are derived.
  *
  * This is done using a JS implementaton of the
- * [SASS mix()](https://sass-lang.com/documentation/modules/color/#mix) function.
+ * [SASS mix()](https://sass-lang.com/documentation/modules/color/#mix) function,
+ * where the base color is mixed with white for the lighter shades and black for the darker shades.
  *
  * The following percentages are used to create the lighten and darken variants for the base colors:
  * - lighten1 = mix(white, base, 20%)
@@ -317,17 +320,6 @@ export const baseColors = [
   { title: "Darken", name: "darken", base: darken.base }
 ];
 
-// TODO: metro-colors.js ::: Set proper theme colors. This is just for testing.
-export const theme = {
-  primary: blue.base,
-  secondary: darken.base,
-  success: green.base,
-  info: lightBlue.base,
-  warning: yellow.base,
-  danger: red.base,
-  dark: darken.darken3
-};
-
 export default {
   darkRed,
   red,
@@ -347,6 +339,5 @@ export default {
   darkOrange,
   darken,
   baseColors,
-  swatches,
-  theme
+  swatches
 };

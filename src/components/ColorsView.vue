@@ -43,7 +43,7 @@
                     </v-card-item>
 
                     <!-- label="Theme" -->
-                    <v-card-text>
+                    <v-card-text class="pb-2">
                       <v-radio-group
                         class="text-label-1"
                         v-model="themeName"
@@ -59,7 +59,7 @@
 
                       <v-select
                         label="Theme Preset"
-                        class="mt-4 mb-2"
+                        class="mt-4 mb-1"
                         v-model="selectedThemePreset"
                         :items="presetThemes"
                         auto-select-first="exact"
@@ -113,9 +113,10 @@
                       <v-card-title class="text-subtitle-1"> Color Picker </v-card-title>
                     </v-card-item>
 
-                    <v-card-text class="pt-2">
+                    <v-card-text class="pt-2 pb-2">
                       <v-select
                         label="Swatch Colors"
+                        class="mb-1"
                         v-model="selectedSwatches"
                         :items="presetSwatches"
                         auto-select-first="exact"
@@ -135,6 +136,18 @@
                           ></v-btn>
                         </template>
                       </v-select>
+                      <v-checkbox
+                        class="text-label-2"
+                        v-model="matchSwatches"
+                        color="primary-lighten-2"
+                        density="compact"
+                        hide-details
+                        @update:model-value="matchSwatchesUpdateHandler"
+                      >
+                        <template v-slot:label>
+                          <span>Sync with theme preset</span>
+                        </template>
+                      </v-checkbox>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -183,7 +196,7 @@
               <v-row class="d-flex flex-wrap">
                 <!-- COLOR BUTTON CARDS LOOP -->
                 <v-col v-for="item in variantCards" :key="item" lg="4" xl="2">
-                  <ColorButtonCard :subtitle="item.title" />
+                  <ColorButtonCard :subtitle="item.title" :selected-variant="item.variant" hide-actions />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -203,7 +216,8 @@
 
   import { useBuilderThemeStore } from "@/stores/builder-theme";
 
-  import ColorSwatches from "@/utils/color/color-swatches";
+  import ColorSwatchNames from "@/utils/color/color-swatches";
+  import ThemePresets from "@/utils/theme/theme-presets";
 
   console.log("=========================");
   console.log("ColorsView ::: setup");
@@ -213,7 +227,7 @@
 
   const showSettings = ref(false);
 
-  const { themeName, showSurfaceColors, showMessageColors, paletteColors, themeColors } = storeToRefs(builderThemeStore);
+  const { themeName, showSurfaceColors, showMessageColors, matchSwatches, paletteColors, themeColors } = storeToRefs(builderThemeStore);
 
   const modalColorOpen = ref(false);
   const modalHelpOpen = ref(false);
@@ -229,15 +243,10 @@
   const tempColor = ref("");
   const selectedColorName = ref("");
 
-  const presetThemes = [
-    { title: "Material Design (default)", value: "material" },
-    { title: "Bootswatch Darkly", value: "bsDarkly" },
-    { title: "Bootstrap 5 Dark", value: "bsDark" },
-    { title: "Bootstrap 5 Light", value: "bsLight" }
-  ];
-  const selectedThemePreset = ref("material");
+  const presetThemes = ref(ThemePresets.presets);
+  const selectedThemePreset = ref(builderThemeStore.themePreset);
 
-  const presetSwatches = ref(ColorSwatches.presets);
+  const presetSwatches = ref(ColorSwatchNames.presets);
   // TODO: move selectedSwatches to the store to maintain its setting across pages.
   const selectedSwatches = ref("material");
 
@@ -295,14 +304,38 @@
     // store automatically updates `message` colors, so no need to do anything here.
   }
 
+  /**
+   * Handles updates to the theme preset selection.
+   *
+   * This function is triggered when the user selects a different theme preset.
+   *
+   * The function calls the `setThemePreset` method on the `builderThemeStore`.
+   *
+   * @param {string} value - The newly selected theme preset name.
+   *
+   * @see {@link builderThemeStore.setThemePreset}
+   */
   function themePresetChangeHandler(value) {
     console.log("ColorsView ::: themePresetChangeHandler");
     console.log(" - value: ", value);
+    console.log(" - selectedThemePreset: ", selectedThemePreset.value);
+    console.log(" - builderThemeStore.themePreset: ", builderThemeStore.themePreset);
+    builderThemeStore.setThemePreset(value);
   }
 
+  /**
+   * Resets the theme preset to its default value.
+   *
+   * This function is bound to the "Reset" button in the theme preset select menu.
+   *
+   * The function calls the `resetThemePreset` method on the `builderThemeStore`.
+   * @see {@link builderThemeStore.resetThemePreset}
+   */
   function themePresetResetHandler() {
     console.log("ColorsView ::: themePresetResetHandler");
     console.log(" - selectedThemePreset: ", selectedThemePreset.value);
+    console.log(" - builderThemeStore.themePreset: ", builderThemeStore.themePreset);
+    builderThemeStore.resetThemePreset();
   }
 
   function swatchPresetChangeHandler(value) {
@@ -313,6 +346,10 @@
   function swatchPresetInfoHandler() {
     console.log("ColorsView ::: swatchPresetInfoHandler");
     console.log(" - selectedSwatches: ", selectedSwatches.value);
+  }
+
+  function matchSwatchesUpdateHandler(value) {
+    console.log("ColorsView ::: matchSwatchesUpdateHandler");
   }
 
   /**
@@ -339,12 +376,14 @@
 
   function editColorChangeHandler(color) {
     console.log("ColorsView ::: editColorChangeHandler");
-    console.log(" - modal color: ", color);
-    console.log(" - selected color: ", selectedColor.value);
+    // console.log(" - modal color: ", color);
+    // console.log(" - selected color: ", selectedColor.value);
     let colorName = selectedColorName.value;
     // Assigning the color to the store's `themeColors` object ref
     // will automatically update the actual Vuetify theme.
+    // TODO: Move this to a store method.
     themeColors.value[colorName] = color;
+    builderThemeStore.setThemeColor(colorName, color);
   }
 
   /**
@@ -371,12 +410,12 @@
    */
   function editColorCancelHandler() {
     console.log("ColorsView ::: editColorCancelHandler");
-    console.log(" - selectedColor: ", selectedColor.value);
-    console.log(" - tempColor: ", tempColor.value);
     let colorName = selectedColorName.value;
-    console.log(" - builderThemeDark.colors: ", colorName, themeColors.value[colorName]);
+    let color = tempColor.value;
+    console.log(" - selectedColor: ", selectedColor.value);
+    console.log(" - tempColor: ", color);
     // set the theme color back to its original value
-    themeColors.value[colorName] = tempColor.value;
+    builderThemeStore.setThemeColor(colorName, color);
     modalColorOpen.value = false;
   }
 </script>

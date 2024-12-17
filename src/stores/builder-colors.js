@@ -165,7 +165,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns
      */
     const materialColors = computed(() => {
-      console.log("AppStore ::: materialColors");
+      console.log("BuilderColorsStore ::: materialColors");
       return colors;
     });
 
@@ -174,7 +174,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns {string[]} An array of hex strings, each representing a color in the Darkly theme.
      */
     const darklyColors = computed(() => {
-      console.log("AppStore ::: darklyColors");
+      console.log("BuilderColorsStore ::: darklyColors");
       // let hex = Object.values(this.bsDarkly);
       // Object.values(this.bsDarklyHex).flat()
       let hex = bsDarklyHex;
@@ -188,7 +188,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns {string[]} An array of hex strings, each representing a color in the Vuetify theme.
      */
     const vuetifyColors = computed(() => {
-      console.log("AppStore ::: vuetifyColors");
+      console.log("BuilderColorsStore ::: vuetifyColors");
       let hex = Object.values(materialColors);
       console.log(" - hex: ", hex);
       return hex;
@@ -200,7 +200,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns {string[]} An array of hex strings.
      */
     const colorsHex = computed(() => {
-      console.log("AppStore ::: colorsHex");
+      console.log("BuilderColorsStore ::: colorsHex");
       let hex = [materialBaseHex.value[0], Object.values(bsDarkly.value), flatColors.swatches[0]];
       console.log(" - colorsHex - hex: ", hex);
       return hex;
@@ -213,12 +213,12 @@ export const useBuilderColorsStore = defineStore(
      */
 
     const flatColorsHex = computed(() => {
-      console.log("AppStore ::: flatColorsHex");
+      console.log("BuilderColorsStore ::: flatColorsHex");
       return flatColors.swatches;
     });
 
     const flatBaseColors = computed(() => {
-      console.log("AppStore ::: flatBaseColors");
+      console.log("BuilderColorsStore ::: flatBaseColors");
       let base = flatColors.baseColors;
       console.log(" - flat baseColors: ", base);
       return base;
@@ -229,7 +229,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns {Object<string, string>} An object with string keys and hex values.
      */
     const greyscaleColors = computed(() => {
-      console.log("AppStore ::: greyscaleColors");
+      console.log("BuilderColorsStore ::: greyscaleColors");
       let hex = greyscale.greyscaleColors;
       console.log(" - greyscale colors: ", hex);
       return hex;
@@ -241,7 +241,7 @@ export const useBuilderColorsStore = defineStore(
      * @returns {string[]} An array of hex strings, each representing a color gradient from white to black.
      */
     const greyscaleColorsHex = computed(() => {
-      console.log("AppStore ::: greyscaleColorsHex");
+      console.log("BuilderColorsStore ::: greyscaleColorsHex");
       let hex = greyscale.greyscaleColorsHex;
       console.log(" - greyscale hex: ", hex);
       return hex;
@@ -270,7 +270,7 @@ export const useBuilderColorsStore = defineStore(
      * This is a placeholder for a real action.
      */
     function exampleAction() {
-      console.log("AppStore ::: exampleAction");
+      console.log("BuilderColorsStore ::: exampleAction");
       console.log(" - store state: ", `${JSON.stringify(this.$state)}`);
     }
     return {

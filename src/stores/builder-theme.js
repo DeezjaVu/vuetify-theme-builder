@@ -1,6 +1,9 @@
+import ColorSwatchNames from "@/utils/color/color-swatches";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useTheme } from "vuetify";
+import ThemePresets from "@/utils/theme/theme-presets";
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
 
 //TODO: Use these to reset the theme back to defaults.
 /**
@@ -99,7 +102,29 @@ const useThemeStore = defineStore("themeStore", () => {
     return themeInstance.value.themes["builder-light"];
   });
 
-  return { themeInstance, builderDark, builderLight };
+  function applyThemePreset(presetName) {
+    console.log("ThemeStore ::: applyThemePreset");
+    console.log(" - presetName: ", presetName);
+
+    const darkColors = builderDark.value.colors;
+    const lightColors = builderLight.value.colors;
+    console.log(" - dark colors: ", darkColors);
+    console.log(" - light colors: ", lightColors);
+
+    const preset = ThemePresets.getThemeFor(presetName);
+    console.log(" - preset: ", preset);
+
+    Object.keys(preset.light).forEach((key) => {
+      console.log(" - key: ", key);
+      darkColors[key] = preset.dark[key];
+      lightColors[key] = preset.light[key];
+
+      //   darkColors[key] = defaultColors.dark[key];
+      //   lightColors[key] = defaultColors.light[key];
+    });
+  }
+
+  return { themeInstance, builderDark, builderLight, applyThemePreset };
 });
 
 /**
@@ -118,8 +143,12 @@ export const useBuilderThemeStore = defineStore(
 
     const themeName = ref("builder-dark");
 
+    // TODO: move to private store and use getter (readonly).
+    const themePreset = ref(ThemePresetNames.VUETIFY);
+
     const showSurfaceColors = ref(false);
     const showMessageColors = ref(true);
+    const matchSwatches = ref(true);
 
     //[-]============================
     //[-] GETTERS (COMPUTED METHODS)
@@ -166,16 +195,40 @@ export const useBuilderThemeStore = defineStore(
     //[-] ACTIONS (METHODS)
     //[-]============================
 
+    function setThemeColor(name, color) {
+      console.log("BuilderThemeStore ::: setThemeColor");
+      console.log(" - name: ", name);
+      console.log(" - color: ", color);
+      themeColors.value[name] = color;
+    }
+
+    function resetThemePreset() {
+      console.log("BuilderThemeStore ::: resetThemePreset");
+      themeStore.value.applyThemePreset(themePreset.value);
+    }
+
+    function setThemePreset(presetName) {
+      console.log("BuilderThemeStore ::: setThemePreset");
+      console.log(" - presetName: ", presetName);
+      themePreset.value = presetName;
+      themeStore.value.applyThemePreset(presetName);
+    }
+
     return {
       showSurfaceColors,
       showMessageColors,
+      matchSwatches,
       themeName,
+      themePreset,
       // builderDark,
       // builderLight,
       defaultThemes,
       defaultColors,
       paletteColors,
-      themeColors
+      themeColors,
+      setThemeColor,
+      resetThemePreset,
+      setThemePreset
     };
   },
   { persist: true }

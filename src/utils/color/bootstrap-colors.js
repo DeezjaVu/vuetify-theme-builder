@@ -199,7 +199,7 @@ const greenHex = Object.values(green).reverse();
 const yellowHex = Object.values(yellow).reverse();
 const orangeHex = Object.values(orange).reverse();
 const grayHex = Object.values(gray).reverse();
-const shadesHex = Object.values(shades);
+// const shadesHex = Object.values(shades);
 
 /**
  * Bootstrap base color list.
@@ -240,21 +240,9 @@ export const swatches = [
   greenHex,
   yellowHex,
   orangeHex,
-  grayHex,
-  shadesHex
+  grayHex
+  // shadesHex
 ];
-
-// TODO: @bootstrap-colors ::: match the theme names to the vuetify names?
-export const theme = {
-  primary: blueBase,
-  secondary: gray.darken1, //"#6C757D",
-  success: greenBase, //"#198754",
-  info: cyanBase, //"#0DCAF0",
-  warning: yellowBase, //"#FFC107",
-  danger: redBase, //"#DC3545",
-  light: "#F8F9FA",
-  dark: "#212529"
-};
 
 export default {
   blue,
@@ -270,6 +258,5 @@ export default {
   gray,
   shades,
   baseColors,
-  swatches,
-  theme
+  swatches
 };

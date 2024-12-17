@@ -5,7 +5,7 @@
         <v-btn v-if="item.color !== 'tertiary' || props.hasTertiary" :text="item.text" :color="item.color" :variant="btnVariant" />
       </template>
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions v-if="!props.hideActions">
       <v-select
         class="mx-2"
         label="Variant"
@@ -23,7 +23,11 @@
 <script setup>
   import { ref, onMounted } from "vue";
 
-  const props = defineProps({ hasTertiary: { type: Boolean, default: false } });
+  const props = defineProps({
+    hasTertiary: { type: Boolean, default: false },
+    selectedVariant: { type: String, default: "elevated" },
+    hideActions: { type: Boolean, default: false }
+  });
 
   const btnsList = [
     {
@@ -54,6 +58,18 @@
       text: "Error",
       color: "error"
     }
+    // {
+    //   text: "Surface",
+    //   color: "surface"
+    // },
+    // {
+    //   text: "Surface Light",
+    //   color: "surface-light"
+    // },
+    // {
+    //   text: "Surface Variant",
+    //   color: "surface-variant"
+    // }
   ];
 
   const btnVariants = ref([
@@ -64,7 +80,7 @@
     { title: "Tonal", value: "tonal" },
     { title: "Text", value: "text" }
   ]);
-  const btnVariant = ref("elevated");
+  const btnVariant = ref(props.selectedVariant);
 
   onMounted(() => {
     console.log("ColorButtonCard ::: onMounted");

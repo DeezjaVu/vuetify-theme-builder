@@ -1,9 +1,12 @@
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
+
 /**
- *
  *
  * @see https://htmlcolorcodes.com/color-chart/flat-design-color-chart/
  * @see https://materialui.co/flatuicolors
  */
+
+import themePresetNames from "../theme/theme-preset-names";
 
 export const turquoise = {
   lighten5: "#E8F8F5",
@@ -336,21 +339,9 @@ export const swatches = [
   asbestosHex,
   concreteHex,
   silverHex,
-  cloudsHex,
-  shadesHex
+  cloudsHex
+  // shadesHex
 ];
-
-// TODO: flat-colors.js ::: Set proper theme colors. This is just for testing.
-export const theme = Object.freeze({
-  primary: midnightBlue.base,
-  secondary: concrete.base,
-  success: amethyst.base,
-  info: peterRiver.base,
-  warning: sunflower.base,
-  danger: pomegranate.base,
-  light: silver.base,
-  dark: asbestos.base
-});
 
 export default {
   turquoise,
@@ -375,6 +366,5 @@ export default {
   asbestos,
   shades,
   baseColors,
-  swatches,
-  theme
+  swatches
 };

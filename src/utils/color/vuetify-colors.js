@@ -1,5 +1,9 @@
 // import colors from "vuetify/lib/util/colors";
 
+import ThemePresetNames from "@/utils/theme/theme-preset-names";
+
+// import ThemePresets from "@/utils/theme/theme-presets";
+
 /**
  * Vuetify Material Colors
  *
@@ -371,16 +375,4 @@ export const swatches = [
   greyHex
 ];
 
-// TODO: @vuetify-colors ::: set proper theme colors. This is just for testing.
-export const theme = {
-  primary: blue.base,
-  secondary: grey.darken1, //"#6C757D",
-  success: green.base, //"#198754",
-  info: cyan.base, //"#0DCAF0",
-  warning: yellow.base, //"#FFC107",
-  danger: red.base, //"#DC3545",
-  light: "#F8F9FA",
-  dark: "#212529"
-};
-
-export default { swatches, theme };
+export default { swatches };

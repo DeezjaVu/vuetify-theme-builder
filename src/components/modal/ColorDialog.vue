@@ -11,20 +11,15 @@
     <v-card density="compact">
       <!-- V-CARD HEADER -->
       <template v-if="smAndUp">
-        <!-- FIXME: Fix DragModal for mobile (disable dragging) -->
+        <!-- Enable dragging for desktop -->
         <drag-modal modal-id="color-dialog-item">
-          <!-- 
-            @modal:drag-start="headerDragStartHandler"
-            @modal:drag-move="headerDragMoveHandler"
-            @modal:drag-end="headerDragEndHandler" 
-            -->
           <v-card-item>
             <v-card-title class="text-title-1"> Select Color </v-card-title>
             <v-card-subtitle> {{ props.colorName }} </v-card-subtitle>
           </v-card-item>
         </drag-modal>
       </template>
-      <!-- NOTE: For mobile -->
+      <!-- Disable dragging for mobile -->
       <template v-else>
         <v-card-item>
           <v-card-title class="text-title-1"> Select Color </v-card-title>
@@ -75,15 +70,7 @@
   import { ref, onMounted, computed } from "vue";
   import { useDisplay } from "vuetify";
 
-  import ColorSwatches from "@/utils/color/color-swatches";
-
-  import vuetifyColors from "@/utils/color/vuetify-colors";
-  import bootstrapColors from "@/utils/color/bootstrap-colors";
-  import tailwindColors from "@/utils/color/tailwind-colors";
-  import flatColors from "@/utils/color/flat-colors";
-  // import primeviewColors from "@/utils/color/pv-lara-colors";
-  import metroColors from "@/utils/color/metro-colors";
-  import salesforceColors from "@/utils/color/salesforce-colors";
+  import ColorSwatchNames from "@/utils/color/color-swatches";
 
   const props = defineProps({
     colorName: {
@@ -101,9 +88,9 @@
   const swatchPreset = defineModel("swatchPreset", {
     default: "material",
     get: (value) => {
-      let swatch = presetSwatches.value.find((swatch) => swatch.value === value);
-      if (!swatch) emit("update:swatch-preset", "material");
-      return swatch ? value : "material";
+      let swatches = presetSwatches.value.find((swatch) => swatch.value === value);
+      if (!swatches) emit("update:swatch-preset", "material");
+      return swatches ? value : "material";
     }
   });
 
@@ -111,27 +98,19 @@
 
   const cpModes = ["hex"];
 
-  const presetSwatches = ref(ColorSwatches.presets);
+  const presetSwatches = ref(ColorSwatchNames.presets);
 
   // const cpSwatches = ref(vuetifyColors.swatches);
   const cpSwatches = computed(() => {
-    let swatches = ColorSwatches.getSwatchesFor(swatchPreset.value);
+    let swatches = ColorSwatchNames.getSwatchesFor(swatchPreset.value);
     return swatches;
   });
 
   onMounted(() => {
     console.log("ColorDialog ::: onMounted");
-    const presets = ColorSwatches.presets;
-    console.log(" - presets: ", presets);
-
-    // console.log(" - pickerColor: ", pickerColor.value);
-    // console.log(" - swatchPreset.value: ", swatchPreset.value);
+    // const presets = ColorSwatchNames.presets;
+    // console.log(" - presets: ", presets);
   });
-
-  // function swatchPresetChangeHandler(value) {
-  //   console.log("ColorDialog ::: swatchPresetChangeHandler");
-  //   console.log(" - value: ", value);
-  // }
 
   function dialogUpdateHandler(value) {
     // console.log("ColorDialog ::: dialogUpdateHandler");
@@ -142,28 +121,6 @@
     // Since bindings take care of most things, we do not need to do anything here.
     // emit("change", value);
   }
-
-  // function headerDragStartHandler() {
-  // console.log("ColorDialog ::: headerDragStartHandler");
-  // }
-
-  // function headerDragMoveHandler(pos) {
-  // console.log("ColorDialog ::: headerDragMoveHandler");
-  // console.log(" - pos: ", pos);
-  // }
-
-  // function headerDragEndHandler(pos) {
-  // console.log("ColorDialog ::: headerDragEndHandler");
-  // console.log(" - pos: ", pos);
-  // }
-
-  // function pickerUpdateHandler(color) {
-  // console.log("ColorDialog ::: pickerUpdateHandler");
-  // console.log(" - color picker:", color);
-  // Setting the pickerColor value will trigger the `@update:picker-color` event on the component.
-  // This is currently not used, as the color picker v-model is used instead, which automatically updates the model.
-  // pickerColor.value = color;
-  // }
 
   function cancelClickHandler() {
     // console.log("ColorDialog ::: cancelClickHandler");
