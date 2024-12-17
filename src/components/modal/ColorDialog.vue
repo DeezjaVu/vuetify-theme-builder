@@ -4,7 +4,7 @@
     class="position-modal-picker"
     :max-width="smAndUp ? 348 : `100%`"
     opacity="0.10"
-    absolute
+    :absolute="smAndUp"
     :fullscreen="!smAndUp"
     @update:model-value="dialogUpdateHandler"
   >
