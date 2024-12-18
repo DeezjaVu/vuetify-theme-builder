@@ -283,7 +283,7 @@
   import { imgAssets } from "@/utils/images/image-assets-base64.js";
   import { argbFromHex, hexFromArgb, Hct, themeFromSourceColor, TonalPalette } from "@material/material-color-utilities";
   import tinycolor from "tinycolor2";
-  import SourceImageCard from "./container/SourceImageCard.vue";
+  import SourceImageCard from "@/components/container/SourceImageCard.vue";
 
   // https://picsum.photos/
   const picsum = [
