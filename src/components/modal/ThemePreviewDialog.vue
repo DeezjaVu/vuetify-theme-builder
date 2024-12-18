@@ -14,6 +14,7 @@
           <v-spacer></v-spacer>
           <v-select
             label="Theme"
+            class="mr-4 mr-md-0"
             v-model="themeName"
             :items="themeNames"
             auto-select-first="exact"
@@ -29,7 +30,7 @@
           </v-toolbar-items>
         </v-toolbar>
 
-        <v-navigation-drawer v-model="navDrawerOpen" width="250" temporary>
+        <v-navigation-drawer v-model="navDrawerOpen" :color="selectedToggleColor" width="250" temporary>
           <!-- label="Theme" -->
           <v-radio-group
             class="text-label-2 my-2"
@@ -49,6 +50,26 @@
           <v-divider></v-divider>
           <v-list :items="navFakeItems" nav></v-list>
           <v-divider></v-divider>
+          <v-select
+            label="Theme"
+            class="ma-4"
+            v-model="themeName"
+            :items="themeNames"
+            auto-select-first="exact"
+            density="compact"
+            variant="outlined"
+            hide-details
+          ></v-select>
+          <v-select
+            label="Color"
+            class="ma-4"
+            v-model="selectedToggleColor"
+            :items="toggleButtonColors"
+            auto-select-first="exact"
+            variant="outlined"
+            hide-details
+            density="compact"
+          ></v-select>
         </v-navigation-drawer>
 
         <!-- [*] PAGE CONTENT -->
@@ -57,33 +78,37 @@
           <v-main scrollable>
             <v-container fluid>
               <!-- [*] THEME STYLED CARDS ROW -->
-              <v-row class="ga-4">
+              <!-- class="ga-4" -->
+              <v-row>
                 <!-- [*] WEATHER CARD -->
-                <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
+                <v-col class="px-0 px-sm-4">
+                  <!-- pa-2 = mobile | pa-sm-4 = everything else -->
+                  <v-container class="bg-surface pa-2 pa-sm-4 rounded-lg" :width="cardWidth">
                     <WeatherCard :themeName="themeName"></WeatherCard>
                   </v-container>
                 </v-col>
 
                 <!-- [*] KEEP CARD -->
-                <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
+                <v-col class="px-0 px-sm-4">
+                  <!-- pa-2 = mobile | pa-sm-4 = everything else -->
+                  <v-container class="bg-surface pa-2 pa-sm-4 rounded-lg" :width="cardWidth">
                     <KeepCard :themeName="themeName"> </KeepCard>
                   </v-container>
                 </v-col>
 
                 <!-- [*] FALLOUT TV SHOW CARD -->
                 <!-- 
-                <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
-                    <FalloutCard :themeName="themeName"></FalloutCard>
-                  </v-container>
-                </v-col> 
+                  <v-col class="px-0">
+                    <v-container class="bg-surface pa-2 pa-sm-4 rounded-lg" :width="cardWidth">
+                      <FalloutCard :themeName="themeName"></FalloutCard>
+                    </v-container>
+                  </v-col> 
                 -->
 
                 <!-- [*] RECIPE CARD -->
-                <v-col>
-                  <v-container class="bg-surface pa-4 rounded-lg" :width="cardWidth">
+                <v-col class="px-0 px-sm-4">
+                  <!-- pa-2 = mobile | pa-sm-4 = everything else -->
+                  <v-container class="bg-surface pa-2 pa-sm-4 rounded-lg" :width="cardWidth">
                     <RecipeCard :themeName="themeName"></RecipeCard>
                   </v-container>
                 </v-col>
@@ -498,11 +523,8 @@
    */
 
   function getHexFor(name) {
-    console.log("ThemePreviewDialog ::: getHexFor");
-    console.log(" - themeName: ", themeName.value);
-    console.log(" - name: ", name);
+    // console.log("ThemePreviewDialog ::: getHexFor");
     const hex = currentThemeColors.value[name];
-    console.log(" - hex for name: ", hex);
     return hex;
   }
 

@@ -154,18 +154,6 @@ export const useBuilderThemeStore = defineStore(
     //[-] GETTERS (COMPUTED METHODS)
     //[-]============================
 
-    // const builderDark = computed(() => {
-    //   console.log("BuilderThemeStore ::: builderDark");
-    //   // TODO: remove builderDark redundancy in private store.
-    //   return themeStore.value.themeInstance.themes["builder-dark"];
-    // });
-
-    // const builderLight = computed(() => {
-    //   console.log("BuilderThemeStore ::: builderLight");
-    //   // TODO: remove builderLight redundancy in private store.
-    //   return themeStore.value.themeInstance.themes["builder-light"];
-    // });
-
     const paletteColors = computed(() => {
       return [
         { title: "Primary", name: "primary", enabled: true },
@@ -186,7 +174,8 @@ export const useBuilderThemeStore = defineStore(
       console.log("BuilderThemeStore ::: themeColors");
       console.log(" - currentThemeName: ", themeName.value);
       const store = themeStore.value;
-      const theme = themeName.value === "builder-dark" ? store.builderDark : store.builderLight;
+      const name = themeName.value;
+      const theme = name === "builder-dark" ? store.builderDark : store.builderLight;
       console.log(" - theme: ", theme);
       return theme.colors;
     });
@@ -195,6 +184,12 @@ export const useBuilderThemeStore = defineStore(
     //[-] ACTIONS (METHODS)
     //[-]============================
 
+    /**
+     * Updates the theme color for a given color name.
+     *
+     * @param {string} name - The name of the color to be updated.
+     * @param {string} color - The new hex color value to assign.
+     */
     function setThemeColor(name, color) {
       console.log("BuilderThemeStore ::: setThemeColor");
       console.log(" - name: ", name);
@@ -202,16 +197,36 @@ export const useBuilderThemeStore = defineStore(
       themeColors.value[name] = color;
     }
 
+    /**
+     * Resets the theme colors to the default values of the current theme preset.
+     *
+     */
     function resetThemePreset() {
       console.log("BuilderThemeStore ::: resetThemePreset");
       themeStore.value.applyThemePreset(themePreset.value);
     }
 
+    /**
+     * Sets the theme preset to the given name.
+     *
+     * This will update the  builder theme styles to
+     * the colors of the given theme preset.
+     *
+     * Valid preset names are available as static properties of the ThemePresets module.
+     * e.g. ThemePresets.VUETIFY
+     *
+     * @param {string} presetName - The name of the theme preset to set.
+     * @see ThemePresets
+     */
     function setThemePreset(presetName) {
       console.log("BuilderThemeStore ::: setThemePreset");
       console.log(" - presetName: ", presetName);
-      themePreset.value = presetName;
-      themeStore.value.applyThemePreset(presetName);
+      if (ThemePresets.isValid(presetName)) {
+        themePreset.value = presetName;
+        themeStore.value.applyThemePreset(presetName);
+      } else {
+        console.warn("BuilderThemeStore ::: setThemePreset - Invalid preset name: ", presetName);
+      }
     }
 
     return {
@@ -220,10 +235,7 @@ export const useBuilderThemeStore = defineStore(
       matchSwatches,
       themeName,
       themePreset,
-      // builderDark,
-      // builderLight,
       defaultThemes,
-      defaultColors,
       paletteColors,
       themeColors,
       setThemeColor,

@@ -16,7 +16,8 @@ export default defineConfig({
   // https://vitejs.dev/guide/static-deploy.html#github-pages
   // base: "/vuetify-theme-builder/",
   // For netlify this needs to be the root of the repo.
-  base: "/",
+  // base: "/",
+  base: process.env.VITE_BASE_URL || "/",
   plugins: [
     VueRouter(),
     Vue({

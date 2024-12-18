@@ -1,12 +1,12 @@
 <template>
-  <v-container class="fill-height">
-    <v-responsive class="align-centerfill-height mx-auto" max-width="960">
+  <v-container class="fill-height align-baseline px-2 px-sm-0 mx-auto">
+    <v-responsive class="align-centerfill-height mx-auto" :max-width="mdAndUp ? 960 : '100%'">
       <v-img class="mb-4" height="128" src="@/assets/logo-128.png" />
 
       <v-spacer class="py-4"></v-spacer>
 
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-card
             append-icon="mdi-open-in-new"
             prepend-icon="mdi-text-box-outline"
@@ -24,7 +24,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-card
             append-icon="mdi-open-in-new"
             prepend-icon="mdi-star-circle-outline"
@@ -42,7 +42,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-card
             append-icon="mdi-open-in-new"
             prepend-icon="mdi-widgets-outline"
@@ -60,7 +60,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-card
             append-icon="mdi-open-in-new"
             class="py-4"
@@ -84,6 +84,9 @@
 
 <script setup>
   import { onMounted } from "vue";
+  import { useDisplay } from "vuetify";
+
+  const { mdAndUp } = useDisplay();
 
   /**
    *

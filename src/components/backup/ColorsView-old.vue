@@ -171,7 +171,7 @@
                             <v-card-title class="text-body-1 font-weight-light">
                               {{ item.title }}
                             </v-card-title>
-                            <v-card-subtitle class="text-subtitle-2 font-mono font-weight-light">
+                            <v-card-subtitle class="font-mono font-weight-light text-subtitle-2 text-lowercase">
                               {{ themeColors[item.name] }}
                             </v-card-subtitle>
                           </v-card-item>

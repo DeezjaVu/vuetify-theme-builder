@@ -51,7 +51,6 @@
   let isDragging = false;
 
   // TODO: DragModal ::: fix modal going offscreen when window is resized.
-  // FIXME: DragModal ::: implement mobile positioning (absolute top left).
 
   onMounted(() => {
     console.log("DragModal ::: onMounted");

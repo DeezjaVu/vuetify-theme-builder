@@ -41,6 +41,16 @@ export default class ThemePresets {
     const theme = ThemePresets.themes.find((item) => item.value === presetName)?.theme;
     return theme ?? vuetifyColors.theme;
   }
+
+  /**
+   * Checks if the given preset name is a valid theme preset.
+   *
+   * @param {string} presetName - The name of the preset to check.
+   * @returns {boolean} True if the preset name is valid, false otherwise.
+   */
+  static isValid(presetName) {
+    return ThemePresets.themes.some((item) => item.value === presetName);
+  }
 }
 
 ThemePresets.themes = Object.freeze([
