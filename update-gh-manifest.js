@@ -16,6 +16,7 @@ fs.readFile(manifestPath, "utf8", (err, data) => {
     manifest.icons.forEach((icon) => {
       icon.src = `/${repoName}${icon.src}`;
     });
+    manifest.start_url = `/${repoName}/`;
   }
 
   fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), "utf8", (err) => {

@@ -4,8 +4,8 @@ This tool will help you generate theme colors for Vuetify.
 
 ## Important Links
 
-- [Vuetify Theme Builder](https://vuetify-theme-builder.netlify.app/)
-- [Vuetify Theme Builder](https://deezjavu.github.io/vuetify-theme-builder/)
+- [Vuetify Theme Builder (Netlify App)](https://vuetify-theme-builder.netlify.app/)
+- [Vuetify Theme Builder (Github Pages)](https://deezjavu.github.io/vuetify-theme-builder/)
 - [Vuetify](https://vuetifyjs.com/)
 - [Vue](https://vuejs.org/)
 
