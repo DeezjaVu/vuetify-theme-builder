@@ -1,0 +1,1 @@
+import{o,c as a,a as n,cl as s}from"./index-Dg04vZsy.js";const _={__name:"variables-backup",setup(r){return o(()=>{console.log("PAGES ::: /builder/variables ::: onMounted")}),(c,t)=>{const e=s("VariablesView");return n(),a(e)}}};export{_ as default};
