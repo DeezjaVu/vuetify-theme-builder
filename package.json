@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "dev:open": "vite --open",
+    "update-manifest": "node update-gh-manifest.js",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore"

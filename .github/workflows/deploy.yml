@@ -21,13 +21,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+        # Copy the .env.gh-pages file to .env to set the base url for GitHub Pages
       - name: Copy .env.gh-pages
         run: cp .env.gh-pages .env
+
+        # Update the manifest.json file for GitHub Pages
+      - name: Update manifest for GitHub Pages
+        run: npm run update-manifest
+        env:
+          GITHUB_PAGES: "true"
 
       - name: Build project
         run: npm run build
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
