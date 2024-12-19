@@ -5,7 +5,7 @@
   "background_color": "#121212",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "start_url": "/",
+  "start_url": "/vuetify-theme-builder/",
   "icons": [
     {
       "src": "/vuetify-theme-builder/logo/logo-192.png",
