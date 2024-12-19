@@ -1,0 +1,1 @@
+import{o,c as t,a as i,cm as n}from"./index-HxBu5Spw.js";const r={__name:"utilities-backup",setup(s){return o(()=>{console.log("PAGES ::: /builder/utilities ::: onMounted")}),(c,a)=>{const e=n("UtilitiesView");return i(),t(e)}}};export{r as default};

@@ -1,0 +1,1 @@
+import{o,c as a,a as n,cm as s}from"./index-HxBu5Spw.js";const _={__name:"variables-backup",setup(r){return o(()=>{console.log("PAGES ::: /builder/variables ::: onMounted")}),(c,t)=>{const e=s("VariablesView");return n(),a(e)}}};export{_ as default};

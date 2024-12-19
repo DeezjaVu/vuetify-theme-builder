@@ -1,0 +1,1 @@
+import{o as e,c,a as n,cm as s}from"./index-HxBu5Spw.js";const _={__name:"colors-backup",setup(r){return e(()=>{console.log("PAGES ::: /builder/colors ::: onMounted")}),(t,a)=>{const o=s("ColorsView");return n(),c(o)}}};export{_ as default};
