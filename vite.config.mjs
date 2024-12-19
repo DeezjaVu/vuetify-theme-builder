@@ -8,6 +8,9 @@ import VueRouter from "unplugin-vue-router/vite";
 // Utilities
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +21,7 @@ export default defineConfig({
   // For netlify this needs to be the root of the repo.
   // base: "/",
   base: process.env.VITE_BASE_URL || "/",
+  // base: process.env.VITE_BASE_URL,
   plugins: [
     VueRouter(),
     Vue({
