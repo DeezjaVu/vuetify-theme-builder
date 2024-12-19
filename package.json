@@ -1,6 +1,7 @@
 {
   "name": "vuetify-theme-builder",
   "version": "0.0.1",
+  "homepage": "https://deezjavu.github.io/vuetify-theme-builder/",
   "scripts": {
     "dev": "vite",
     "dev:open": "vite --open",
