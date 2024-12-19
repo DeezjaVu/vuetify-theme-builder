@@ -94,6 +94,7 @@
   onMounted(() => {
     console.log("AppView ::: onMounted");
     console.log(" - mdAndUp: ", mdAndUp.value);
+    // changes for github actions...
   });
 </script>
 
